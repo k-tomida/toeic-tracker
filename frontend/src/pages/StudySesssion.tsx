@@ -4,7 +4,7 @@ export const StudySession = () => {
     return (
         <>
             <Header />
-            <h1>語彙管理ページです</h1>
+            <h1>学習記録ページです</h1>
         </>
     )
 }
