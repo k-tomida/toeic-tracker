@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router"
 import { Home } from "../pages/Home"
 import { StudySession } from "../pages/StudySesssion"
-import { Score } from "../pages/score"
+import { Score } from "../pages/Score"
 import { Vocabulary } from "../pages/Vocabulary"
 
 export const Router = () => {
