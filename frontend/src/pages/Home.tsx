@@ -1,10 +1,11 @@
 import { Header } from "../components/Header"
+import { HomeMain } from "../components/HomeMain"
 
 export const Home = () => {
     return (
         <>
             <Header />
-            <h1>Homeです</h1>
+            <HomeMain />
         </>
     )
 }

@@ -2,9 +2,9 @@ import type { ReactNode } from "react";
 import { NavLink } from "react-router";
 
 type Props = {
-    to: string,
-    icon: ReactNode
-    label: string
+    to: string;
+    icon: ReactNode;
+    label: string;
 }
 
 export const NavItem = ({ to, icon, label }: Props) => {
