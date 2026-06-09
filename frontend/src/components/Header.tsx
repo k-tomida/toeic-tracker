@@ -4,7 +4,7 @@ import { NavItem } from "../modules/NavItem";
 
 export const Header = () => {
     return (
-        <header className="border-b border-gray-300 ">
+        <header className="border-b border-gray-300 bg-white ">
             <div className="max-w-7xl mx-auto px-4">
                 <div className="m-4 text-3xl font-extrabold">TOEIC <span className="text-green-700">Tracker</span></div>
                 <nav className="flex  space-x-5 m-2">
