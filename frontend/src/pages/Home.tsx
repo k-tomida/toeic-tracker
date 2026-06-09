@@ -5,7 +5,9 @@ export const Home = () => {
     return (
         <>
             <Header />
-            <KpiCards />
+            <main>
+                <KpiCards />
+            </main>
         </>
     )
 }
