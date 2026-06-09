@@ -1,6 +1,6 @@
 import { IoHomeOutline, IoBook } from "react-icons/io5";
 import { FaRegClock, FaChartBar } from "react-icons/fa";
-import { NavItem } from "../ui/NavItem";
+import { NavItem } from "../modules/NavItem";
 
 export const Header = () => {
     return (

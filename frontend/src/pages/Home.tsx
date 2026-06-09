@@ -1,10 +1,13 @@
 import { Header } from "../components/Header"
+import { KpiCards } from "../components/KpiCards"
 
 export const Home = () => {
     return (
         <>
             <Header />
-            <h1>Homeです</h1>
+            <main>
+                <KpiCards />
+            </main>
         </>
     )
 }
