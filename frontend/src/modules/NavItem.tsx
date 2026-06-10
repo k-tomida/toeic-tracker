@@ -9,8 +9,8 @@ type Props = {
 
 export const NavItem = ({ to, icon, label }: Props) => {
     return (
-        <NavLink to={to} className={({ isActive }) => `p-1 flex items-center rounded-xl hover:bg-gray-100 ${isActive ? "text-green-700" : ""}`}>
-            {icon}{label}
+        <NavLink to={to} className={({ isActive }) => `p-1 flex items-center rounded-xl hover:bg-gray-100 ${isActive ? "bg-gray-200" : ""}`}>
+            {icon}<span className="ml-1">{label}</span>
         </NavLink>
     );
 }
