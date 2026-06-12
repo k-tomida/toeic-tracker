@@ -9,14 +9,49 @@ export const GoalProgress = () => {
                 <span className="mr-4 text-gray-500">あと<span className="text-xl text-black">{80}点</span></span>
             </div>
             <div className="m-4">
-                <ProgressBar current={820} target={900} />
+                <ProgressBar current={820} target={900} barHeight="h-5" />
                 <div className="flex justify-between mt-2">
                     <span className="text-gray-500">0</span>
                     <span className="text-2xl">{92}%</span>
                     <span className="text-gray-500">{900}</span>
                 </div>
             </div>
-            <div>
+
+            <div className="flex justify-between gap-10 mx-5 flex-wrap">
+
+                <div className="flex-1 min-w-[280px]">
+                    <div className="flex justify-between items-center text-lg">
+                        <div className="m-2 flex items-center gap-2">
+                            <div className="h-3 w-3 bg-sky-600 rounded-full"></div>
+                            <span>Listening</span>
+                        </div>
+                        <div>
+                            <span>{445} / 495</span>
+                        </div>
+                    </div>
+                    <ProgressBar current={445} target={495} barHeight="h-3" color="bg-sky-600" />
+                    <div className="flex justify-between mt-2 text-gray-500">
+                        <span>0</span>
+                        <span>495</span>
+                    </div>
+                </div>
+
+                <div className="flex-1 min-w-[280px]">
+                    <div className="flex justify-between items-center text-lg">
+                        <div className="m-2 flex items-center gap-2">
+                            <div className="h-3 w-3 bg-violet-600 rounded-full"></div>
+                            <span className="text-lg">Reading</span>
+                        </div>
+                        <div>
+                            <span>{375} / 495</span>
+                        </div>
+                    </div>
+                    <ProgressBar current={375} target={495} barHeight="h-3" color="bg-violet-600" />
+                    <div className="flex justify-between mt-2 text-gray-500">
+                        <span>0</span>
+                        <span>495</span>
+                    </div>
+                </div>
 
             </div>
         </div>

@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 type Props = {
     current: number;
     target: number;
+    color?: string;
+    barHeight: string;
 };
 
-export const ProgressBar = ({ current, target }: Props) => {
+export const ProgressBar = ({ current, target, color = "bg-green-500", barHeight }: Props) => {
     const percentage = Math.min(Math.round((current / target) * 100), 100);
     const [width, setWidth] = useState(0);
 
@@ -18,9 +20,9 @@ export const ProgressBar = ({ current, target }: Props) => {
 
     return (
         <div className="flex items-center gap-4">
-            <div className="flex-1 bg-gray-100 rounded-full h-5">
+            <div className={`flex-1 bg-gray-100 rounded-full ${barHeight}`}>
                 <div
-                    className="bg-green-500 h-5 rounded-full transition-all duration-1000 ease-out"
+                    className={`${color} ${barHeight} rounded-full transition-all duration-1000 ease-out`}
                     style={{ width: `${width}%` }}
                 />
             </div>

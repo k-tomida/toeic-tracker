@@ -55,10 +55,10 @@ export const HeatMap = ({ data }: Props) => {
 
     const getColor = (count: number) => {
         if (count === 0) return "bg-gray-100";
-        if (count <= 30) return "bg-green-100";
-        if (count <= 60) return "bg-green-300";
-        if (count <= 90) return "bg-green-500";
-        return "bg-green-700";
+        if (count <= 30) return "bg-green-200";
+        if (count <= 60) return "bg-green-400";
+        if (count <= 90) return "bg-green-600";
+        return "bg-green-800";
     };
 
     const months: string[] = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
@@ -103,7 +103,7 @@ export const HeatMap = ({ data }: Props) => {
                 {/* 凡例ラベル */}
                 <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
                     <span>少ない</span>
-                    {["bg-gray-100", "bg-green-100", "bg-green-300", "bg-green-500", "bg-green-700"].map((c) => (
+                    {["bg-gray-100", "bg-green-200", "bg-green-400", "bg-green-600", "bg-green-800"].map((c) => (
                         <div key={c} className={`w-3 h-3 rounded-sm ${c}`} />
                     ))}
                     <span>多い</span>
