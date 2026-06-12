@@ -1,8 +1,9 @@
-import { KpiCard } from "../modules/KpiCard"
+
 import { FaRegClock } from "react-icons/fa";
 import { AiOutlineFire } from "react-icons/ai";
 import { TfiCup } from "react-icons/tfi";
 import { LuNotebookPen } from "react-icons/lu";
+import { KpiCard } from "../../modules/KpiCard";
 
 export const KpiCards = () => {
     return (
@@ -12,5 +13,6 @@ export const KpiCards = () => {
             <KpiCard title="最新スコア" icon={<TfiCup />} value={820} sub="前回比 +25" />
             <KpiCard title="登録語彙数" icon={<LuNotebookPen />} value={342} sub="今週 +18語" />
         </div>
+
     )
 }
