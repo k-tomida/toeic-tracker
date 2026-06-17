@@ -1,16 +1,16 @@
 import { Route, Routes } from "react-router"
-import { Home } from "../pages/Home"
-import { StudySession } from "../pages/StudySesssion"
-import { Score } from "../pages/Score"
-import { Vocabulary } from "../pages/Vocabulary"
+import { HomePage } from "../pages/HomePage"
+import { StudyManagementPage } from "../pages/StudyManagementPage"
+import { ScorePage } from "../pages/ScorePage"
+import { VocabularyPage } from "../pages/VocabularyPage"
 
 export const Router = () => {
     return (
         <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/study-sessions" element={<StudySession />} />
-            <Route path="/scores" element={<Score />} />
-            <Route path="/vocabularies" element={<Vocabulary />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/study-sessions" element={<StudyManagementPage />} />
+            <Route path="/scores" element={<ScorePage />} />
+            <Route path="/vocabularies" element={<VocabularyPage />} />
         </Routes>
     )
 }

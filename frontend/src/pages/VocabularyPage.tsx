@@ -1,6 +1,6 @@
 import { Header } from "../components/Header"
 
-export const Vocabulary = () => {
+export const VocabularyPage = () => {
     return (
         <>
             <Header />
