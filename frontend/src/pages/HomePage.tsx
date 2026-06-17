@@ -20,7 +20,7 @@ export const HomePage = () => {
         <KpiCards />
         <HeatMap data={dummyData} />
         <GoalProgress />
-        <div className="flex justify-between flex-wrap gap-4 mx-10">
+        <div className="flex flex-wrap gap-4 mx-10">
           <ScoreChart />
           <StudySession />
         </div>
