@@ -1,6 +1,6 @@
 import { Header } from "../components/Header"
 
-export const StudySession = () => {
+export const StudyManagementPage = () => {
     return (
         <>
             <Header />

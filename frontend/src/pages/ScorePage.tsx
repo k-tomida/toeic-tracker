@@ -1,6 +1,6 @@
 import { Header } from "../components/Header"
 
-export const Score = () => {
+export const ScorePage = () => {
     return (
         <>
             <Header />
