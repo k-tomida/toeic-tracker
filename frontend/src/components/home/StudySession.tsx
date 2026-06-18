@@ -24,18 +24,33 @@ const changeTagByCategory = (category: string) => (
 
 //dateを2026-06-16から6/16(月)に変える関数
 const formatDateLabel = (date: string) => {
-    return "";
+    const parsedDate = new Date(date);
+    const dateParts = date.split("-");
+    const dayOfWeekIndex = parsedDate.getDay();
+    const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
+    return `${dateParts[1]}/${dateParts[2]}(${dayNames[dayOfWeekIndex]})`;
 }
 
 export const StudySession = () => {
     return (
-        <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0 min-w-[550px]">
-            <p className="mb-3 text-xl font-medium text-gray-600">直近の学習セッション</p>
+        <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0 min-w-[400px]">
+            <p className="mb-5 text-xl font-medium text-gray-600">直近の学習セッション</p>
             {datas.map((data) => (
-                <div key={data.date} className="flex justify-between gap-3 py-3 border-b border-gray-200 last:border-b-0">
-                    <div>{data.date}</div>
-                    <div className="flex gap-1 flex-1">{data.category.map((category) => changeTagByCategory(category))}</div>
-                    <div>{data.studyTime}min</div>
+                <div key={data.date} className="flex justify-between gap-3 py-3 m-2 border-b border-gray-200 last:border-b-0">
+                    {/* 日付 */}
+                    <div className="text-sm font-medium text-gray-700 shrink-0 w-24">
+                        {formatDateLabel(data.date)}
+                    </div>
+
+                    {/* カテゴリタグ */}
+                    <div className="flex gap-1 flex-wrap flex-1">
+                        {data.category.map((category) => changeTagByCategory(category))}
+                    </div>
+
+                    {/* 学習時間 */}
+                    <div className="text-sm text-gray-500 shrink-0">
+                        {data.studyTime}min
+                    </div>
                 </div>
             ))}
         </div>
