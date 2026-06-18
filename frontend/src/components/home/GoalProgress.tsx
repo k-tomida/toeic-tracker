@@ -23,7 +23,7 @@ export const GoalProgress = () => {
                     <div className="flex justify-between items-center text-lg">
                         <div className="m-2 flex items-center gap-2">
                             <div className="h-3 w-3 bg-sky-600 rounded-full"></div>
-                            <span>Listening</span>
+                            <span>リスニング</span>
                         </div>
                         <div>
                             <span>{445} / 495</span>
@@ -40,7 +40,7 @@ export const GoalProgress = () => {
                     <div className="flex justify-between items-center text-lg">
                         <div className="m-2 flex items-center gap-2">
                             <div className="h-3 w-3 bg-violet-600 rounded-full"></div>
-                            <span className="text-lg">Reading</span>
+                            <span className="text-lg">リーディング</span>
                         </div>
                         <div>
                             <span>{375} / 495</span>
