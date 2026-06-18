@@ -1,15 +1,14 @@
 
 const datas = [
-    { date: "2026-06-16", category: ["リスニング", "単語", "リーディング", "文法", "模試"], studyTime: 45 },
+    { date: "2026-06-16", category: ["リスニング", "単語", "文法", "模試"], studyTime: 45 },
     { date: "2026-06-15", category: ["単語"], studyTime: 30 },
-    { date: "2026-06-14", category: ["リーディング"], studyTime: 60 },
+    { date: "2026-06-14", category: ["文法"], studyTime: 60 },
     { date: "2026-06-13", category: ["単語"], studyTime: 20 },
     { date: "2026-06-12", category: ["リスニング"], studyTime: 50 }
 ];
 
 const tagStyles: Record<string, string> = {
     リスニング: "bg-blue-50 text-blue-800",
-    リーディング: "bg-purple-50 text-purple-800",
     単語: "bg-amber-50 text-amber-800",
     文法: "bg-green-50 text-green-800",
     模試: "bg-orange-50 text-orange-800",
