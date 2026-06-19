@@ -1,4 +1,7 @@
 import { Header } from "../components/Header"
+import { CategorySelect } from "../components/score/CategorySelect"
+import { OrderSelect } from "../components/score/OrderSelect"
+import { PeriodSelect } from "../components/score/PeriodSelect"
 import { Button } from "../ui/Button"
 
 export const StudyManagementPage = () => {
@@ -14,6 +17,11 @@ export const StudyManagementPage = () => {
                             <span>セッションを追加</span>
                         </div>
                     </Button>
+                </div>
+                <div>
+                    <CategorySelect />
+                    <PeriodSelect />
+                    <OrderSelect />
                 </div>
             </main>
         </div>
