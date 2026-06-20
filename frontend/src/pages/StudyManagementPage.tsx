@@ -1,8 +1,8 @@
 import { Header } from "../components/Header"
-import { AddSessionButton } from "../components/score/AddsessionButton";
-import { CategorySelect } from "../components/score/CategorySelect"
-import { OrderSelect } from "../components/score/OrderSelect"
-import { PeriodSelect } from "../components/score/PeriodSelect"
+import { AddSessionButton } from "../components/studySession/AddSessionButton";
+import { CategorySelect } from "../components/studySession/CategorySelect"
+import { OrderSelect } from "../components/studySession/OrderSelect"
+import { PeriodSelect } from "../components/studySession/PeriodSelect"
 
 import { CiFilter } from "react-icons/ci";
 
