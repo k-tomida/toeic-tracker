@@ -5,6 +5,7 @@ import { OrderSelect } from "../components/studySession/OrderSelect"
 import { PeriodSelect } from "../components/studySession/PeriodSelect"
 
 import { CiFilter } from "react-icons/ci";
+import { StudyTable } from "../components/studySession/StudyTable";
 
 export const StudyManagementPage = () => {
     return (
@@ -22,6 +23,9 @@ export const StudyManagementPage = () => {
                         <OrderSelect />
                     </div>
                     <AddSessionButton />
+                </div>
+                <div>
+                    <StudyTable />
                 </div>
             </main>
         </div>

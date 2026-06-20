@@ -1,14 +1,11 @@
 import type { ReactNode } from "react";
 
 type Props = {
-    bgColor?: string;
     children: ReactNode;
     onClick?: () => void;
 };
 
-export const Button = ({
-    children,
-}: Props) => {
+export const Button = ({ children, }: Props) => {
     return (
         <button
             className="
@@ -21,7 +18,8 @@ export const Button = ({
             transition-all
             duration-200
             hover:-translate-y-0.5 
-            cursor-pointer">
+            cursor-pointer
+            active:bg-gray-200">
             {children}
         </button>
     );
