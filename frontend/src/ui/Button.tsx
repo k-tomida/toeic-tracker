@@ -12,14 +12,14 @@ export const Button = ({
     return (
         <button
             className="
+            shadow-md
+            shadow-green-100
             p-2
             border
             border-gray-300
             rounded-md
             transition-all
             duration-200
-            hover:bg-gray-100
-            hover:shadow-md
             hover:-translate-y-0.5 
             cursor-pointer">
             {children}
