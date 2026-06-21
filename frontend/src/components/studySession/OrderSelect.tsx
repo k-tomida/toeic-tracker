@@ -8,7 +8,7 @@ const categoryOptions = [
 ];
 
 export const OrderSelect = () => {
-    const [category, setCategory] = useState("all");
+    const [category, setCategory] = useState("newest");
     return (
         <Select name="category" value={category} onChange={setCategory} options={categoryOptions} />
     );

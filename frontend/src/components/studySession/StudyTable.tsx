@@ -1,7 +1,6 @@
+import { FaPen } from "react-icons/fa";
 import { changeTagByCategory } from "../../utils/changeTagByCategory";
 import { formatDate } from "../../utils/formatDate";
-
-
 
 const dummyStudySessions = [
     {
@@ -78,31 +77,106 @@ const dummyStudySessions = [
     },
 ];
 
-export const StudyTable = () => {
+type StudyTableProps = {
+    category: string;
+    period: string;
+};
+
+const categoryLabelMap: Record<string, string> = {
+    listening: "リスニング",
+    vocabulary: "単語",
+    grammar: "文法",
+    full: "模試",
+};
+
+export const StudyTable = ({ category, period }: StudyTableProps) => {
+    let filteredStudyTables =
+        category !== "all"
+            ? dummyStudySessions.filter((studyTable) =>
+                studyTable.category.includes(categoryLabelMap[category])
+            )
+            : dummyStudySessions;
+
+    const today = new Date();
+    const thisMonth = today.getMonth() + 1;
+    const thisYear = today.getFullYear();
+
+    if (period === "thisMonth") {
+        filteredStudyTables = filteredStudyTables.filter((studyTable) => {
+            const month = new Date(studyTable.date).getMonth() + 1;
+            const year = new Date(studyTable.date).getFullYear();
+            return (year === thisYear) && (month === thisMonth);
+        })
+    }
+    else if (period === "lastMonth") {
+        filteredStudyTables = filteredStudyTables.filter((studyTable) => {
+            const month = new Date(studyTable.date).getMonth() + 1;
+            const year = new Date(studyTable.date).getFullYear();
+            if (thisMonth === 1) {
+                return (year === thisYear - 1) && (month === 12);
+            }
+            return month === thisMonth - 1;
+        })
+    }
+    else if (period === "lastThreeMonth") {
+        filteredStudyTables = filteredStudyTables.filter((studyTable) => {
+            const month = new Date(studyTable.date).getMonth() + 1;
+            const year = new Date(studyTable.date).getFullYear();
+            return (year === thisYear) && (thisMonth - 2 <= month) && (month <= thisMonth);
+        })
+    }
+
     return (
-        <table className="w-full border border-gray-300 rounded-lg overflow-hidden border-separate border-spacing-0">
-            <thead>
-                <tr className="text-left text-sm text-gray-500 ">
-                    <th className="py-3 px-3">日付</th>
-                    <th className="py-3 px-3">カテゴリ</th>
-                    <th className="py-3 px-3">学習時間</th>
-                    <th className="py-3 px-3">メモ</th>
-                    <th className="py-3 px-3"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {dummyStudySessions.map((data) => (
-                    <tr key={data.id} className="hover:bg-stone-100">
-                        <td className="py-3 px-3">{formatDate(data.date)}</td>
-                        <td className="py-3 px-3">{data.category.map(category => changeTagByCategory(category))}</td>
-                        <td className="py-3 px-3">{data.duration}min</td>
-                        <td className="py-3 px-3">{data.memo}</td>
-                        <td className="py-3 px-3">
-                            <button className="cursor-pointer">aaa</button>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
+        filteredStudyTables.length === 0 ? (
+            <div>テーブルがありません</div>
+        ) : (
+            <div className="w-full border border-gray-200 rounded-lg overflow-hidden">
+                <table className="w-full border-collapse">
+                    <thead>
+                        <tr className="text-left text-sm text-emerald-900 bg-emerald-50">
+                            <th className="py-3 px-4 font-medium">日付</th>
+                            <th className="py-3 px-4 font-medium">カテゴリ</th>
+                            <th className="py-3 px-4 font-medium">学習時間</th>
+                            <th className="py-3 px-4 font-medium">メモ</th>
+                            <th className="py-3 px-4"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredStudyTables.map((data) => (
+                            <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
+                                <td className="py-3 px-4 text-gray-700">{formatDate(data.date)}</td>
+                                <td className="py-3 px-4">
+                                    <div className="flex gap-1 flex-wrap">
+                                        {data.category.map((c) => changeTagByCategory(c))}
+                                    </div>
+                                </td>
+                                <td className="py-3 px-4 text-gray-700">{data.duration}min</td>
+                                <td className="py-3 px-4 text-gray-500">{data.memo}</td>
+                                <td className="py-3 px-4">
+                                    <button className="cursor-pointer text-gray-400 hover:text-red-500"><FaPen /></button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
+                    <span>全{dummyStudySessions.length}件中{filteredStudyTables.length}件表示</span>
+                    <div className="flex gap-1">
+                        {[1, 2, 3].map((num) => (
+                            <button
+                                key={num}
+                                className={`px-3 py-1 rounded-md text-sm transition-colors ${num === 1
+                                    ? "bg-emerald-600 text-white"
+                                    : "border border-gray-300 text-gray-700 hover:bg-gray-100"
+                                    }`}
+                            >
+                                {num}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        )
     );
 }
