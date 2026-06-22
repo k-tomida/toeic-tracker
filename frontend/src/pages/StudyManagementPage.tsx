@@ -1,6 +1,5 @@
 import { Header } from "../components/Header"
 import { AddSessionButton } from "../components/studySession/AddSessionButton";
-import { OrderSelect } from "../components/studySession/OrderSelect"
 import { CiFilter } from "react-icons/ci";
 import { StudyTable } from "../components/studySession/StudyTable";
 import { useState } from "react";
@@ -19,16 +18,23 @@ const categoryOptions: categoryType[] = [
     { label: "模試", value: "full" },
 ];
 
-const periodOptions = [
+const periodOptions: categoryType[] = [
     { label: "期間 : すべて", value: "all" },
     { label: "今月", value: "thisMonth" },
     { label: "先月", value: "lastMonth" },
     { label: "過去3ヶ月", value: "lastThreeMonth" }
 ];
 
+const orderOptions: categoryType[] = [
+    { label: "並び順 : 新しい順", value: "newest" },
+    { label: "古い順", value: "oldest" },
+    { label: "学習時間が長い順", value: "longest" },
+];
+
 export const StudyManagementPage = () => {
     const [category, setCategory] = useState(categoryOptions[0].value);
     const [period, setPeriod] = useState(periodOptions[0].value);
+    const [order, setOrder] = useState(periodOptions[0].value);
     return (
         <div className="min-h-screen ">
             <Header />
@@ -38,13 +44,12 @@ export const StudyManagementPage = () => {
                         <CiFilter size={28} />
                         <Select name="category" value={category} onChange={setCategory} options={categoryOptions} />
                         <Select name="period" value={period} onChange={setPeriod} options={periodOptions} />
-                        <OrderSelect />
-
+                        <Select name="order" value={order} onChange={setOrder} options={orderOptions} />
                     </div>
                     <AddSessionButton />
                 </div>
                 <div className="m-6">
-                    <StudyTable category={category} period={period} />
+                    <StudyTable category={category} period={period} order={order} />
                 </div>
             </main>
         </div>

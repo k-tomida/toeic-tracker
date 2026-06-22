@@ -3,6 +3,7 @@ import { changeTagByCategory } from "../../utils/changeTagByCategory";
 import { formatDate } from "../../utils/formatDate";
 import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
 import type { tableType } from "../../types/tableType";
+import { sortTableByOrder } from "../../utils/sortTableByOrder";
 
 const dummyStudySessions: tableType[] = [
     {
@@ -80,6 +81,7 @@ const dummyStudySessions: tableType[] = [
 type StudyTableProps = {
     category: string;
     period: string;
+    order: string;
 };
 
 const categoryLabelMap: Record<string, string> = {
@@ -89,15 +91,20 @@ const categoryLabelMap: Record<string, string> = {
     full: "模試",
 };
 
-export const StudyTable = ({ category, period }: StudyTableProps) => {
+export const StudyTable = ({ category, period, order }: StudyTableProps) => {
+    // categoryでフィルタする
     let filteredStudyTables: tableType[] =
         category !== "all"
             ? dummyStudySessions.filter((studyTable) =>
                 studyTable.category.includes(categoryLabelMap[category])
             )
             : dummyStudySessions;
-
+    //期間でフィルタする
     filteredStudyTables = changeTableByPeriod(period, filteredStudyTables);
+
+    //日付でソートする
+    filteredStudyTables = sortTableByOrder(order, filteredStudyTables);
+
     return (
         filteredStudyTables.length === 0 ? (
             <div>テーブルがありません</div>
