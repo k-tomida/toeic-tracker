@@ -3,6 +3,5 @@ export type tableType = {
     date: string;
     category: string[];
     duration: number;
-    score?: number;
     memo: string;
 }

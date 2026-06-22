@@ -4,13 +4,12 @@ import { formatDate } from "../../utils/formatDate";
 import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
 import type { tableType } from "../../types/tableType";
 
-const dummyStudySessions = [
+const dummyStudySessions: tableType[] = [
     {
         id: "1",
         date: "2026-06-16",
         category: ["模試", "リスニング", "単語", "文法"],
         duration: 120,
-        score: 820,
         memo: "公式問題集Vol.3",
     },
     {
@@ -46,7 +45,6 @@ const dummyStudySessions = [
         date: "2026-06-10",
         category: ["模試"],
         duration: 120,
-        score: 780,
         memo: "公式問題集Vol.2",
     },
     {
