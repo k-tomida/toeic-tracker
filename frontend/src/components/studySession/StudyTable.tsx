@@ -1,6 +1,8 @@
 import { FaPen } from "react-icons/fa";
 import { changeTagByCategory } from "../../utils/changeTagByCategory";
 import { formatDate } from "../../utils/formatDate";
+import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
+import type { tableType } from "../../types/tableType";
 
 const dummyStudySessions = [
     {
@@ -90,42 +92,14 @@ const categoryLabelMap: Record<string, string> = {
 };
 
 export const StudyTable = ({ category, period }: StudyTableProps) => {
-    let filteredStudyTables =
+    let filteredStudyTables: tableType[] =
         category !== "all"
             ? dummyStudySessions.filter((studyTable) =>
                 studyTable.category.includes(categoryLabelMap[category])
             )
             : dummyStudySessions;
 
-    const today = new Date();
-    const thisMonth = today.getMonth() + 1;
-    const thisYear = today.getFullYear();
-
-    if (period === "thisMonth") {
-        filteredStudyTables = filteredStudyTables.filter((studyTable) => {
-            const month = new Date(studyTable.date).getMonth() + 1;
-            const year = new Date(studyTable.date).getFullYear();
-            return (year === thisYear) && (month === thisMonth);
-        })
-    }
-    else if (period === "lastMonth") {
-        filteredStudyTables = filteredStudyTables.filter((studyTable) => {
-            const month = new Date(studyTable.date).getMonth() + 1;
-            const year = new Date(studyTable.date).getFullYear();
-            if (thisMonth === 1) {
-                return (year === thisYear - 1) && (month === 12);
-            }
-            return month === thisMonth - 1;
-        })
-    }
-    else if (period === "lastThreeMonth") {
-        filteredStudyTables = filteredStudyTables.filter((studyTable) => {
-            const month = new Date(studyTable.date).getMonth() + 1;
-            const year = new Date(studyTable.date).getFullYear();
-            return (year === thisYear) && (thisMonth - 2 <= month) && (month <= thisMonth);
-        })
-    }
-
+    filteredStudyTables = changeTableByPeriod(period, filteredStudyTables);
     return (
         filteredStudyTables.length === 0 ? (
             <div>テーブルがありません</div>
