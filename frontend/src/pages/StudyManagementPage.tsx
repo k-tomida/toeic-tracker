@@ -34,7 +34,7 @@ const orderOptions: categoryType[] = [
 export const StudyManagementPage = () => {
     const [category, setCategory] = useState(categoryOptions[0].value);
     const [period, setPeriod] = useState(periodOptions[0].value);
-    const [order, setOrder] = useState(periodOptions[0].value);
+    const [order, setOrder] = useState(orderOptions[0].value);
     return (
         <div className="min-h-screen ">
             <Header />
