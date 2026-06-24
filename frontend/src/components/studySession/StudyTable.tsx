@@ -5,6 +5,7 @@ import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
 import type { tableType } from "../../types/tableType";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";
 import { useState } from "react";
+import { PopUp } from "../../modules/PopUp";
 
 const dummyStudySessions: tableType[] = [
     {
@@ -236,6 +237,8 @@ const ITEMS_PER_PAGE = 10
 
 export const StudyTable = ({ category, period, order }: StudyTableProps) => {
     const [page, setPage] = useState(1);
+    const [popUpData, setPopUpData] = useState<tableType | null>(null);
+    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
     const [prevFilters, setPrevFilters] = useState({ category, period, order });
 
@@ -269,58 +272,71 @@ export const StudyTable = ({ category, period, order }: StudyTableProps) => {
     const pageTables = filteredStudyTables.slice(startItem - 1, endItem);
     const totalPages = Math.ceil(filteredStudyTables.length / ITEMS_PER_PAGE);
 
-    return (
-        filteredStudyTables.length === 0 ? (
-            <div>テーブルがありません</div>
-        ) : (
-            <div className="w-full border border-gray-200 rounded-lg overflow-hidden">
-                <table className="w-full border-collapse">
-                    <thead>
-                        <tr className="text-left text-sm text-emerald-900 bg-emerald-50">
-                            <th className="py-3 px-4 font-medium w-40">日付</th>
-                            <th className="py-3 px-4 font-medium w-92">カテゴリ</th>
-                            <th className="py-3 px-4 font-medium w-40">学習時間</th>
-                            <th className="py-3 px-4 font-medium w-108">メモ</th>
-                            <th className="py-3 px-4"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {pageTables.map((data) => (
-                            <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
-                                <td className="py-3 px-4 text-gray-700">{formatDate(data.date)}</td>
-                                <td className="py-3 px-4">
-                                    <div className="flex gap-1 flex-wrap">
-                                        {data.category.map((c) => changeTagByCategory(c))}
-                                    </div>
-                                </td>
-                                <td className="py-3 px-4 text-gray-700">{data.duration}min</td>
-                                <td className="py-3 px-4 text-gray-500">{data.memo}</td>
-                                <td className="py-3 px-4">
-                                    <button className="cursor-pointer text-gray-400 hover:text-red-500"><FaPen /></button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
 
-                <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
-                    <span>全{filteredStudyTables.length}件中 {startItem}〜{endItem}件表示</span>
-                    <div className="flex gap-1">
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
-                            <button
-                                key={num}
-                                onClick={() => setPage(num)}
-                                className={`px-3 py-1 rounded-md text-sm transition-colors ${num === page
-                                    ? "bg-emerald-600 text-white"
-                                    : "border border-gray-300 text-gray-700 hover:bg-gray-100"
-                                    }`}
-                            >
-                                {num}
-                            </button>
-                        ))}
+    return (
+        <div>
+            {filteredStudyTables.length === 0 ? (
+                <div>テーブルがありません</div>
+            ) : (
+                <div className="w-full border border-gray-200 rounded-lg overflow-hidden">
+                    <table className="w-full border-collapse">
+                        <thead>
+                            <tr className="text-left text-sm text-emerald-900 bg-emerald-50">
+                                <th className="py-3 px-4 font-medium w-40">日付</th>
+                                <th className="py-3 px-4 font-medium w-92">カテゴリ</th>
+                                <th className="py-3 px-4 font-medium w-40">学習時間</th>
+                                <th className="py-3 px-4 font-medium w-108">メモ</th>
+                                <th className="py-3 px-4"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {pageTables.map((data) => (
+                                <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
+                                    <td className="py-3 px-4 text-gray-700">{formatDate(data.date)}</td>
+                                    <td className="py-3 px-4">
+                                        <div className="flex gap-1 flex-wrap">
+                                            {data.category.map((c) => changeTagByCategory(c))}
+                                        </div>
+                                    </td>
+                                    <td className="py-3 px-4 text-gray-700">{data.duration}min</td>
+                                    <td className="py-3 px-4 text-gray-500">{data.memo}</td>
+                                    <td className="py-3 px-4">
+                                        <button
+                                            className="cursor-pointer text-gray-400 hover:bg-gray-200 p-2 border border-gray-300 rounded-md"
+                                            onClick={() => {
+                                                setPopUpData(data);
+                                                setIsPopUpOpen(true);
+                                            }}>
+                                            <FaPen />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+
+                    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
+                        <span>全{filteredStudyTables.length}件中 {startItem}〜{endItem}件表示</span>
+                        <div className="flex gap-1">
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                                <button
+                                    key={num}
+                                    onClick={() => setPage(num)}
+                                    className={`px-3 py-1 rounded-md text-sm transition-colors ${num === page
+                                        ? "bg-emerald-600 text-white"
+                                        : "border border-gray-300 text-gray-700 hover:bg-gray-100"
+                                        }`}
+                                >
+                                    {num}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
-        )
+            )}
+            {isPopUpOpen && popUpData !== null && (
+                <PopUp onClose={() => setIsPopUpOpen(false)} data={popUpData} />
+            )}
+        </div>
     );
 }
