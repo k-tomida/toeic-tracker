@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 type Props = {
     children: ReactNode;
-    onClick?: () => void;
+    onClick: () => void;
 };
 
 export const Button = ({ children, onClick }: Props) => {

@@ -1,11 +1,15 @@
 import { Button } from "../../ui/Button"
 
-export const AddSessionButton = () => {
+type AddSessionButtonProps = {
+    onClick: () => void;
+};
+
+export const AddSessionButton = ({ onClick }: AddSessionButtonProps) => {
     return (
-        <Button>
+        <Button onClick={onClick}>
             <div className="flex items-center gap-3">
                 <span>+</span>
-                <span>セッションを追加</span>
+                <span>学習記録を追加</span>
             </div>
         </Button>
     )
