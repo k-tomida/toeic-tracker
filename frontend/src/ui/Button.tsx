@@ -5,7 +5,7 @@ type Props = {
     onClick?: () => void;
 };
 
-export const Button = ({ children, }: Props) => {
+export const Button = ({ children, onClick }: Props) => {
     return (
         <button
             className="
@@ -19,7 +19,8 @@ export const Button = ({ children, }: Props) => {
             duration-200
             hover:-translate-y-0.5 
             cursor-pointer
-            active:bg-gray-200">
+            active:bg-gray-200"
+            onClick={onClick}>
             {children}
         </button>
     );

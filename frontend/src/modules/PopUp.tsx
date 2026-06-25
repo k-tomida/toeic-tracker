@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { tableType } from "../types/tableType";
 import { formatDate } from "../utils/formatDate";
+import { Button } from "../ui/Button";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 type Props = {
     onClose: () => void;
@@ -29,7 +31,6 @@ export const PopUp = ({ onClose, data }: Props) => {
     };
 
     return (
-
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg mx-4">
                 <div className="flex justify-between items-start">
@@ -77,7 +78,7 @@ export const PopUp = ({ onClose, data }: Props) => {
                     </div>
                 </div>
                 {/* メモ */}
-                <div>
+                <div className="my-3">
                     <h2 className="text-gray-600 mb-2">メモ（任意）</h2>
                     <input
                         type="text"
@@ -85,6 +86,15 @@ export const PopUp = ({ onClose, data }: Props) => {
                         onChange={(e) => setMemo(e.target.value)}
                         className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full"
                     />
+                </div>
+                {/* 削除ボタンと保存ボタン */}
+                <div className="flex justify-between mt-7 ">
+                    <Button onClick={onClose}>
+                        <span className="flex gap-2 items-center">
+                            <FaRegTrashAlt /> 削除
+                        </span>
+                    </Button>
+                    <Button onClick={onClose}>保存する</Button>
                 </div>
             </div>
         </div>
