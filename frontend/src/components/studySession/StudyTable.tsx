@@ -5,7 +5,6 @@ import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
 import type { tableType } from "../../types/tableType";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";
 import { useState } from "react";
-import { PopUp } from "../../modules/PopUp";
 
 const dummyStudySessions: tableType[] = [
     {
@@ -224,6 +223,7 @@ type StudyTableProps = {
     category: string;
     period: string;
     order: string;
+    onEdit: (data: tableType) => void; // ← 追加
 };
 
 const categoryLabelMap: Record<string, string> = {
@@ -235,10 +235,8 @@ const categoryLabelMap: Record<string, string> = {
 
 const ITEMS_PER_PAGE = 10
 
-export const StudyTable = ({ category, period, order }: StudyTableProps) => {
+export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps) => {
     const [page, setPage] = useState(1);
-    const [popUpData, setPopUpData] = useState<tableType | null>(null);
-    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
     const [prevFilters, setPrevFilters] = useState({ category, period, order });
 
@@ -303,10 +301,7 @@ export const StudyTable = ({ category, period, order }: StudyTableProps) => {
                                     <td className="py-3 px-4">
                                         <button
                                             className="cursor-pointer text-gray-400 hover:bg-gray-200 p-2 border border-gray-300 rounded-md"
-                                            onClick={() => {
-                                                setPopUpData(data);
-                                                setIsPopUpOpen(true);
-                                            }}>
+                                            onClick={() => onEdit(data)}>
                                             <FaPen />
                                         </button>
                                     </td>
@@ -333,9 +328,6 @@ export const StudyTable = ({ category, period, order }: StudyTableProps) => {
                         </div>
                     </div>
                 </div>
-            )}
-            {isPopUpOpen && popUpData !== null && (
-                <PopUp onClose={() => setIsPopUpOpen(false)} data={popUpData} />
             )}
         </div>
     );

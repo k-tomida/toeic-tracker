@@ -4,6 +4,8 @@ import { CiFilter } from "react-icons/ci";
 import { StudyTable } from "../components/studySession/StudyTable";
 import { useState } from "react";
 import { Select } from "../ui/Select";
+import { PopUp } from "../modules/PopUp";
+import type { tableType } from "../types/tableType";
 
 type categoryType = {
     label: string;
@@ -35,8 +37,16 @@ export const StudyManagementPage = () => {
     const [category, setCategory] = useState(categoryOptions[0].value);
     const [period, setPeriod] = useState(periodOptions[0].value);
     const [order, setOrder] = useState(orderOptions[0].value);
+    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    const [popUpData, setPopUpData] = useState<tableType | null>(null);
+
+    const openPopUp = (data: tableType | null) => {
+        setPopUpData(data);
+        setIsPopUpOpen(true);
+    };
+
     return (
-        <div className="min-h-screen ">
+        <div className="min-h-screen">
             <Header />
             <main className="max-w-7xl mx-auto px-4 py-6">
                 <div className="flex items-center justify-between">
@@ -46,12 +56,23 @@ export const StudyManagementPage = () => {
                         <Select name="period" value={period} onChange={setPeriod} options={periodOptions} />
                         <Select name="order" value={order} onChange={setOrder} options={orderOptions} />
                     </div>
-                    <AddSessionButton />
+                    <AddSessionButton onClick={() => openPopUp(null)} />
                 </div>
                 <div className="m-6">
-                    <StudyTable category={category} period={period} order={order} />
+                    <StudyTable
+                        category={category}
+                        period={period}
+                        order={order}
+                        onEdit={(data) => openPopUp(data)}
+                    />
                 </div>
             </main>
+            {isPopUpOpen && (
+                <PopUp
+                    onClose={() => setIsPopUpOpen(false)}
+                    data={popUpData}
+                />
+            )}
         </div>
-    )
-}
+    );
+};
