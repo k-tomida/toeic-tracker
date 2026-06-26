@@ -50,7 +50,10 @@ export const StudyManagementPage = () => {
         <div className="min-h-screen">
             <Header />
             <main className="max-w-7xl mx-auto px-4 py-6">
-                <StudyTimeSummary />
+                <div className="flex flex-wrap gap-4 mx-10">
+                    <StudyTimeSummary />
+                    <StudyTimeSummary />
+                </div>
                 <div className="flex items-center justify-between">
                     <div className="flex justify-center gap-5 bg-emerald-50 border border-emerald-200 p-3 m-4 rounded-lg items-center flex-wrap">
                         <CiFilter size={28} />
