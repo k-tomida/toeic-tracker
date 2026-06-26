@@ -59,7 +59,7 @@ export const HeatMap = () => {
 
     return (
         <div className="bg-white rounded-xl p-4 overflow-x-auto m-10 border border-gray-300">
-            <div className="min-w-fit pr-4">
+            <div className="min-w-fit pr-4 ml-10">
                 <p className="mb-3 text-xl font-medium text-gray-600">学習アクティビティ</p>
                 {/* 月ラベル */}
                 <div className="whitespace-nowrap">
