@@ -1,11 +1,4 @@
-type Data = {
-    date: string;
-    studyTime: number;
-}
-
-type Props = {
-    data: Data[];
-}
+import { dummyStudySessions } from "../../data/dummyStudySession";
 
 /** 
  * 引数のstartDateから一年間の日付を取得する
@@ -25,7 +18,7 @@ function getDatesForOneYear(startDate: Date): string[] {
     return dates;
 }
 
-export const HeatMap = ({ data }: Props) => {
+export const HeatMap = () => {
     const dates = getDatesForOneYear(new Date("2026-01-01"));
 
     // 7行（日〜土）× 53列のグリッドに並べる==========
@@ -49,8 +42,8 @@ export const HeatMap = ({ data }: Props) => {
     // 7行（日〜土）× 53列のグリッドに並べる==========
 
     const getStudyTimeByDate = (date: string) => {
-        const studyData = data.find(item => item.date === date);
-        return studyData ? studyData.studyTime : 0;
+        const studyData = dummyStudySessions.find(item => item.date === date);
+        return studyData ? studyData.duration : 0;
     }
 
     const getColor = (count: number) => {
@@ -68,45 +61,47 @@ export const HeatMap = ({ data }: Props) => {
         <div className="bg-white rounded-xl p-4 overflow-x-auto m-10 border border-gray-300">
             <div className="min-w-fit pr-4">
                 <p className="mb-3 text-xl font-medium text-gray-600">学習アクティビティ</p>
-                {/* 月ラベル */}
-                <div className="whitespace-nowrap">
-                    {months.map((month, mi) => (
-                        <span
-                            key={mi}
-                            className="text-sm text-gray-400 pr-6 pl-6 "
-                        >{month}
-                        </span>
-                    ))}
-                </div>
-                <div className="flex gap-1">
-                    {/* 曜日ラベル */}
-                    <div className="flex flex-col gap-1 mr-1">
-                        {["", "月", "", "水", "", "金", ""].map((d, i) => (
-                            <div key={i} className="w-3 h-3 text-xs text-gray-400 flex items-center">
-                                {d}
+                <div className="ml-10">
+                    {/* 月ラベル */}
+                    <div className="whitespace-nowrap">
+                        {months.map((month, mi) => (
+                            <span
+                                key={mi}
+                                className="text-sm text-gray-400 pr-6 pl-6 "
+                            >{month}
+                            </span>
+                        ))}
+                    </div>
+                    <div className="flex gap-1">
+                        {/* 曜日ラベル */}
+                        <div className="flex flex-col gap-1 mr-1">
+                            {["", "月", "", "水", "", "金", ""].map((d, i) => (
+                                <div key={i} className="w-3 h-3 text-xs text-gray-400 flex items-center">
+                                    {d}
+                                </div>
+                            ))}
+                        </div>
+                        {/* 週ごとの列 */}
+                        {weeks.map((week, wi) => (
+                            <div key={wi} className="flex flex-col gap-1">
+                                {week.map((date, di) => (
+                                    <div
+                                        key={di}
+                                        className={`w-3 h-3 rounded-sm ${date ? getColor(getStudyTimeByDate(date)) : "bg-transparent"}`}
+                                        title={`${date}: ${getStudyTimeByDate(date)}分`}
+                                    />
+                                ))}
                             </div>
                         ))}
                     </div>
-                    {/* 週ごとの列 */}
-                    {weeks.map((week, wi) => (
-                        <div key={wi} className="flex flex-col gap-1">
-                            {week.map((date, di) => (
-                                <div
-                                    key={di}
-                                    className={`w-3 h-3 rounded-sm ${date ? getColor(getStudyTimeByDate(date)) : "bg-transparent"}`}
-                                    title={`${date}: ${getStudyTimeByDate(date)}分`}
-                                />
-                            ))}
-                        </div>
-                    ))}
-                </div>
-                {/* 凡例ラベル */}
-                <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
-                    <span>少ない</span>
-                    {["bg-gray-100", "bg-green-200", "bg-green-400", "bg-green-600", "bg-green-800"].map((c) => (
-                        <div key={c} className={`w-3 h-3 rounded-sm ${c}`} />
-                    ))}
-                    <span>多い</span>
+                    {/* 凡例ラベル */}
+                    <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
+                        <span>少ない</span>
+                        {["bg-gray-100", "bg-green-200", "bg-green-400", "bg-green-600", "bg-green-800"].map((c) => (
+                            <div key={c} className={`w-3 h-3 rounded-sm ${c}`} />
+                        ))}
+                        <span>多い</span>
+                    </div>
                 </div>
             </div>
         </div>
