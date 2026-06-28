@@ -1,1 +1,0 @@
-export type OrderType = "newest" | "oldest" | "longest";

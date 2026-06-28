@@ -1,1 +1,0 @@
-export type periodType = "all" | "thisMonth" | "lastMonth" | "lastThreeMonth";
