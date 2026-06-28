@@ -6,13 +6,14 @@ import type { tableType } from "../../types/tableType";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";
 import { useState } from "react";
 import { dummyStudySessions } from "../../data/dummyStudySession";
+import type { OrderType } from "../../types/orderType";
 
 
 type StudyTableProps = {
     category: string;
     period: string;
-    order: string;
-    onEdit: (data: tableType) => void; // ← 追加
+    order: OrderType;
+    onEdit: (data: tableType) => void;
 };
 
 const categoryLabelMap: Record<string, string> = {

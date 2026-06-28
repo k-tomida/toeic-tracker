@@ -59,47 +59,49 @@ export const HeatMap = () => {
 
     return (
         <div className="bg-white rounded-xl p-4 overflow-x-auto m-10 border border-gray-300">
-            <div className="min-w-fit pr-4 ml-10">
+            <div className="min-w-fit pr-4">
                 <p className="mb-3 text-xl font-medium text-gray-600">学習アクティビティ</p>
-                {/* 月ラベル */}
-                <div className="whitespace-nowrap">
-                    {months.map((month, mi) => (
-                        <span
-                            key={mi}
-                            className="text-sm text-gray-400 pr-6 pl-6 "
-                        >{month}
-                        </span>
-                    ))}
-                </div>
-                <div className="flex gap-1">
-                    {/* 曜日ラベル */}
-                    <div className="flex flex-col gap-1 mr-1">
-                        {["", "月", "", "水", "", "金", ""].map((d, i) => (
-                            <div key={i} className="w-3 h-3 text-xs text-gray-400 flex items-center">
-                                {d}
+                <div className="ml-10">
+                    {/* 月ラベル */}
+                    <div className="whitespace-nowrap">
+                        {months.map((month, mi) => (
+                            <span
+                                key={mi}
+                                className="text-sm text-gray-400 pr-6 pl-6 "
+                            >{month}
+                            </span>
+                        ))}
+                    </div>
+                    <div className="flex gap-1">
+                        {/* 曜日ラベル */}
+                        <div className="flex flex-col gap-1 mr-1">
+                            {["", "月", "", "水", "", "金", ""].map((d, i) => (
+                                <div key={i} className="w-3 h-3 text-xs text-gray-400 flex items-center">
+                                    {d}
+                                </div>
+                            ))}
+                        </div>
+                        {/* 週ごとの列 */}
+                        {weeks.map((week, wi) => (
+                            <div key={wi} className="flex flex-col gap-1">
+                                {week.map((date, di) => (
+                                    <div
+                                        key={di}
+                                        className={`w-3 h-3 rounded-sm ${date ? getColor(getStudyTimeByDate(date)) : "bg-transparent"}`}
+                                        title={`${date}: ${getStudyTimeByDate(date)}分`}
+                                    />
+                                ))}
                             </div>
                         ))}
                     </div>
-                    {/* 週ごとの列 */}
-                    {weeks.map((week, wi) => (
-                        <div key={wi} className="flex flex-col gap-1">
-                            {week.map((date, di) => (
-                                <div
-                                    key={di}
-                                    className={`w-3 h-3 rounded-sm ${date ? getColor(getStudyTimeByDate(date)) : "bg-transparent"}`}
-                                    title={`${date}: ${getStudyTimeByDate(date)}分`}
-                                />
-                            ))}
-                        </div>
-                    ))}
-                </div>
-                {/* 凡例ラベル */}
-                <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
-                    <span>少ない</span>
-                    {["bg-gray-100", "bg-green-200", "bg-green-400", "bg-green-600", "bg-green-800"].map((c) => (
-                        <div key={c} className={`w-3 h-3 rounded-sm ${c}`} />
-                    ))}
-                    <span>多い</span>
+                    {/* 凡例ラベル */}
+                    <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
+                        <span>少ない</span>
+                        {["bg-gray-100", "bg-green-200", "bg-green-400", "bg-green-600", "bg-green-800"].map((c) => (
+                            <div key={c} className={`w-3 h-3 rounded-sm ${c}`} />
+                        ))}
+                        <span>多い</span>
+                    </div>
                 </div>
             </div>
         </div>

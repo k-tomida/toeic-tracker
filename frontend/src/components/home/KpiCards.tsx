@@ -5,8 +5,8 @@ import { TfiCup } from "react-icons/tfi";
 import { LuNotebookPen } from "react-icons/lu";
 import { KpiCard } from "../../modules/KpiCard";
 import { calcStreak } from "../../utils/calcStreak";
-import { calcMaxStreak } from "../../utils/calcMaxStreak";
-import { calcStudyTimeInMonth } from "../../utils/calcStudyTimeInMonth";
+import { calcMaxStreak } from "../../utils/calcStreak";
+import { calcStudyTimeInMonth } from "../../utils/calcStudyTime";
 
 export const KpiCards = () => {
     const today = new Date();
