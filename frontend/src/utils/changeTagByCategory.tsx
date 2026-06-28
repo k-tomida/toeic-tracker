@@ -9,7 +9,7 @@ const tagStyles: Record<string, string> = {
 //カテゴリ別にタグの色を変える関数
 export const changeTagByCategory = (category: string): ReactNode => {
     return (
-        <span className={`text-sm px-2 py-0.5 rounded-full font-medium ${tagStyles[category]}`} key={category}>
+        <span className={`text-sm px-2 py-0.5 rounded-full font-medium ${tagStyles[category]}`}>
             {category}
         </span>
     )

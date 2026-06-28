@@ -6,36 +6,37 @@ import { useState } from "react";
 import { Select } from "../ui/Select";
 import { PopUp } from "../modules/PopUp";
 import type { tableType } from "../types/tableType";
-import { StudyTimeSummary } from "../components/studySession/StudyTimeSummary";
-import type { OrderType } from "../types/orderType";
-import type { categoryType } from "../types/categoryType";
-import type { periodType } from "../types/periodType";
 
-const categoryOptions: { label: string, value: categoryType }[] = [
+type categoryType = {
+    label: string;
+    value: string;
+}
+
+const categoryOptions: categoryType[] = [
     { label: "すべてのカテゴリ", value: "all" },
     { label: "リスニング", value: "listening" },
     { label: "単語", value: "vocabulary" },
     { label: "文法", value: "grammar" },
-    { label: "模試", value: "mockExam" },
+    { label: "模試", value: "full" },
 ];
 
-const periodOptions: { label: string, value: periodType }[] = [
+const periodOptions: categoryType[] = [
     { label: "期間 : すべて", value: "all" },
     { label: "今月", value: "thisMonth" },
     { label: "先月", value: "lastMonth" },
     { label: "過去3ヶ月", value: "lastThreeMonth" }
 ];
 
-const orderOptions: { label: string, value: OrderType }[] = [
+const orderOptions: categoryType[] = [
     { label: "並び順 : 新しい順", value: "newest" },
     { label: "古い順", value: "oldest" },
     { label: "学習時間が長い順", value: "longest" },
 ];
 
 export const StudyManagementPage = () => {
-    const [category, setCategory] = useState<string>(categoryOptions[0].value);
-    const [period, setPeriod] = useState<string>(periodOptions[0].value);
-    const [order, setOrder] = useState<string>(orderOptions[0].value);
+    const [category, setCategory] = useState(categoryOptions[0].value);
+    const [period, setPeriod] = useState(periodOptions[0].value);
+    const [order, setOrder] = useState(orderOptions[0].value);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [popUpData, setPopUpData] = useState<tableType | null>(null);
 
@@ -48,10 +49,6 @@ export const StudyManagementPage = () => {
         <div className="min-h-screen">
             <Header />
             <main className="max-w-7xl mx-auto px-4 py-6">
-                <div className="flex flex-wrap gap-10 mx-10 my-5">
-                    <StudyTimeSummary />
-                    <StudyTimeSummary />
-                </div>
                 <div className="flex items-center justify-between">
                     <div className="flex justify-center gap-5 bg-emerald-50 border border-emerald-200 p-3 m-4 rounded-lg items-center flex-wrap">
                         <CiFilter size={28} />
