@@ -15,7 +15,7 @@ export const KpiCards = () => {
     const diff = calcStudyTimeInMonth(today) - calcStudyTimeInMonth(lastMonth);
     const diffStr = diff >= 0 ? `+${diff}` : `${diff}`;
     return (
-        <div className="flex max-w-7xl mx-auto justify-between flex-wrap">
+        <div className="flex max-w-7xl lg:mx-8 mx-auto justify-between flex-wrap ">
             <KpiCard title={<span className="flex items-center gap-1"><AiOutlineFire />ストリーク</span>} value={calcStreak()} unit="日" sub={`過去最高 ${calcMaxStreak()}日`} />
             <KpiCard title={<span className="flex items-center gap-1"><FaRegClock />今月の学習時間</span>} value={calcStudyTimeInMonth(today)} unit="h" sub={`先月比 ${diffStr}h`} />
             <KpiCard title={<span className="flex items-center gap-1"><TfiCup />最新スコア</span>} value={820} sub="前回比 +25" />
