@@ -16,7 +16,7 @@ export const StudyTimeSummary = () => {
     const diffStrMonth = diffMonth >= 0 ? `+${diffMonth}` : `${diffMonth}`;
 
     return (
-        <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0 min-w-[400px]">
+        <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-[400px]">
             <h2 className="mb-3 text-xl font-medium text-gray-600">学習時間サマリー</h2>
             <div>
                 <div className="flex mx-auto justify-center flex-wrap xl:gap-8">

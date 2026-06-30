@@ -34,9 +34,9 @@ const orderOptions: { label: string, value: OrderType }[] = [
 ];
 
 export const StudyManagementPage = () => {
-    const [category, setCategory] = useState<string>(categoryOptions[0].value);
-    const [period, setPeriod] = useState<string>(periodOptions[0].value);
-    const [order, setOrder] = useState<string>(orderOptions[0].value);
+    const [category, setCategory] = useState<categoryType>(categoryOptions[0].value);
+    const [period, setPeriod] = useState<periodType>(periodOptions[0].value);
+    const [order, setOrder] = useState<OrderType>(orderOptions[0].value);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [popUpData, setPopUpData] = useState<tableType | null>(null);
 
