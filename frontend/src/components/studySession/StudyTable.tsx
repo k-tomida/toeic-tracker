@@ -6,19 +6,15 @@ import type { tableType } from "../../types/tableType";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";
 import { useState } from "react";
 import { dummyStudySessions } from "../../data/dummyStudySession";
+import type { categoryType } from "../../types/categoryType";
+import type { periodType } from "../../types/periodType";
+import type { OrderType } from "../../types/orderType";
 
 type StudyTableProps = {
-    category: string;
-    period: string;
-    order: string;
+    category: categoryType;
+    period: periodType;
+    order: OrderType;
     onEdit: (data: tableType) => void;
-};
-
-const categoryLabelMap: Record<string, string> = {
-    listening: "リスニング",
-    vocabulary: "単語",
-    grammar: "文法",
-    full: "模試",
 };
 
 const ITEMS_PER_PAGE = 10
@@ -42,7 +38,7 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
     let filteredStudyTables: tableType[] =
         category !== "all"
             ? dummyStudySessions.filter((studyTable) =>
-                studyTable.category.includes(categoryLabelMap[category])
+                studyTable.category.includes(category)
             )
             : dummyStudySessions;
 

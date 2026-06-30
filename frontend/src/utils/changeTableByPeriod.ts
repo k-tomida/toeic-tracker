@@ -1,7 +1,8 @@
+import type { periodType } from "../types/periodType";
 import type { tableType } from "../types/tableType";
 
 
-export const changeTableByPeriod = (period: string, filteredStudyTables: tableType[]): tableType[] => {
+export const changeTableByPeriod = (period: periodType, filteredStudyTables: tableType[]): tableType[] => {
     const today = new Date();
     const thisMonth = today.getMonth() + 1;
     const thisYear = today.getFullYear();

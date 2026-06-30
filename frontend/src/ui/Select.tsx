@@ -1,6 +1,10 @@
+import type { categoryType } from "../types/categoryType";
+import type { OrderType } from "../types/orderType";
+import type { periodType } from "../types/periodType";
+
 type Props = {
     name: string;
-    value: string;
+    value: OrderType | periodType | categoryType;
     onChange: (value: string) => void;
     options: { value: string; label: string }[];
 };
