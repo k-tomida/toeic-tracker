@@ -1,4 +1,5 @@
 import { dummyStudySessions } from "../data/dummyStudySession"
+import type { categoryType } from "../types/categoryType";
 import { sortTableByOrder } from "./sortTableByOrder";
 
 export const calcStudyTimeInWeek = (day: Date): number => {
@@ -57,3 +58,20 @@ export const calcMonthsFromStart = (): number => {
     const months = today.getMonth() - startDate.getMonth();
     return years * 12 + months;
 }
+
+export const calcStudyTimeByCategory = (category: categoryType): number => {
+    const thisMonth = new Date().getMonth() + 1;
+    const thisYear = new Date().getFullYear();
+    let count = 0;
+
+    dummyStudySessions.forEach((d) => {
+        const date = new Date(d.date);
+        if (thisMonth === date.getMonth() + 1 && thisYear === date.getFullYear()) {
+            if (d.category.includes(category)) {
+                count += d.duration;
+            }
+        }
+    })
+    return Math.round(count / 60);
+}
+

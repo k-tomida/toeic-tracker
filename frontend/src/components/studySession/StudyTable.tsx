@@ -6,21 +6,16 @@ import type { tableType } from "../../types/tableType";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";
 import { useState } from "react";
 import { dummyStudySessions } from "../../data/dummyStudySession";
+import type { categoryType } from "../../types/categoryType";
+import type { periodType } from "../../types/periodType";
 import type { OrderType } from "../../types/orderType";
-
+import { getPageNumbers } from "../../utils/getPageNumbers";
 
 type StudyTableProps = {
-    category: string;
-    period: string;
+    category: categoryType;
+    period: periodType;
     order: OrderType;
     onEdit: (data: tableType) => void;
-};
-
-const categoryLabelMap: Record<string, string> = {
-    listening: "リスニング",
-    vocabulary: "単語",
-    grammar: "文法",
-    full: "模試",
 };
 
 const ITEMS_PER_PAGE = 10
@@ -44,7 +39,7 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
     let filteredStudyTables: tableType[] =
         category !== "all"
             ? dummyStudySessions.filter((studyTable) =>
-                studyTable.category.includes(categoryLabelMap[category])
+                studyTable.category.includes(category)
             )
             : dummyStudySessions;
 
@@ -103,13 +98,16 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
                     <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
                         <span>全{filteredStudyTables.length}件中 {startItem}〜{endItem}件表示</span>
                         <div className="flex gap-1">
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                            {getPageNumbers(page, totalPages).map((num, i) => (
                                 <button
-                                    key={num}
-                                    onClick={() => setPage(num)}
+                                    key={i}
+                                    onClick={() => typeof num === "number" && setPage(num)}
+                                    disabled={num === "..."}
                                     className={`px-3 py-1 rounded-md text-sm transition-colors ${num === page
                                         ? "bg-emerald-600 text-white"
-                                        : "border border-gray-300 text-gray-700 hover:bg-gray-100"
+                                        : num === "..."
+                                            ? "text-gray-400 cursor-default"
+                                            : "border border-gray-300 text-gray-700 hover:bg-gray-100"
                                         }`}
                                 >
                                     {num}

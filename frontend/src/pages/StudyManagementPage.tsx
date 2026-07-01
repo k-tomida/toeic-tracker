@@ -10,6 +10,7 @@ import { StudyTimeSummary } from "../components/studySession/StudyTimeSummary";
 import type { OrderType } from "../types/orderType";
 import type { categoryType } from "../types/categoryType";
 import type { periodType } from "../types/periodType";
+import { CategoryBreakdown } from "../components/studySession/CategoryBreakdown";
 
 const categoryOptions: { label: string, value: categoryType }[] = [
     { label: "すべてのカテゴリ", value: "all" },
@@ -33,9 +34,9 @@ const orderOptions: { label: string, value: OrderType }[] = [
 ];
 
 export const StudyManagementPage = () => {
-    const [category, setCategory] = useState<string>(categoryOptions[0].value);
-    const [period, setPeriod] = useState<string>(periodOptions[0].value);
-    const [order, setOrder] = useState<string>(orderOptions[0].value);
+    const [category, setCategory] = useState<categoryType>(categoryOptions[0].value);
+    const [period, setPeriod] = useState<periodType>(periodOptions[0].value);
+    const [order, setOrder] = useState<OrderType>(orderOptions[0].value);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [popUpData, setPopUpData] = useState<tableType | null>(null);
 
@@ -48,12 +49,12 @@ export const StudyManagementPage = () => {
         <div className="min-h-screen">
             <Header />
             <main className="max-w-7xl mx-auto px-4 py-6">
-                <div className="flex flex-wrap gap-10 mx-10 my-5">
+                <div className="flex flex-wrap gap-4 mx-10 my-5">
                     <StudyTimeSummary />
-                    <StudyTimeSummary />
+                    <CategoryBreakdown />
                 </div>
-                <div className="flex items-center justify-between">
-                    <div className="flex justify-center gap-5 bg-emerald-50 border border-emerald-200 p-3 m-4 rounded-lg items-center flex-wrap">
+                <div className="flex items-center justify-between m-10">
+                    <div className="flex justify-center gap-5 bg-emerald-50 border border-emerald-200 p-3 rounded-lg items-center flex-wrap">
                         <CiFilter size={28} />
                         <Select name="category" value={category} onChange={setCategory} options={categoryOptions} />
                         <Select name="period" value={period} onChange={setPeriod} options={periodOptions} />
@@ -61,7 +62,7 @@ export const StudyManagementPage = () => {
                     </div>
                     <AddSessionButton onClick={() => openPopUp(null)} />
                 </div>
-                <div className="m-6">
+                <div className="my-6 mx-10">
                     <StudyTable
                         category={category}
                         period={period}
