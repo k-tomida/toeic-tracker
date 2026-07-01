@@ -5,7 +5,7 @@ const tagStyles: Record<categoryType, string> = {
     listening: "bg-blue-50 text-blue-800 border border-blue-200",
     vocabulary: "bg-amber-50 text-amber-800 border border-amber-200",
     grammar: "bg-green-50 text-green-800 border border-green-200",
-    mockExam: "bg-orange-50 text-orange-800 border border-orange-200",
+    mockExam: "bg-purple-50 text-purple-800 border border-purple-200",
     all: "bg-gray-100 text-gray-700 border border-gray-200",
 };
 

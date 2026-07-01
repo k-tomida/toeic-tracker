@@ -9,6 +9,7 @@ import { dummyStudySessions } from "../../data/dummyStudySession";
 import type { categoryType } from "../../types/categoryType";
 import type { periodType } from "../../types/periodType";
 import type { OrderType } from "../../types/orderType";
+import { getPageNumbers } from "../../utils/getPageNumbers";
 
 type StudyTableProps = {
     category: categoryType;
@@ -97,13 +98,16 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
                     <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
                         <span>全{filteredStudyTables.length}件中 {startItem}〜{endItem}件表示</span>
                         <div className="flex gap-1">
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                            {getPageNumbers(page, totalPages).map((num, i) => (
                                 <button
-                                    key={num}
-                                    onClick={() => setPage(num)}
+                                    key={i}
+                                    onClick={() => typeof num === "number" && setPage(num)}
+                                    disabled={num === "..."}
                                     className={`px-3 py-1 rounded-md text-sm transition-colors ${num === page
                                         ? "bg-emerald-600 text-white"
-                                        : "border border-gray-300 text-gray-700 hover:bg-gray-100"
+                                        : num === "..."
+                                            ? "text-gray-400 cursor-default"
+                                            : "border border-gray-300 text-gray-700 hover:bg-gray-100"
                                         }`}
                                 >
                                     {num}
