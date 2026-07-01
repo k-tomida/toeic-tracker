@@ -5,232 +5,17 @@ import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
 import type { tableType } from "../../types/tableType";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";
 import { useState } from "react";
-
-const dummyStudySessions: tableType[] = [
-    {
-        id: "1",
-        date: "2026-06-16",
-        category: ["模試", "リスニング", "単語", "文法"],
-        duration: 120,
-        memo: "公式問題集Vol.3",
-    },
-    {
-        id: "2",
-        date: "2026-06-15",
-        category: ["単語"],
-        duration: 30,
-        memo: "アプリで100問",
-    },
-    {
-        id: "3",
-        date: "2026-06-14",
-        category: ["文法"],
-        duration: 60,
-        memo: "Part5対策",
-    },
-    {
-        id: "4",
-        date: "2026-06-13",
-        category: ["リスニング"],
-        duration: 45,
-        memo: "Part2集中練習",
-    },
-    {
-        id: "5",
-        date: "2026-06-12",
-        category: ["単語"],
-        duration: 50,
-        memo: "アプリで150問",
-    },
-    {
-        id: "6",
-        date: "2026-06-10",
-        category: ["模試"],
-        duration: 120,
-        memo: "公式問題集Vol.2",
-    },
-    {
-        id: "7",
-        date: "2026-06-08",
-        category: ["文法"],
-        duration: 20,
-        memo: "Part6対策",
-    },
-    {
-        id: "8",
-        date: "2026-06-06",
-        category: ["リスニング"],
-        duration: 40,
-        memo: "Part3,4ディクテーション",
-    },
-    {
-        id: "9",
-        date: "2026-06-04",
-        category: ["単語"],
-        duration: 35,
-        memo: "単語帳2周目",
-    },
-    {
-        id: "10",
-        date: "2026-06-02",
-        category: ["文法"],
-        duration: 55,
-        memo: "Part5,6まとめ",
-    },
-    {
-        id: "11",
-        date: "2026-05-31",
-        category: ["リスニング"],
-        duration: 50,
-        memo: "Part3シャドーイング",
-    },
-    {
-        id: "12",
-        date: "2026-05-29",
-        category: ["単語"],
-        duration: 40,
-        memo: "金フレ200語",
-    },
-    {
-        id: "13",
-        date: "2026-05-27",
-        category: ["文法"],
-        duration: 45,
-        memo: "時制復習",
-    },
-    {
-        id: "14",
-        date: "2026-05-25",
-        category: ["模試"],
-        duration: 120,
-        memo: "公式問題集Vol.1",
-    },
-    {
-        id: "15",
-        date: "2026-05-23",
-        category: ["リスニング"],
-        duration: 35,
-        memo: "Part2復習",
-    },
-    {
-        id: "16",
-        date: "2026-05-21",
-        category: ["単語"],
-        duration: 30,
-        memo: "アプリで80問",
-    },
-    {
-        id: "17",
-        date: "2026-05-19",
-        category: ["文法"],
-        duration: 60,
-        memo: "仮定法まとめ",
-    },
-    {
-        id: "18",
-        date: "2026-05-17",
-        category: ["リスニング"],
-        duration: 55,
-        memo: "Part4対策",
-    },
-    {
-        id: "19",
-        date: "2026-05-15",
-        category: ["単語"],
-        duration: 45,
-        memo: "金フレ3周目",
-    },
-    {
-        id: "20",
-        date: "2026-05-13",
-        category: ["模試"],
-        duration: 120,
-        memo: "オンライン模試",
-    },
-    {
-        id: "21",
-        date: "2026-05-11",
-        category: ["文法"],
-        duration: 35,
-        memo: "Part5演習",
-    },
-    {
-        id: "22",
-        date: "2026-05-09",
-        category: ["リスニング"],
-        duration: 40,
-        memo: "ニュース英語",
-    },
-    {
-        id: "23",
-        date: "2026-05-07",
-        category: ["単語"],
-        duration: 25,
-        memo: "金フレ復習",
-    },
-    {
-        id: "24",
-        date: "2026-05-05",
-        category: ["文法"],
-        duration: 50,
-        memo: "接続詞問題",
-    },
-    {
-        id: "25",
-        date: "2026-05-03",
-        category: ["リスニング"],
-        duration: 45,
-        memo: "Part1,2練習",
-    },
-    {
-        id: "26",
-        date: "2026-05-01",
-        category: ["単語"],
-        duration: 35,
-        memo: "英単語帳チェック",
-    },
-    {
-        id: "27",
-        date: "2026-04-29",
-        category: ["模試"],
-        duration: 120,
-        memo: "時間計測あり",
-    },
-    {
-        id: "28",
-        date: "2026-04-27",
-        category: ["文法"],
-        duration: 40,
-        memo: "関係詞復習",
-    },
-    {
-        id: "29",
-        date: "2026-04-25",
-        category: ["リスニング"],
-        duration: 60,
-        memo: "Part3,4総復習",
-    },
-    {
-        id: "30",
-        date: "2026-04-23",
-        category: ["単語"],
-        duration: 30,
-        memo: "アプリで120問",
-    },
-];
+import { dummyStudySessions } from "../../data/dummyStudySession";
+import type { categoryType } from "../../types/categoryType";
+import type { periodType } from "../../types/periodType";
+import type { orderType } from "../../types/orderType";
+import { getPageNumbers } from "../../utils/getPageNumbers";
 
 type StudyTableProps = {
-    category: string;
-    period: string;
-    order: string;
-    onEdit: (data: tableType) => void; // ← 追加
-};
-
-const categoryLabelMap: Record<string, string> = {
-    listening: "リスニング",
-    vocabulary: "単語",
-    grammar: "文法",
-    full: "模試",
+    category: categoryType;
+    period: periodType;
+    order: orderType;
+    onEdit: (data: tableType) => void;
 };
 
 const ITEMS_PER_PAGE = 10
@@ -254,7 +39,7 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
     let filteredStudyTables: tableType[] =
         category !== "all"
             ? dummyStudySessions.filter((studyTable) =>
-                studyTable.category.includes(categoryLabelMap[category])
+                studyTable.category.includes(category)
             )
             : dummyStudySessions;
 
@@ -313,13 +98,16 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
                     <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
                         <span>全{filteredStudyTables.length}件中 {startItem}〜{endItem}件表示</span>
                         <div className="flex gap-1">
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                            {getPageNumbers(page, totalPages).map((num, i) => (
                                 <button
-                                    key={num}
-                                    onClick={() => setPage(num)}
+                                    key={i}
+                                    onClick={() => typeof num === "number" && setPage(num)}
+                                    disabled={num === "..."}
                                     className={`px-3 py-1 rounded-md text-sm transition-colors ${num === page
                                         ? "bg-emerald-600 text-white"
-                                        : "border border-gray-300 text-gray-700 hover:bg-gray-100"
+                                        : num === "..."
+                                            ? "text-gray-400 cursor-default"
+                                            : "border border-gray-300 text-gray-700 hover:bg-gray-100"
                                         }`}
                                 >
                                     {num}

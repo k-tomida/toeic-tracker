@@ -3,6 +3,7 @@ import type { tableType } from "../types/tableType";
 import { formatDate } from "../utils/formatDate";
 import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
+import type { categoryType } from "../types/categoryType";
 
 type Props = {
     onClose: () => void;
@@ -10,13 +11,20 @@ type Props = {
 };
 
 const tagStyles: Record<string, string> = {
-    リスニング: "bg-blue-50 text-blue-800 border border-blue-200",
-    単語: "bg-amber-50 text-amber-800 border border-amber-200",
-    文法: "bg-green-50 text-green-800 border border-green-200",
-    模試: "bg-orange-50 text-orange-800 border border-orange-200",
+    listening: "bg-blue-50 text-blue-800 border border-blue-200",
+    vocabulary: "bg-amber-50 text-amber-800 border border-amber-200",
+    grammar: "bg-green-50 text-green-800 border border-green-200",
+    mockExam: "bg-purple-50 text-purple-800 border border-purple-200",
 };
 
-const allCategories = ["模試", "リスニング", "単語", "文法"];
+const categoryLabelMap: Record<string, string> = {
+    listening: "リスニング",
+    vocabulary: "単語",
+    grammar: "文法",
+    mockExam: "模試"
+};
+
+const allCategories: categoryType[] = ["mockExam", "listening", "vocabulary", "grammar"];
 
 export const PopUp = ({ onClose, data }: Props) => {
     const [date, setDate] = useState(data?.date ?? "");
@@ -24,7 +32,7 @@ export const PopUp = ({ onClose, data }: Props) => {
     const [category, setCategory] = useState(data?.category ?? []);
     const [memo, setMemo] = useState(data?.memo ?? "");
 
-    const toggleCategory = (c: string) => {
+    const toggleCategory = (c: categoryType) => {
         setCategory((prev) =>
             prev.includes(c) ? prev.filter((item) => item !== c) : [...prev, c]
         );
@@ -74,7 +82,7 @@ export const PopUp = ({ onClose, data }: Props) => {
                                 className={`text-sm px-2 py-0.5 rounded-full font-medium hover:bg-gray-200
                                     ${category.includes(c) ? tagStyles[c] : "bg-gray-100 text-gray-400"}`}
                             >
-                                {c}
+                                {categoryLabelMap[c]}
                             </button>
                         ))}
                     </div>

@@ -1,0 +1,1 @@
+export type orderType = "newest" | "oldest" | "longest";

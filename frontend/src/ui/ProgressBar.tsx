@@ -19,13 +19,11 @@ export const ProgressBar = ({ current, target, color = "bg-green-500", barHeight
     }, [percentage]);
 
     return (
-        <div className="flex items-center gap-4">
-            <div className={`flex-1 bg-gray-100 rounded-full ${barHeight}`}>
-                <div
-                    className={`${color} ${barHeight} rounded-full transition-all duration-1000 ease-out`}
-                    style={{ width: `${width}%` }}
-                />
-            </div>
+        <div className={`flex-1 bg-gray-100 rounded-full ${barHeight}`}>
+            <div
+                className={`${color} ${barHeight} rounded-full transition-all duration-1000 ease-out`}
+                style={{ width: `${width}%` }}
+            />
         </div>
     );
 };

@@ -1,0 +1,1 @@
+export type categoryType = "all" | "listening" | "vocabulary" | "grammar" | "mockExam";
