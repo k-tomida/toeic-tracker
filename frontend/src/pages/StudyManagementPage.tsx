@@ -7,7 +7,7 @@ import { Select } from "../ui/Select";
 import { PopUp } from "../modules/PopUp";
 import type { tableType } from "../types/tableType";
 import { StudyTimeSummary } from "../components/studySession/StudyTimeSummary";
-import type { OrderType } from "../types/orderType";
+import type { orderType } from "../types/orderType";
 import type { categoryType } from "../types/categoryType";
 import type { periodType } from "../types/periodType";
 import { CategoryBreakdown } from "../components/studySession/CategoryBreakdown";
@@ -27,7 +27,7 @@ const periodOptions: { label: string, value: periodType }[] = [
     { label: "過去3ヶ月", value: "lastThreeMonth" }
 ];
 
-const orderOptions: { label: string, value: OrderType }[] = [
+const orderOptions: { label: string, value: orderType }[] = [
     { label: "並び順 : 新しい順", value: "newest" },
     { label: "古い順", value: "oldest" },
     { label: "学習時間が長い順", value: "longest" },
@@ -36,7 +36,7 @@ const orderOptions: { label: string, value: OrderType }[] = [
 export const StudyManagementPage = () => {
     const [category, setCategory] = useState<categoryType>(categoryOptions[0].value);
     const [period, setPeriod] = useState<periodType>(periodOptions[0].value);
-    const [order, setOrder] = useState<OrderType>(orderOptions[0].value);
+    const [order, setOrder] = useState<orderType>(orderOptions[0].value);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [popUpData, setPopUpData] = useState<tableType | null>(null);
 

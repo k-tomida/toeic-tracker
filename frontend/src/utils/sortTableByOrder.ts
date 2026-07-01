@@ -1,8 +1,8 @@
-import type { OrderType } from "../types/orderType";
+import type { orderType } from "../types/orderType";
 import type { tableType } from "../types/tableType";
 
 
-export const sortTableByOrder = (order: OrderType, filteredStudyTables: tableType[]): tableType[] => {
+export const sortTableByOrder = (order: orderType, filteredStudyTables: tableType[]): tableType[] => {
     if (order === "newest") {
         return [...filteredStudyTables].sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
     }

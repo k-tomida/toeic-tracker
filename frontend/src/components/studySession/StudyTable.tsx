@@ -8,13 +8,13 @@ import { useState } from "react";
 import { dummyStudySessions } from "../../data/dummyStudySession";
 import type { categoryType } from "../../types/categoryType";
 import type { periodType } from "../../types/periodType";
-import type { OrderType } from "../../types/orderType";
+import type { orderType } from "../../types/orderType";
 import { getPageNumbers } from "../../utils/getPageNumbers";
 
 type StudyTableProps = {
     category: categoryType;
     period: periodType;
-    order: OrderType;
+    order: orderType;
     onEdit: (data: tableType) => void;
 };
 
