@@ -27,3 +27,17 @@ export const calcBestScore = (): [number, number, number] => {
     return [bestListening, bestReading, bestTotal];
 };
 
+export const calcBestScoreAndDate = (): [number, string] => {
+    let best = 0;
+    let date = "";
+    dummyScoreData.forEach((d) => {
+        const total = calcTotalScore(d.listening, d.reading);
+        if (total > best) {
+            best = total;
+            date = d.examDate
+        }
+    });
+
+    return [best, date];
+}
+
