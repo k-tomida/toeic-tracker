@@ -6,3 +6,7 @@ export const formatDate = (date: string): string => {
     const dayNames = ["日", "月", "火", "水", "木", "金", "土"];
     return `${dateParts[1]}/${dateParts[2]}(${dayNames[dayOfWeekIndex]})`;
 }
+
+export const formatDateSlash = (date: string): string => {
+    return date.replaceAll("-", "/");
+}

@@ -3,4 +3,5 @@ export type userType = {
     name: string;
     email: string;
     targetScore: number;
+    nextExamDate: string | null;
 };

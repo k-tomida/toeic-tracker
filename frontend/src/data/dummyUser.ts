@@ -5,4 +5,5 @@ export const dummyUser: userType = {
     name: "Kenta",
     email: "kenta@example.com",
     targetScore: 900,
+    nextExamDate: "2026-12-25"
 };
