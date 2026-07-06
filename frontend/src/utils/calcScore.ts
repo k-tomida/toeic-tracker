@@ -25,7 +25,7 @@ export const calcBestScore = (): [number, number, number] => {
         }
     });
 
-    return [bestListening, bestReading, bestTotal];
+    return [bestTotal, bestListening, bestReading];
 };
 
 export const calcBestScoreAndDate = (): [number, string] => {
