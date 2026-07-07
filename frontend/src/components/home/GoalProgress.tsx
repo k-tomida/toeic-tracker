@@ -3,7 +3,7 @@ import { ProgressBar } from "../../ui/ProgressBar"
 import { calcBestScore } from "../../utils/calcScore"
 
 export const GoalProgress = () => {
-    const [listening, reading, total] = calcBestScore()
+    const [total, listening, reading] = calcBestScore()
     return (
         <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">
             <p className="mb-3 text-xl font-medium text-gray-600">目標スコア達成率</p>
@@ -15,7 +15,7 @@ export const GoalProgress = () => {
                 <ProgressBar current={total} target={dummyUser.targetScore} barHeight="h-5" />
                 <div className="flex justify-between mt-2">
                     <span className="text-gray-500">0</span>
-                    <span className="text-2xl">{Math.round((total / 900) * 100)}%</span>
+                    <span className="text-2xl">{Math.round((total / dummyUser.targetScore) * 100)}%</span>
                     <span className="text-gray-500">{900}</span>
                 </div>
             </div>
