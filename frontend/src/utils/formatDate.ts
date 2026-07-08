@@ -10,3 +10,7 @@ export const formatDate = (date: string): string => {
 export const formatDateSlash = (date: string): string => {
     return date.replaceAll("-", "/");
 }
+
+export const formatDateSlashAndRemoveDay = (date: string): string => {
+    return date.replaceAll("-", "/").slice(0, 7);
+}
