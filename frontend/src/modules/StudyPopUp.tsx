@@ -26,7 +26,7 @@ const categoryLabelMap: Record<string, string> = {
 
 const allCategories: categoryType[] = ["mockExam", "listening", "vocabulary", "grammar"];
 
-export const PopUp = ({ onClose, data }: Props) => {
+export const StudyPopUp = ({ onClose, data }: Props) => {
     const [date, setDate] = useState(data?.date ?? "");
     const [duration, setDuration] = useState(data?.duration ?? 0);
     const [category, setCategory] = useState(data?.category ?? []);
