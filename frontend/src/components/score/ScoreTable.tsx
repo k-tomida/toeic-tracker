@@ -5,12 +5,22 @@ import { sortScoreByNewest } from "../../utils/sortTableByOrder"
 import { calcTotalScore } from "../../utils/calcScore";
 import { useState } from "react";
 import { getPageNumbers } from "../../utils/getPageNumbers";
+import { formatDateSlash } from "../../utils/formatDate";
+import type { scoreType } from "../../types/scoreType";
+import { ScorePopUp } from "../../modules/ScorePopUp";
 
-const ITEMS_PER_PAGE = 10
+const ITEMS_PER_PAGE = 5;
 
 export const ScoreTable = () => {
     const [page, setPage] = useState(1);
     const sortScoreData = sortScoreByNewest(dummyScoreData);
+    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    const [popUpData, setPopUpData] = useState<scoreType | null>(null);
+
+    const openPopUp = (data: scoreType | null) => {
+        setPopUpData(data);
+        setIsPopUpOpen(true);
+    };
 
     //ページネーション機能
     const startItem = (page - 1) * ITEMS_PER_PAGE + 1;
@@ -22,7 +32,7 @@ export const ScoreTable = () => {
         <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">
             <div className="flex justify-between m-2">
                 <p className="mb-3 text-xl font-medium text-gray-600">スコア履歴</p>
-                <Button onClick={() => alert()}>
+                <Button onClick={() => openPopUp(null)}>
                     <div className="flex items-center gap-3">
                         <span>+</span>
                         <span>学習記録を追加</span>
@@ -47,7 +57,7 @@ export const ScoreTable = () => {
                             <tbody>
                                 {pageTables.map((data) => (
                                     <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
-                                        <td className="py-3 px-4 text-gray-700">{data.examDate}</td>
+                                        <td className="py-3 px-4 text-gray-700">{formatDateSlash(data.examDate)}</td>
                                         <td className="py-3 px-4 text-gray-700">{data.listening}</td>
                                         <td className="py-3 px-4 text-gray-700">{data.reading}</td>
                                         <td className="py-3 px-4 text-gray-700">{calcTotalScore(data.listening, data.reading)}</td>
@@ -55,7 +65,7 @@ export const ScoreTable = () => {
                                         <td className="py-3 px-4">
                                             <button
                                                 className="cursor-pointer text-gray-400 hover:bg-gray-200 p-2 border border-gray-300 rounded-md"
-                                                onClick={() => alert()}>
+                                                onClick={() => openPopUp(data)}>
                                                 <FaPen />
                                             </button>
                                         </td>
@@ -86,6 +96,12 @@ export const ScoreTable = () => {
                         </div>
                     </div>)}
             </div>
+            {isPopUpOpen && (
+                <ScorePopUp
+                    onClose={() => setIsPopUpOpen(false)}
+                    data={popUpData}
+                />
+            )}
         </div >
     )
 }

@@ -7,7 +7,7 @@ import type { categoryType } from "../types/categoryType";
 
 type Props = {
     onClose: () => void;
-    data: tableType | null; // null = 新規追加
+    data: tableType | null;
 };
 
 const tagStyles: Record<string, string> = {
@@ -27,7 +27,7 @@ const categoryLabelMap: Record<string, string> = {
 const allCategories: categoryType[] = ["mockExam", "listening", "vocabulary", "grammar"];
 
 export const StudyPopUp = ({ onClose, data }: Props) => {
-    const [date, setDate] = useState(data?.date ?? "");
+    const [date, setDate] = useState(data?.date ?? new Date().toISOString().slice(0, 10));
     const [duration, setDuration] = useState(data?.duration ?? 0);
     const [category, setCategory] = useState(data?.category ?? []);
     const [memo, setMemo] = useState(data?.memo ?? "");
@@ -56,9 +56,9 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                         <h2 className="text-gray-600 mb-1">日付</h2>
                         <input
                             type="date"
-                            value={data !== null ? date : new Date().toISOString().slice(0, 10)}
+                            value={date}
                             onChange={(e) => setDate(e.target.value)}
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-56"
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
                         />
                     </div>
                     <div>
@@ -67,7 +67,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                             type="number"
                             value={duration}
                             onChange={(e) => setDuration(parseInt(e.target.value))}
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-56"
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
                         />
                     </div>
                 </div>
@@ -79,7 +79,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                             <button
                                 key={c}
                                 onClick={() => toggleCategory(c)}
-                                className={`text-sm px-2 py-0.5 rounded-full font-medium hover:bg-gray-200
+                                className={`text-lg px-2 py-0.5 rounded-full font-medium hover:bg-gray-200
                                     ${category.includes(c) ? tagStyles[c] : "bg-gray-100 text-gray-400"}`}
                             >
                                 {categoryLabelMap[c]}
@@ -94,7 +94,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                         type="text"
                         value={memo}
                         onChange={(e) => setMemo(e.target.value)}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full"
+                        className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
                     />
                 </div>
                 {/* 削除ボタンは編集時のみ表示 */}
