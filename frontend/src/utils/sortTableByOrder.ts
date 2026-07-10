@@ -1,4 +1,5 @@
 import type { orderType } from "../types/orderType";
+import type { scoreType } from "../types/scoreType";
 import type { tableType } from "../types/tableType";
 
 
@@ -13,4 +14,9 @@ export const sortTableByOrder = (order: orderType, filteredStudyTables: tableTyp
         return [...filteredStudyTables].sort((a, b) => b.duration - a.duration);
     }
     return filteredStudyTables;
+}
+
+export const sortScoreByNewest = (scoreData: scoreType[]): scoreType[] => {
+
+    return [...scoreData].sort((a, b) => Date.parse(b.examDate) - Date.parse(a.examDate));
 }
