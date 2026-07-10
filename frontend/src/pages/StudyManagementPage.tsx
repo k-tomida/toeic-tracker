@@ -4,7 +4,7 @@ import { CiFilter } from "react-icons/ci";
 import { StudyTable } from "../components/studySession/StudyTable";
 import { useState } from "react";
 import { Select } from "../ui/Select";
-import { PopUp } from "../modules/PopUp";
+import { StudyPopUp } from "../modules/StudyPopUp";
 import type { tableType } from "../types/tableType";
 import { StudyTimeSummary } from "../components/studySession/StudyTimeSummary";
 import type { orderType } from "../types/orderType";
@@ -72,7 +72,7 @@ export const StudyManagementPage = () => {
                 </div>
             </main>
             {isPopUpOpen && (
-                <PopUp
+                <StudyPopUp
                     onClose={() => setIsPopUpOpen(false)}
                     data={popUpData}
                 />

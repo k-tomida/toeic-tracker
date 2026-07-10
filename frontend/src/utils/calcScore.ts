@@ -2,7 +2,7 @@ import { dummyScoreData } from "../data/dummyScoreData";
 import { formatDateSlash } from "./formatDate";
 
 export const calcTotalScore = (listening: number, reading: number): number => {
-    return listening + reading;
+    return (isNaN(listening) ? 0 : listening) + (isNaN(reading) ? 0 : reading);
 };
 
 export const calcScoreByNumber = (selectNumber: number): number => {

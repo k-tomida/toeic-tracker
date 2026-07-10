@@ -1,6 +1,7 @@
 import { Header } from "../components/Header"
 import { GoalSetting } from "../components/score/GoalSetting"
 import { ScoreSummary } from "../components/score/ScoreSummay"
+import { ScoreTable } from "../components/score/ScoreTable"
 import { ScoreTrendChart } from "../components/score/ScoreTrendChart"
 
 export const ScorePage = () => {
@@ -13,6 +14,7 @@ export const ScorePage = () => {
                     <GoalSetting />
                 </div>
                 <ScoreTrendChart />
+                <ScoreTable />
             </main>
         </div>
     )
