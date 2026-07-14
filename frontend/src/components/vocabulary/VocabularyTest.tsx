@@ -1,8 +1,9 @@
 import { useState } from "react"
-import { countUnaquiredVocabulary, countVocabulary } from "../../utils/calcVocabulary"
+import { countUnacquiredVocabulary, countVocabulary } from "../../utils/calcVocabulary"
 
 export const VocabularyTest = () => {
     const [scope, setScope] = useState("all")
+    const [test, setTest] = useState("all")
     return (
         <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-[400px]">
             <h2 className="mb-3 text-xl font-medium text-gray-600"> 単語テスト</h2>
@@ -44,7 +45,7 @@ export const VocabularyTest = () => {
                             未習得のみ
                         </p>
                         <p className={scope === "unaquired" ? "text-sm text-green-600" : "text-sm text-gray-500"}>
-                            {countUnaquiredVocabulary()}語
+                            {countUnacquiredVocabulary()}語
                         </p>
                     </button>
                 </div>
@@ -52,14 +53,63 @@ export const VocabularyTest = () => {
             </div>
             <div>
                 <p className="text-lg text-gray-500 mb-2">問題数</p>
-                <div>
-                    <button>10問</button>
-                    <button>20問</button>
-                    <button>すべて</button>
+                <div className="flex gap-2 mb-5">
+                    <button
+                        onClick={() => setTest("ten")}
+                        className={test === "ten"
+                            ? "flex-1 text-left rounded-lg p-3 border-[1.5px] border-green-500 bg-green-50"
+                            : "flex-1 text-left rounded-lg p-3 border-[1.5px] border-gray-200"}
+                    >
+                        <p
+                            className={
+                                test === "ten"
+                                    ? "font-medium text-green-800 mb-0.5"
+                                    : "font-medium text-gray-900 mb-0.5"
+                            }
+                        >
+                            10問
+                        </p>
+                    </button>
+                    <button
+                        onClick={() => setTest("twenty")}
+                        className={test === "twenty"
+                            ? "flex-1 text-left rounded-lg p-3 border-[1.5px] border-green-500 bg-green-50"
+                            : "flex-1 text-left rounded-lg p-3 border-[1.5px] border-gray-200"}
+                    >
+                        <p
+                            className={
+                                test === "twenty"
+                                    ? "font-medium text-green-800 mb-0.5"
+                                    : "font-medium text-gray-900 mb-0.5"
+                            }
+                        >
+                            20問
+                        </p>
+                    </button>
+                    <button
+                        onClick={() => setTest("all")}
+                        className={test === "all"
+                            ? "flex-1 text-left rounded-lg p-3 border-[1.5px] border-green-500 bg-green-50"
+                            : "flex-1 text-left rounded-lg p-3 border-[1.5px] border-gray-200"}
+                    >
+                        <p
+                            className={
+                                test === "all"
+                                    ? "font-medium text-green-800 mb-0.5"
+                                    : "font-medium text-gray-900 mb-0.5"
+                            }
+                        >
+                            すべて
+                        </p>
+                    </button>
                 </div>
             </div>
-            <div>
-                <button>開始する</button>
+            <div className="flex justify-center">
+                <button
+                    className="bg-green-500 font-medium rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700"
+                    onClick={() => alert()}
+                >開始する
+                </button>
             </div>
         </div>
     )

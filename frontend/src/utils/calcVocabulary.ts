@@ -4,7 +4,7 @@ export const countVocabulary = () => {
     return dummyVocabulary.length;
 }
 
-export const countAquiredVocabulary = () => {
+export const countAcquiredVocabulary = () => {
     let count = 0;
     dummyVocabulary.forEach((data) => {
         if (data.status) {
@@ -14,7 +14,7 @@ export const countAquiredVocabulary = () => {
     return count;
 }
 
-export const countUnaquiredVocabulary = () => {
+export const countUnacquiredVocabulary = () => {
     let count = 0;
     dummyVocabulary.forEach((data) => {
         if (!data.status) {
