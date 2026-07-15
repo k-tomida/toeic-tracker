@@ -1,5 +1,5 @@
 import { KpiCard } from "../../modules/KpiCard"
-import { countAquiredVocabulary, countUnaquiredVocabulary, countVocabulary } from "../../utils/calcVocabulary"
+import { countAcquiredVocabulary, countUnacquiredVocabulary, countVocabulary } from "../../utils/calcVocabulary"
 
 export const VocabularySummary = () => {
     return (
@@ -8,11 +8,11 @@ export const VocabularySummary = () => {
             <div>
                 <div className="flex mx-auto justify-center flex-wrap xl:gap-8">
                     <KpiCard title="総単語数" value={countVocabulary()} />
-                    <KpiCard title="習得率" value={countVocabulary() === 0 ? 0 : Math.round(countAquiredVocabulary() / countVocabulary() * 100)} unit="%" />
+                    <KpiCard title="習得率" value={countVocabulary() === 0 ? 0 : Math.round(countAcquiredVocabulary() / countVocabulary() * 100)} unit="%" />
                 </div>
                 <div className="flex mx-auto justify-center flex-wrap xl:gap-8">
-                    <KpiCard title="習得済み" value={countAquiredVocabulary()} />
-                    <KpiCard title="未習得" value={countUnaquiredVocabulary()} />
+                    <KpiCard title="習得済み" value={countAcquiredVocabulary()} />
+                    <KpiCard title="未習得" value={countUnacquiredVocabulary()} />
                 </div>
             </div>
         </div>
