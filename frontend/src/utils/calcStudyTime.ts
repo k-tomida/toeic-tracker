@@ -47,10 +47,12 @@ export const calcStudyTimeAll = (): number => {
 }
 
 export const calcStudyTimeAverage = (): number => {
+    if (dummyStudySessions.length === 0) return 0;
     return Math.round(calcStudyTimeAll() / dummyStudySessions.length * 10) / 10;
 }
 
 export const calcMonthsFromStart = (): number => {
+    if (dummyStudySessions.length === 0) return 0;
     const today = new Date();
     const data = sortTableByOrder("oldest", dummyStudySessions);
     const startDate = new Date(data[0].date);

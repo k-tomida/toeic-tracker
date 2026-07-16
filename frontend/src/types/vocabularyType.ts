@@ -1,8 +1,16 @@
 export type vocabularyType = {
     id: string;
     word: string;
-    class: "Noun" | "Verb" | "Adjective" | "Adverb" | "Preposition" | "Conjunction" | "AuxiliaryVerb";
+    class: wordClassType;
     meaning: string;
-    status: "acquired" | "unacquired";
+    status: statusType;
+    date: string; // 追加日
+    memo?: string;
 };
+
+export type wordClassType = "Noun" | "Verb" | "Adjective" | "Adverb" | "Preposition" | "Conjunction" | "AuxiliaryVerb";
+
+export type statusType = "acquired" | "unacquired";
+
+export type vocabularyOrderType = "newest" | "oldest" | "alphabetical";
 
