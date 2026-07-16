@@ -4,24 +4,47 @@ import { formatDate } from "../../utils/formatDate";
 import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
 import type { tableType } from "../../types/tableType";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { dummyStudySessions } from "../../data/dummyStudySession";
 import type { categoryType } from "../../types/categoryType";
 import type { periodType } from "../../types/periodType";
 import type { orderType } from "../../types/orderType";
 import { getPageNumbers } from "../../utils/getPageNumbers";
+import { CiFilter } from "react-icons/ci";
+import { Select } from "../../ui/Select";
+import { Button } from "../../ui/Button";
+import { StudyPopUp } from "../../modules/StudyPopUp";
 
-type StudyTableProps = {
-    category: categoryType;
-    period: periodType;
-    order: orderType;
-    onEdit: (data: tableType) => void;
-};
+const categoryOptions: { label: string, value: categoryType }[] = [
+    { label: "すべてのカテゴリ", value: "all" },
+    { label: "リスニング", value: "listening" },
+    { label: "単語", value: "vocabulary" },
+    { label: "文法", value: "grammar" },
+    { label: "模試", value: "mockExam" },
+];
+
+const periodOptions: { label: string, value: periodType }[] = [
+    { label: "期間 : すべて", value: "all" },
+    { label: "今月", value: "thisMonth" },
+    { label: "先月", value: "lastMonth" },
+    { label: "過去3ヶ月", value: "lastThreeMonth" }
+];
+
+const orderOptions: { label: string, value: orderType }[] = [
+    { label: "並び順 : 新しい順", value: "newest" },
+    { label: "古い順", value: "oldest" },
+    { label: "学習時間が長い順", value: "longest" },
+];
 
 const ITEMS_PER_PAGE = 10
 
-export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps) => {
+export const StudyTable = () => {
     const [page, setPage] = useState(1);
+    const [category, setCategory] = useState<categoryType>(categoryOptions[0].value);
+    const [period, setPeriod] = useState<periodType>(periodOptions[0].value);
+    const [order, setOrder] = useState<orderType>(orderOptions[0].value);
+    const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+    const [popUpData, setPopUpData] = useState<tableType | null>(null);
 
     const [prevFilters, setPrevFilters] = useState({ category, period, order });
 
@@ -35,19 +58,17 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
         setPage(1);
     }
 
-    // categoryでフィルタする
-    let filteredStudyTables: tableType[] =
-        category !== "all"
-            ? dummyStudySessions.filter((studyTable) =>
-                studyTable.category.includes(category)
-            )
-            : dummyStudySessions;
+    const filteredStudyTables = useMemo(() => {
+        const byCategory =
+            category !== "all"
+                ? dummyStudySessions.filter((studyTable) =>
+                    studyTable.category.includes(category)
+                )
+                : dummyStudySessions;
 
-    //期間でフィルタする
-    filteredStudyTables = changeTableByPeriod(period, filteredStudyTables);
-
-    //日付でソートする
-    filteredStudyTables = sortTableByOrder(order, filteredStudyTables);
+        const byPeriod = changeTableByPeriod(period, byCategory);
+        return sortTableByOrder(order, byPeriod);
+    }, [category, period, order]);
 
     //ページネーション機能
     const startItem = (page - 1) * ITEMS_PER_PAGE + 1;
@@ -57,18 +78,33 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
 
 
     return (
-        <div>
+        <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">
+            <p className="mb-3 text-xl font-medium text-gray-600">学習記録履歴</p>
+            <div className="flex items-center justify-between m-5">
+                <div className="flex justify-center gap-5 bg-emerald-50 border border-emerald-200 p-3 rounded-lg items-center flex-wrap">
+                    <CiFilter size={28} />
+                    <Select name="category" value={category} onChange={setCategory} options={categoryOptions} />
+                    <Select name="period" value={period} onChange={setPeriod} options={periodOptions} />
+                    <Select name="order" value={order} onChange={setOrder} options={orderOptions} />
+                </div>
+                <Button onClick={() => { setPopUpData(null); setIsPopUpOpen(true); }}>
+                    <div className="flex items-center gap-3">
+                        <span>+</span>
+                        <span>学習記録を追加</span>
+                    </div>
+                </Button>
+            </div>
             {filteredStudyTables.length === 0 ? (
-                <div>テーブルがありません</div>
+                <div>データがありません</div>
             ) : (
                 <div className="w-full border border-gray-200 rounded-lg overflow-hidden">
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="text-left text-sm text-emerald-900 bg-emerald-50">
                                 <th className="py-3 px-4 font-medium w-40">日付</th>
-                                <th className="py-3 px-4 font-medium w-92">カテゴリ</th>
+                                <th className="py-3 px-4 font-medium w-80">カテゴリ</th>
                                 <th className="py-3 px-4 font-medium w-40">学習時間</th>
-                                <th className="py-3 px-4 font-medium w-108">メモ</th>
+                                <th className="py-3 px-4 font-medium w-100">メモ</th>
                                 <th className="py-3 px-4"></th>
                             </tr>
                         </thead>
@@ -86,7 +122,7 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
                                     <td className="py-3 px-4">
                                         <button
                                             className="cursor-pointer text-gray-400 hover:bg-gray-200 p-2 border border-gray-300 rounded-md"
-                                            onClick={() => onEdit(data)}>
+                                            onClick={() => { setPopUpData(data); setIsPopUpOpen(true); }}>
                                             <FaPen />
                                         </button>
                                     </td>
@@ -116,6 +152,12 @@ export const StudyTable = ({ category, period, order, onEdit }: StudyTableProps)
                         </div>
                     </div>
                 </div>
+            )}
+            {isPopUpOpen && (
+                <StudyPopUp
+                    onClose={() => setIsPopUpOpen(false)}
+                    data={popUpData}
+                />
             )}
         </div>
     );
