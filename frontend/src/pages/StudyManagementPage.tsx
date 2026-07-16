@@ -53,23 +53,7 @@ export const StudyManagementPage = () => {
                     <StudyTimeSummary />
                     <CategoryBreakdown />
                 </div>
-                <div className="flex items-center justify-between m-10">
-                    <div className="flex justify-center gap-5 bg-emerald-50 border border-emerald-200 p-3 rounded-lg items-center flex-wrap">
-                        <CiFilter size={28} />
-                        <Select name="category" value={category} onChange={setCategory} options={categoryOptions} />
-                        <Select name="period" value={period} onChange={setPeriod} options={periodOptions} />
-                        <Select name="order" value={order} onChange={setOrder} options={orderOptions} />
-                    </div>
-                    <AddSessionButton onClick={() => openPopUp(null)} />
-                </div>
-                <div className="my-6 mx-10">
-                    <StudyTable
-                        category={category}
-                        period={period}
-                        order={order}
-                        onEdit={(data) => openPopUp(data)}
-                    />
-                </div>
+                <StudyTable />
             </main>
             {isPopUpOpen && (
                 <StudyPopUp
