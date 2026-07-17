@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { vocabularyType, wordClassType } from "../types/vocabularyType";
 import { Select } from "../ui/Select";
+import { Button } from "../ui/Button";
+import { FaRegTrashAlt } from "react-icons/fa";
 
 type Props = {
     onClose: () => void;
@@ -21,6 +23,7 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
     const [word, setWord] = useState(data?.word ?? "")
     const [wordClass, setWordClass] = useState(data?.class ?? "Noun")
     const [meaning, setMeaning] = useState(data?.meaning ?? "")
+    const [memo, setMemo] = useState(data?.memo ?? "");
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg mx-4">
@@ -57,11 +60,23 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                         onChange={(e) => setMeaning(e.target.value)}
                         className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full" />
                 </div>
-                <div className="my-4">
+                <div className="my-3">
                     <h2 className="text-gray-600 mb-2">メモ（任意）</h2>
                     <input
+                        type="text"
+                        value={memo}
+                        onChange={(e) => setMemo(e.target.value)}
                         className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
                     />
+                </div>
+                <div className="flex justify-between mt-7">
+                    {data !== null ? (
+                        <Button onClick={onClose}>
+                            <span className="flex gap-2 items-center">
+                                <FaRegTrashAlt /> 削除
+                            </span>
+                        </Button>) : (<div />)}
+                    <Button onClick={onClose}>保存する</Button>
                 </div>
             </div>
         </div >
