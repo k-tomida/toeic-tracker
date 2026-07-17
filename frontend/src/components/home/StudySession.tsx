@@ -1,4 +1,4 @@
-import { changeTagByCategory } from "../../utils/changeTagByCategory";
+import { changeTagByCategory } from "../../utils/changeTag";
 import { formatDate } from "../../utils/formatDate";
 import { dummyStudySessions } from "../../data/dummyStudySession";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";

@@ -35,7 +35,7 @@ export const ScoreTable = () => {
                 <Button onClick={() => openPopUp(null)}>
                     <div className="flex items-center gap-3">
                         <span>+</span>
-                        <span>学習記録を追加</span>
+                        <span>スコアを追加</span>
                     </div>
                 </Button>
             </div>
