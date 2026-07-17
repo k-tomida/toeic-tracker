@@ -1,5 +1,6 @@
 import { Header } from "../components/Header"
 import { VocabularySummary } from "../components/vocabulary/VocabularySummary"
+import { VocabularyTable } from "../components/vocabulary/VocabularyTable"
 import { VocabularyTest } from "../components/vocabulary/VocabularyTest"
 
 export const VocabularyPage = () => {
@@ -11,6 +12,7 @@ export const VocabularyPage = () => {
                     <VocabularySummary />
                     <VocabularyTest />
                 </div>
+                <VocabularyTable />
             </main>
         </div>
     )

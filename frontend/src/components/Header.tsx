@@ -10,8 +10,8 @@ export const Header = () => {
                 <nav className="flex  space-x-5 m-2">
                     <NavItem to="/" icon={<IoHomeOutline />} label="ダッシュボード" />
                     <NavItem to="/study-sessions" icon={<FaRegClock />} label="学習記録" />
-                    <NavItem to="/scores" icon={<FaChartBar />} label="スコア管理" />
                     <NavItem to="/vocabularies" icon={<IoBook />} label="語彙管理" />
+                    <NavItem to="/scores" icon={<FaChartBar />} label="スコア管理" />
                 </nav>
             </div>
         </header>
