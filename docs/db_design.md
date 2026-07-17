@@ -1,9 +1,10 @@
 # TOEICトラッカー DB設計書
 
-**バージョン**: 1.0.0  
-**作成日**: 2026-06-01  
+**バージョン**: 1.1.0  
+**作成日**: 2026-07-17  
 **作成者**: k-tomida  
-**DB**: PostgreSQL 15
+**DB**: PostgreSQL 15（Neon / dev branch分離）  
+**マイグレーション管理**: Flyway
 
 ---
 
@@ -12,15 +13,16 @@
 ```mermaid
 erDiagram
   users ||--o{ study_sessions : "1対多"
-  users ||--o{ toeic_scores : "1対多"
+  users ||--o{ scores : "1対多"
   users ||--o{ vocabularies : "1対多"
-  vocabularies ||--o{ vocabulary_tags : "1対多"
 
   users {
     bigserial id PK
     varchar email UK
     varchar password
     varchar name
+    integer target_score
+    date next_exam_date
     timestamptz created_at
     timestamptz updated_at
   }
@@ -34,14 +36,14 @@ erDiagram
     timestamptz created_at
     timestamptz updated_at
   }
-  toeic_scores {
+  scores {
     bigserial id PK
     bigint user_id FK
     date exam_date
     integer total_score
     integer listening_score
     integer reading_score
-    text notes
+    text memo
     timestamptz created_at
     timestamptz updated_at
   }
@@ -49,16 +51,12 @@ erDiagram
     bigserial id PK
     bigint user_id FK
     varchar word
+    varchar word_class
     text meaning
-    text example
-    integer proficiency
+    varchar status
+    text memo
     timestamptz created_at
     timestamptz updated_at
-  }
-  vocabulary_tags {
-    bigserial id PK
-    bigint vocabulary_id FK
-    varchar tag
   }
 ```
 
@@ -74,18 +72,22 @@ erDiagram
 | email | VARCHAR(255) | NOT NULL | - | メールアドレス（ユニーク） |
 | password | VARCHAR(255) | NOT NULL | - | BCryptハッシュ |
 | name | VARCHAR(100) | NOT NULL | - | 表示名 |
+| target_score | INTEGER | NULL | - | 目標スコア（10〜990） |
+| next_exam_date | DATE | NULL | - | 次回受験予定日 |
 | created_at | TIMESTAMPTZ | NOT NULL | NOW() | 作成日時 |
 | updated_at | TIMESTAMPTZ | NOT NULL | NOW() | 更新日時 |
 
 **制約**
 ```sql
 CREATE TABLE users (
-    id         BIGSERIAL PRIMARY KEY,
-    email      VARCHAR(255) NOT NULL UNIQUE,
-    password   VARCHAR(255) NOT NULL,
-    name       VARCHAR(100) NOT NULL,
-    created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+    id              BIGSERIAL    PRIMARY KEY,
+    email           VARCHAR(255) NOT NULL UNIQUE,
+    password        VARCHAR(255) NOT NULL,
+    name            VARCHAR(100) NOT NULL,
+    target_score    INTEGER      CHECK (target_score BETWEEN 10 AND 990),
+    next_exam_date  DATE,
+    created_at      TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 ```
 
@@ -98,14 +100,14 @@ CREATE TABLE users (
 | id | BIGSERIAL | NOT NULL | auto | PK |
 | user_id | BIGINT | NOT NULL | - | FK → users.id |
 | date | DATE | NOT NULL | - | 学習日 |
-| duration | INTEGER | NOT NULL | - | 学習時間（分）1〜480 |
+| duration | INTEGER | NOT NULL | - | 学習時間（分）1〜1440 |
 | category | VARCHAR(20) | NOT NULL | - | カテゴリ（enum） |
 | memo | TEXT | NULL | - | メモ（最大500文字） |
 | created_at | TIMESTAMPTZ | NOT NULL | NOW() | 作成日時 |
 | updated_at | TIMESTAMPTZ | NOT NULL | NOW() | 更新日時 |
 
 **categoryの値**  
-`LISTENING` / `READING` / `VOCABULARY` / `GRAMMAR` / `MOCK_EXAM` / `OTHER`
+`LISTENING` / `VOCABULARY` / `GRAMMAR` / `MOCK_EXAM`  
 
 **制約**
 ```sql
@@ -113,7 +115,7 @@ CREATE TABLE study_sessions (
     id         BIGSERIAL    PRIMARY KEY,
     user_id    BIGINT       NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     date       DATE         NOT NULL,
-    duration   INTEGER      NOT NULL CHECK (duration BETWEEN 1 AND 480),
+    duration   INTEGER      NOT NULL CHECK (duration BETWEEN 1 AND 1440),
     category   VARCHAR(20)  NOT NULL,
     memo       TEXT         CHECK (char_length(memo) <= 500),
     created_at TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
@@ -125,7 +127,7 @@ CREATE INDEX idx_study_sessions_user_date ON study_sessions(user_id, date);
 
 ---
 
-### 2.3 toeic_scores
+### 2.3 scores
 
 | カラム名 | 型 | NULL | デフォルト | 説明 |
 |----------|-----|------|-----------|------|
@@ -135,26 +137,26 @@ CREATE INDEX idx_study_sessions_user_date ON study_sessions(user_id, date);
 | total_score | INTEGER | NOT NULL | - | 合計スコア（10〜990） |
 | listening_score | INTEGER | NOT NULL | - | リスニング（5〜495） |
 | reading_score | INTEGER | NOT NULL | - | リーディング（5〜495） |
-| notes | TEXT | NULL | - | 備考（最大200文字） |
+| memo | TEXT | NULL | - | メモ（最大200文字） |
 | created_at | TIMESTAMPTZ | NOT NULL | NOW() | 作成日時 |
 | updated_at | TIMESTAMPTZ | NOT NULL | NOW() | 更新日時 |
 
 **制約**
 ```sql
-CREATE TABLE toeic_scores (
+CREATE TABLE scores (
     id              BIGSERIAL   PRIMARY KEY,
     user_id         BIGINT      NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     exam_date       DATE        NOT NULL,
     total_score     INTEGER     NOT NULL CHECK (total_score BETWEEN 10 AND 990),
     listening_score INTEGER     NOT NULL CHECK (listening_score BETWEEN 5 AND 495),
     reading_score   INTEGER     NOT NULL CHECK (reading_score BETWEEN 5 AND 495),
-    notes           TEXT        CHECK (char_length(notes) <= 200),
+    memo            TEXT        CHECK (char_length(memo) <= 200),
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT chk_score_sum CHECK (listening_score + reading_score = total_score)
 );
 
-CREATE INDEX idx_toeic_scores_user_date ON toeic_scores(user_id, exam_date);
+CREATE INDEX idx_scores_user_date ON scores(user_id, exam_date);
 ```
 
 ---
@@ -166,11 +168,18 @@ CREATE INDEX idx_toeic_scores_user_date ON toeic_scores(user_id, exam_date);
 | id | BIGSERIAL | NOT NULL | auto | PK |
 | user_id | BIGINT | NOT NULL | - | FK → users.id |
 | word | VARCHAR(200) | NOT NULL | - | 単語・フレーズ |
+| word_class | VARCHAR(20) | NOT NULL | - | 品詞（enum） |
 | meaning | TEXT | NOT NULL | - | 意味 |
-| example | TEXT | NULL | - | 例文 |
-| proficiency | INTEGER | NOT NULL | 1 | 習熟度（1〜5） |
+| status | VARCHAR(20) | NOT NULL | 'unacquired' | 学習ステータス（enum） |
+| memo | TEXT | NULL | - | メモ・例文など（最大500文字） |
 | created_at | TIMESTAMPTZ | NOT NULL | NOW() | 作成日時 |
 | updated_at | TIMESTAMPTZ | NOT NULL | NOW() | 更新日時 |
+
+**word_classの値**  
+`noun` / `verb` / `adjective` / `adverb` / `preposition` / `conjunction` / `auxiliaryVerb`
+
+**statusの値**  
+`acquired`（習得済） / `unacquired`（未習得）
 
 **制約**
 ```sql
@@ -178,83 +187,22 @@ CREATE TABLE vocabularies (
     id          BIGSERIAL    PRIMARY KEY,
     user_id     BIGINT       NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     word        VARCHAR(200) NOT NULL,
+    word_class  VARCHAR(20)  NOT NULL,
     meaning     TEXT         NOT NULL,
-    example     TEXT,
-    proficiency INTEGER      NOT NULL DEFAULT 1 CHECK (proficiency BETWEEN 1 AND 5),
+    status      VARCHAR(20)  NOT NULL DEFAULT 'unacquired',
+    memo        TEXT         CHECK (char_length(memo) <= 500),
     created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
     updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX idx_vocabularies_user ON vocabularies(user_id);
+CREATE INDEX idx_vocabularies_user_status ON vocabularies(user_id, status);
+CREATE INDEX idx_vocabularies_user_word ON vocabularies(user_id, word);
 ```
 
 ---
 
-### 2.5 vocabulary_tags
-
-| カラム名 | 型 | NULL | デフォルト | 説明 |
-|----------|-----|------|-----------|------|
-| id | BIGSERIAL | NOT NULL | auto | PK |
-| vocabulary_id | BIGINT | NOT NULL | - | FK → vocabularies.id |
-| tag | VARCHAR(50) | NOT NULL | - | タグ名 |
-
-**制約**
-```sql
-CREATE TABLE vocabulary_tags (
-    id            BIGSERIAL   PRIMARY KEY,
-    vocabulary_id BIGINT      NOT NULL REFERENCES vocabularies(id) ON DELETE CASCADE,
-    tag           VARCHAR(50) NOT NULL,
-    UNIQUE (vocabulary_id, tag)
-);
-```
-
----
-
-## 3. Spring Data JPA Entity 対応表
-
-| テーブル | Entityクラス | Repositoryクラス |
-|---------|-------------|-----------------|
-| users | `User` | `UserRepository` |
-| study_sessions | `StudySession` | `StudySessionRepository` |
-| toeic_scores | `ToeicScore` | `ToeicScoreRepository` |
-| vocabularies | `Vocabulary` | `VocabularyRepository` |
-| vocabulary_tags | `VocabularyTag` | `VocabularyTagRepository` |
-
-### Entityリレーション方針
-
-```java
-// User → StudySession : 1対多
-@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-private List<StudySession> studySessions;
-
-// User → ToeicScore : 1対多
-@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-private List<ToeicScore> toeicScores;
-
-// User → Vocabulary : 1対多
-@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-private List<Vocabulary> vocabularies;
-
-// Vocabulary → VocabularyTag : 1対多
-@OneToMany(mappedBy = "vocabulary", cascade = CascadeType.ALL)
-private List<VocabularyTag> tags;
-```
-
-> **Note**: Phase 1〜2ではUserリレーションを一時的に省略し、単一ユーザー前提で開発を進めて構わない。Phase 3のJWT認証導入時にuser_idを有効化する。
-
----
-
-## 4. インデックス設計
-
-| インデックス名 | テーブル | カラム | 目的 |
-|----------------|---------|--------|------|
-| idx_study_sessions_user_date | study_sessions | (user_id, date) | ヒートマップ・集計クエリ高速化 |
-| idx_toeic_scores_user_date | toeic_scores | (user_id, exam_date) | スコア推移グラフ高速化 |
-| idx_vocabularies_user | vocabularies | (user_id) | 語彙一覧取得高速化 |
-
----
-
-## 5. 命名規則
+## 3. 命名規則
 
 | 対象 | 規則 | 例 |
 |------|------|----|
