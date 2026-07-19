@@ -1,0 +1,520 @@
+openapi: 3.0.3
+info:
+  title: TOEICトラッカー API
+  version: 1.0.0
+  description: |
+    TOEIC学習記録・スコア・語彙を管理するAPI。
+    対応DB設計: db_design.md v1.1.0
+
+    現時点ではユーザーは1人に固定されており、ログイン機能（signup/login、JWT認証）は未実装。
+    そのため本バージョンの仕様には認証関連のエンドポイント・securitySchemeを含めていない。
+    将来的にログイン機能を実装する際は、securitySchemes（bearerAuth等）と
+    各エンドポイントへのsecurity指定、401レスポンスを別途追加する。
+servers:
+  - url: https://localhost:8080/
+
+tags:
+  - name: users
+  - name: study-sessions
+  - name: scores
+  - name: vocabularies
+
+paths:
+  /users/me:
+    get:
+      tags: [users]
+      summary: ユーザー情報取得（固定の単一ユーザー）
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+    put:
+      tags: [users]
+      summary: 目標スコア・次回受験日の更新（全体を置き換える）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserUpdateRequest"
+      responses:
+        "200":
+          description: 更新後のユーザー情報
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+
+  /study-sessions:
+    get:
+      tags: [study-sessions]
+      summary: 学習記録の全件取得
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudySession"
+    post:
+      tags: [study-sessions]
+      summary: 学習記録の新規作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudySessionRequest"
+      responses:
+        "201":
+          description: 作成された学習記録
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudySession"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+
+  /study-sessions/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdPathParam"
+    get:
+      tags: [study-sessions]
+      summary: 学習記録の単体取得
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudySession"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [study-sessions]
+      summary: 学習記録の更新（全体を置き換える）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudySessionRequest"
+      responses:
+        "200":
+          description: 更新後の学習記録
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudySession"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [study-sessions]
+      summary: 学習記録の削除
+      responses:
+        "204":
+          description: 削除成功
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /scores:
+    get:
+      tags: [scores]
+      summary: スコアの全件取得
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Score"
+    post:
+      tags: [scores]
+      summary: スコアの新規作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScoreRequest"
+      responses:
+        "201":
+          description: 作成されたスコア
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Score"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+
+  /scores/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdPathParam"
+    get:
+      tags: [scores]
+      summary: スコアの単体取得
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Score"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [scores]
+      summary: スコアの更新（全体を置き換える）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScoreRequest"
+      responses:
+        "200":
+          description: 更新後のスコア
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Score"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [scores]
+      summary: スコアの削除
+      responses:
+        "204":
+          description: 削除成功
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /vocabularies:
+    get:
+      tags: [vocabularies]
+      summary: 単語の全件取得
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Vocabulary"
+    post:
+      tags: [vocabularies]
+      summary: 単語の新規作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VocabularyCreateRequest"
+      responses:
+        "201":
+          description: 作成された単語
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vocabulary"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+
+  /vocabularies/{id}:
+    parameters:
+      - $ref: "#/components/parameters/IdPathParam"
+    get:
+      tags: [vocabularies]
+      summary: 単語の単体取得
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vocabulary"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags: [vocabularies]
+      summary: 単語の更新（status変更含む・全体を置き換える）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VocabularyUpdateRequest"
+      responses:
+        "200":
+          description: 更新後の単語
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vocabulary"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [vocabularies]
+      summary: 単語の削除
+      responses:
+        "204":
+          description: 削除成功
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+components:
+  parameters:
+    IdPathParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+
+  responses:
+    ValidationError:
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: リソースが存在しない
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          example: 400
+        error:
+          type: string
+          example: VALIDATION_ERROR
+        message:
+          type: string
+        path:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        name:
+          type: string
+        targetScore:
+          type: integer
+          nullable: true
+          minimum: 10
+          maximum: 990
+        nextExamDate:
+          type: string
+          format: date
+          nullable: true
+
+    UserUpdateRequest:
+      type: object
+      required: [targetScore, nextExamDate]
+      description: PUTのため未設定にしたい項目もnullを明示して送る
+      properties:
+        targetScore:
+          type: integer
+          nullable: true
+          minimum: 10
+          maximum: 990
+        nextExamDate:
+          type: string
+          format: date
+          nullable: true
+
+    StudySessionCategory:
+      type: string
+      enum: [LISTENING, VOCABULARY, GRAMMAR, MOCK_EXAM]
+
+    StudySession:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "12"
+        date:
+          type: string
+          format: date
+        duration:
+          type: integer
+          minimum: 1
+          maximum: 1440
+          description: 学習時間（分）
+        category:
+          $ref: "#/components/schemas/StudySessionCategory"
+        memo:
+          type: string
+          nullable: true
+          maxLength: 500
+        createdAt:
+          type: string
+          format: date-time
+
+    StudySessionRequest:
+      type: object
+      required: [date, duration, category]
+      properties:
+        date:
+          type: string
+          format: date
+        duration:
+          type: integer
+          minimum: 1
+          maximum: 1440
+        category:
+          $ref: "#/components/schemas/StudySessionCategory"
+        memo:
+          type: string
+          maxLength: 500
+
+    Score:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "3"
+        examDate:
+          type: string
+          format: date
+        totalScore:
+          type: integer
+          minimum: 10
+          maximum: 990
+        listeningScore:
+          type: integer
+          minimum: 5
+          maximum: 495
+        readingScore:
+          type: integer
+          minimum: 5
+          maximum: 495
+        memo:
+          type: string
+          nullable: true
+          maxLength: 200
+        createdAt:
+          type: string
+          format: date-time
+
+    ScoreRequest:
+      type: object
+      required: [examDate, totalScore, listeningScore, readingScore]
+      properties:
+        examDate:
+          type: string
+          format: date
+        totalScore:
+          type: integer
+          minimum: 10
+          maximum: 990
+        listeningScore:
+          type: integer
+          minimum: 5
+          maximum: 495
+        readingScore:
+          type: integer
+          minimum: 5
+          maximum: 495
+        memo:
+          type: string
+          maxLength: 200
+      description: |
+        listeningScore + readingScore は totalScore と一致する必要がある
+        （DBの chk_score_sum に対応するバリデーションをAPI層でも行う）
+
+    WordClass:
+      type: string
+      enum:
+        [Noun, Verb, Adjective, Adverb, Preposition, Conjunction, AuxiliaryVerb]
+
+    VocabularyStatus:
+      type: string
+      enum: [acquired, unacquired]
+
+    Vocabulary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "42"
+        word:
+          type: string
+          maxLength: 200
+        class:
+          $ref: "#/components/schemas/WordClass"
+        meaning:
+          type: string
+        status:
+          $ref: "#/components/schemas/VocabularyStatus"
+        date:
+          type: string
+          format: date
+          description: 追加日（DBのcreated_atの日付部分）
+        memo:
+          type: string
+          nullable: true
+          maxLength: 500
+
+    VocabularyCreateRequest:
+      type: object
+      required: [word, class, meaning]
+      properties:
+        word:
+          type: string
+          maxLength: 200
+        class:
+          $ref: "#/components/schemas/WordClass"
+        meaning:
+          type: string
+        memo:
+          type: string
+          maxLength: 500
+      description: statusはリクエストに含めない（作成時は常にDBデフォルトのunacquired）
+
+    VocabularyUpdateRequest:
+      type: object
+      required: [word, class, meaning, status]
+      description: PUTのためstatusも含め全項目を送る（習得済みのON/OFFだけを変えたい場合も他フィールドは現在の値をそのまま送る）
+      properties:
+        word:
+          type: string
+          maxLength: 200
+        class:
+          $ref: "#/components/schemas/WordClass"
+        meaning:
+          type: string
+        status:
+          $ref: "#/components/schemas/VocabularyStatus"
+        memo:
+          type: string
+          maxLength: 500
