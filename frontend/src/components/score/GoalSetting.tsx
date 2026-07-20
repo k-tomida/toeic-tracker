@@ -1,13 +1,27 @@
-import { useState } from "react"
-import { ProgressBar } from "../../ui/ProgressBar"
-import { dummyUser } from "../../data/dummyUser";
+import { useState } from "react";
+import { ProgressBar } from "../../ui/ProgressBar";
 import { calcBestScore } from "../../utils/calcScore";
+import { useUser } from "../../hooks/user/useUser";
+import type { userType } from "../../types/userType";
 
+// 1. 親コンポーネント：データ取得とローディングの管理のみを行う
 export const GoalSetting = () => {
-    const [date, setDate] = useState(dummyUser.nextExamDate);
-    const [score, setScore] = useState(dummyUser.targetScore);
+    const { data, isLoading, isError } = useUser();
+
+    if (isLoading) return <div>読み込み中...</div>;
+    if (isError || !data) return <div>データの取得に失敗しました</div>;
+
+    // データが確実に存在する状態でのみフォームを描画
+    return <GoalSettingForm user={data} key={data.id} />;
+};
+
+const GoalSettingForm = ({ user }: { user: userType }) => {
+    const [date, setDate] = useState(user.nextExamDate ?? new Date().toISOString().slice(0, 10));
+    const [score, setScore] = useState(user.targetScore ?? 600);
+
     const [bestScore] = calcBestScore();
     const isAchieved = bestScore >= score;
+
     return (
         <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-[400px]">
             <h2 className="mb-3 text-xl font-medium text-gray-600">目標設定</h2>
@@ -38,7 +52,7 @@ export const GoalSetting = () => {
                 <p className="text-lg text-gray-500">次回受験予定日</p>
                 <input
                     type="date"
-                    value={date ?? "new Date().toISOString().slice(0, 10)"}
+                    value={date}
                     onChange={(e) => setDate(e.target.value)}
                     className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
                 />
@@ -47,5 +61,5 @@ export const GoalSetting = () => {
                 <button className="bg-green-500 rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700">更新</button>
             </div>
         </div>
-    )
-}
+    );
+};
