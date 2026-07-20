@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.DialectOverride;
 
+import java.time.LocalDate;
+
 @Data
 @Entity(name="users")
 public class User {
@@ -24,5 +26,5 @@ public class User {
     private Integer targetScore;
 
     @Column(name="next_exam_date")
-    private String nextExamDate;
+    private LocalDate nextExamDate;
 }
