@@ -9,7 +9,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@Entity(name = "study_sessions")
+@Entity
+@Table(name = "study_sessions")
 public class StudySession {
 
     @Id
@@ -33,8 +34,10 @@ public class StudySession {
     private String memo;
 
     @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 }
