@@ -1,23 +1,23 @@
 import type { ReactNode } from "react";
-import type { categoryType } from "../types/categoryType";
+import type { categoryType } from "../types/studySessionType";
 import type { statusType, wordClassType } from "../types/vocabularyType";
 
 // カテゴリ別にタグの色を変える関数
 export const changeTagByCategory = (category: categoryType): ReactNode => {
 
-    const tagStyles: Record<categoryType, string> = {
-        listening: "bg-blue-50 text-blue-800 border border-blue-200",
-        vocabulary: "bg-amber-50 text-amber-800 border border-amber-200",
-        grammar: "bg-green-50 text-green-800 border border-green-200",
-        mockExam: "bg-purple-50 text-purple-800 border border-purple-200",
+    const tagStyles: Record<"all" | categoryType, string> = {
+        LISTENING: "bg-blue-50 text-blue-800 border border-blue-200",
+        VOCABULARY: "bg-amber-50 text-amber-800 border border-amber-200",
+        GRAMMAR: "bg-green-50 text-green-800 border border-green-200",
+        MOCK_EXAM: "bg-purple-50 text-purple-800 border border-purple-200",
         all: "bg-gray-100 text-gray-700 border border-gray-200",
     };
 
-    const categoryLabelMap: Record<categoryType, string> = {
-        listening: "リスニング",
-        vocabulary: "単語",
-        grammar: "文法",
-        mockExam: "模試",
+    const categoryLabelMap: Record<"all" | categoryType, string> = {
+        LISTENING: "リスニング",
+        VOCABULARY: "単語",
+        GRAMMAR: "文法",
+        MOCK_EXAM: "模試",
         all: "すべてのカテゴリ",
     };
     return (

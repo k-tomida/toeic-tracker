@@ -1,30 +1,29 @@
 import { useState } from "react";
-import type { tableType } from "../types/tableType";
+import type { studySessionType, categoryType } from "../types/studySessionType";
 import { formatDate } from "../utils/formatDate";
 import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
-import type { categoryType } from "../types/categoryType";
 
 type Props = {
     onClose: () => void;
-    data: tableType | null;
+    data: studySessionType | null;
 };
 
-const tagStyles: Record<string, string> = {
-    listening: "bg-blue-50 text-blue-800 border border-blue-200",
-    vocabulary: "bg-amber-50 text-amber-800 border border-amber-200",
-    grammar: "bg-green-50 text-green-800 border border-green-200",
-    mockExam: "bg-purple-50 text-purple-800 border border-purple-200",
+const tagStyles: Record<categoryType, string> = {
+    LISTENING: "bg-blue-50 text-blue-800 border border-blue-200",
+    VOCABULARY: "bg-amber-50 text-amber-800 border border-amber-200",
+    GRAMMAR: "bg-green-50 text-green-800 border border-green-200",
+    MOCK_EXAM: "bg-purple-50 text-purple-800 border border-purple-200",
 };
 
-const categoryLabelMap: Record<string, string> = {
-    listening: "リスニング",
-    vocabulary: "単語",
-    grammar: "文法",
-    mockExam: "模試"
+const categoryLabelMap: Record<categoryType, string> = {
+    LISTENING: "リスニング",
+    VOCABULARY: "単語",
+    GRAMMAR: "文法",
+    MOCK_EXAM: "模試"
 };
 
-const allCategories: categoryType[] = ["mockExam", "listening", "vocabulary", "grammar"];
+const allCategories: categoryType[] = ["LISTENING", "VOCABULARY", "GRAMMAR", "MOCK_EXAM"];
 
 export const StudyPopUp = ({ onClose, data }: Props) => {
     const [date, setDate] = useState(data?.date ?? new Date().toISOString().slice(0, 10));

@@ -1,5 +1,5 @@
 import { dummyStudySessions } from "../data/dummyStudySession";
-import type { tableType } from "../types/tableType";
+import type { tableType } from "../types/studySessionType";
 import { sortTableByOrder } from "./sortTableByOrder";
 
 export const calcStreak = (): number => {

@@ -17,7 +17,7 @@ export const StudySession = () => {
 
                     {/* カテゴリタグ */}
                     <div className="flex gap-1 flex-wrap flex-1">
-                        {data.category.map((category) => changeTagByCategory(category))}
+                        {changeTagByCategory(data.category)}
                     </div>
 
                     {/* 学習時間 */}

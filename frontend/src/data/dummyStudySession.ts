@@ -1,4 +1,4 @@
-import type { tableType } from "../types/tableType";
+import type { tableType } from "../types/studySessionType";
 
 export const dummyStudySessions: tableType[] = [
     {

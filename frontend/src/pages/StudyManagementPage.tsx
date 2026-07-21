@@ -2,8 +2,13 @@ import { Header } from "../components/Header"
 import { StudyTable } from "../components/studySession/StudyTable";
 import { StudyTimeSummary } from "../components/studySession/StudyTimeSummary";
 import { CategoryBreakdown } from "../components/studySession/CategoryBreakdown";
+import { useStudySession } from "../hooks/study_session/useStudySession";
 
 export const StudyManagementPage = () => {
+    const { data, isLoading, isError } = useStudySession();
+
+    if (isLoading) return <div>読み込み中...</div>;
+    if (isError || !data) return <div>データの取得に失敗しました</div>;
     return (
         <div className="min-h-screen">
             <Header />
@@ -12,7 +17,7 @@ export const StudyManagementPage = () => {
                     <StudyTimeSummary />
                     <CategoryBreakdown />
                 </div>
-                <StudyTable />
+                <StudyTable studySessions={data} />
             </main>
 
         </div>

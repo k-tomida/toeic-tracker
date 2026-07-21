@@ -1,5 +1,5 @@
 import type { periodType } from "../types/periodType";
-import type { tableType } from "../types/tableType";
+import type { tableType } from "../types/studySessionType";
 
 
 export const changeTableByPeriod = (period: periodType, filteredStudyTables: tableType[]): tableType[] => {
