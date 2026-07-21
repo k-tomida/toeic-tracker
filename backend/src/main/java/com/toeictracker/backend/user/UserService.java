@@ -2,6 +2,8 @@ package com.toeictracker.backend.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,11 +14,13 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    @Cacheable("getUser")
     public User getUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません: id=" + id));
     }
 
+    @CacheEvict(value = "getUser", allEntries = true)
     public User updateUser(Long id, User updatedData) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません: id=" + id));

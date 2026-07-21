@@ -1,21 +1,11 @@
 import { useState } from "react";
 import { ProgressBar } from "../../ui/ProgressBar";
 import { calcBestScore } from "../../utils/calcScore";
-import { useUser } from "../../hooks/user/useUser";
+import { useUser, useUserMutation } from "../../hooks/user/useUser";
 import type { userType } from "../../types/userType";
 
-// 1. 親コンポーネント：データ取得とローディングの管理のみを行う
-export const GoalSetting = () => {
-    const { data, isLoading, isError } = useUser();
-
-    if (isLoading) return <div>読み込み中...</div>;
-    if (isError || !data) return <div>データの取得に失敗しました</div>;
-
-    // データが確実に存在する状態でのみフォームを描画
-    return <GoalSettingForm user={data} key={data.id} />;
-};
-
-const GoalSettingForm = ({ user }: { user: userType }) => {
+export const GoalSetting = ({ user }: { user: userType }) => {
+    const mutation=useUserMutation();
     const [date, setDate] = useState(user.nextExamDate ?? new Date().toISOString().slice(0, 10));
     const [score, setScore] = useState(user.targetScore ?? 600);
 
@@ -58,7 +48,12 @@ const GoalSettingForm = ({ user }: { user: userType }) => {
                 />
             </div>
             <div className="flex justify-center pt-3">
-                <button className="bg-green-500 rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700">更新</button>
+                <button 
+                className="bg-green-500 rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700"
+                onClick={()=>mutation.mutate({
+                    targetScore: score,
+                    nextExamDate: date
+                })}>更新</button>
             </div>
         </div>
     );

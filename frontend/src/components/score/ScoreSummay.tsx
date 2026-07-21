@@ -1,10 +1,13 @@
-import { dummyUser } from "../../data/dummyUser";
 import { KpiCard } from "../../modules/KpiCard";
 import { calcDaysUntilNextExam, calcExamTimes } from "../../utils/calcExam";
 import { calcBestScoreAndDate, calcScoreByNumber } from "../../utils/calcScore";
 import { formatDateSlash } from "../../utils/formatDate";
 
-export const ScoreSummary = () => {
+type Props={
+    nextExamDate: null|string;
+}
+
+export const ScoreSummary = ({nextExamDate}: Props) => {
     const scoreDiff = calcScoreByNumber(0) - calcScoreByNumber(1);
     const scoreDiffStr = scoreDiff >= 0 ? `+${scoreDiff}` : `${scoreDiff}`;
     const [bestScore, bestScoreDate] = calcBestScoreAndDate();
@@ -19,7 +22,7 @@ export const ScoreSummary = () => {
                 </div>
                 <div className="flex mx-auto justify-center flex-wrap xl:gap-8">
                     <KpiCard title={<span>受験回数</span>} value={calcExamTimes()} unit="回" />
-                    <KpiCard title={<span>次回受験まで</span>} value={calcDaysUntilNextExam() ?? 0} unit="日" sub={dummyUser.nextExamDate ? `${formatDateSlash(dummyUser.nextExamDate)} 予定` : "未設定"} />
+                    <KpiCard title={<span>次回受験まで</span>} value={calcDaysUntilNextExam(nextExamDate) ?? 0} unit="日" sub={nextExamDate ? `${formatDateSlash(nextExamDate)} 予定` : "未設定"} />
                 </div>
             </div>
         </div>

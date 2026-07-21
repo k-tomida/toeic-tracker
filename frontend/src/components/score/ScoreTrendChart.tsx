@@ -1,8 +1,11 @@
 import { Bar, ComposedChart, LabelList, Legend, Line, ReferenceLine, XAxis, YAxis } from "recharts"
 import { formatTrendChartData } from "../../utils/formatChartData"
-import { dummyUser } from "../../data/dummyUser";
 
-export const ScoreTrendChart = () => {
+type Props = {
+    targetScore: number;
+};
+
+export const ScoreTrendChart = ({targetScore}: Props) => {
     const scoreData = formatTrendChartData();
     return (
         <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">
@@ -54,10 +57,10 @@ export const ScoreTrendChart = () => {
                         />
                     </Line>
                     <ReferenceLine
-                        y={dummyUser.targetScore}
+                        y={targetScore}
                         stroke="#eda100"
                         strokeDasharray="4 4"
-                        label={{ value: `目標 ${dummyUser.targetScore}`, position: "top", fill: "#c98500", fontSize: 14 }}
+                        label={{ value: `目標 ${targetScore}`, position: "top", fill: "#c98500", fontSize: 14 }}
                     />
                     <XAxis dataKey="examDate" />
                     <YAxis domain={[0, 990]} />
