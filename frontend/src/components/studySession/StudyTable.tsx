@@ -114,7 +114,7 @@ export const StudyTable = () => {
                                     <td className="py-3 px-4 text-gray-700">{formatDate(data.date)}</td>
                                     <td className="py-3 px-4">
                                         <div className="flex gap-1 flex-wrap">
-                                            {data.category.map((c) => changeTagByCategory(c))}
+                                            {changeTagByCategory(data.category)}
                                         </div>
                                     </td>
                                     <td className="py-3 px-4 text-gray-700">{data.duration}min</td>

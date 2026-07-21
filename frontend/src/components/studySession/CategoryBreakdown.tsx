@@ -8,7 +8,6 @@ export const CategoryBreakdown = () => {
         <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-[400px]">
             <div className="flex items-baseline gap-2 mb-3">
                 <h2 className="text-xl font-medium text-gray-600">カテゴリ別内訳</h2>
-                <span className="text-xs text-gray-400">※ 複数カテゴリのセッションは重複集計</span>
             </div>
             <div>
                 <div className="flex items-center gap-10 mb-6 justify-between">

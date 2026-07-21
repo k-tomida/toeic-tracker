@@ -32,12 +32,6 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
     const [category, setCategory] = useState(data?.category ?? []);
     const [memo, setMemo] = useState(data?.memo ?? "");
 
-    const toggleCategory = (c: categoryType) => {
-        setCategory((prev) =>
-            prev.includes(c) ? prev.filter((item) => item !== c) : [...prev, c]
-        );
-    };
-
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg mx-4">
@@ -73,14 +67,14 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                 </div>
                 {/* カテゴリ選択*/}
                 <div className="my-3">
-                    <h2 className="text-gray-600 mb-2">カテゴリ（複数選択可）</h2>
+                    <h2 className="text-gray-600 mb-2">カテゴリ</h2>
                     <div className="flex gap-3 py-1">
                         {allCategories.map((c) => (
                             <button
                                 key={c}
-                                onClick={() => toggleCategory(c)}
+                                onClick={() => setCategory(c)}
                                 className={`text-lg px-2 py-0.5 rounded-full font-medium hover:bg-gray-200
-                                    ${category.includes(c) ? tagStyles[c] : "bg-gray-100 text-gray-400"}`}
+                                    ${category === c ? tagStyles[c] : "bg-gray-100 text-gray-400"}`}
                             >
                                 {categoryLabelMap[c]}
                             </button>
