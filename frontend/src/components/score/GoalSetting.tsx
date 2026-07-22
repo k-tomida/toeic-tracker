@@ -3,13 +3,19 @@ import { ProgressBar } from "../../ui/ProgressBar";
 import { calcBestScore } from "../../utils/calcScore";
 import { useUserMutation } from "../../hooks/user/useUser";
 import type { userType } from "../../types/userType";
+import type { scoreType } from "../../types/scoreType";
 
-export const GoalSetting = ({ user }: { user: userType }) => {
+type Props = {
+    user: userType;
+    scores: scoreType[]
+}
+
+export const GoalSetting = ({ user, scores }: Props) => {
     const mutation = useUserMutation();
     const [date, setDate] = useState(user.nextExamDate ?? new Date().toISOString().slice(0, 10));
     const [score, setScore] = useState(user.targetScore ?? 600);
 
-    const [bestScore] = calcBestScore();
+    const [bestScore] = calcBestScore(scores);
     const isAchieved = bestScore >= score;
 
     return (

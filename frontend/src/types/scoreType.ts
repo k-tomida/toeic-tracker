@@ -1,7 +1,8 @@
 export type scoreType = {
     id: string;
     examDate: string;
-    listening: number;
-    reading: number;
+    totalScore: number;
+    listeningScore: number;
+    readingScore: number;
     memo?: string;
 };

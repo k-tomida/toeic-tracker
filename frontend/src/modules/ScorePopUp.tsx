@@ -3,7 +3,6 @@ import { formatDateSlash } from "../utils/formatDate";
 import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
 import type { scoreType } from "../types/scoreType";
-import { calcTotalScore } from "../utils/calcScore";
 
 type Props = {
     onClose: () => void;
@@ -12,8 +11,8 @@ type Props = {
 
 export const ScorePopUp = ({ onClose, data }: Props) => {
     const [date, setDate] = useState(data?.examDate ?? new Date().toISOString().slice(0, 10));
-    const [listening, setListening] = useState(data?.listening ?? 0);
-    const [reading, setReading] = useState(data?.reading ?? 0);
+    const [listening, setListening] = useState(data?.listeningScore ?? 0);
+    const [reading, setReading] = useState(data?.readingScore ?? 0);
     const [memo, setMemo] = useState(data?.memo ?? "");
 
     return (
@@ -71,7 +70,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                 <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex justify-between items-center">
                     <span className="text-sm text-green-800">合計スコア</span>
                     <span className="text-2xl font-bold text-green-600">
-                        {calcTotalScore(listening, reading)}
+                        {listening + reading}
                     </span>
                 </div>
                 {/* メモ*/}

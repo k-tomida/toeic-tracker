@@ -1,12 +1,14 @@
 import { Bar, ComposedChart, LabelList, Legend, Line, ReferenceLine, XAxis, YAxis } from "recharts"
 import { formatTrendChartData } from "../../utils/formatChartData"
+import type { scoreType } from "../../types/scoreType";
 
 type Props = {
     targetScore: number;
+    scores: scoreType[]
 };
 
-export const ScoreTrendChart = ({targetScore}: Props) => {
-    const scoreData = formatTrendChartData();
+export const ScoreTrendChart = ({ targetScore, scores }: Props) => {
+    const scoreData = formatTrendChartData(scores);
     return (
         <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">
             <p className="mb-3 text-xl font-medium text-gray-600">スコア推移</p>

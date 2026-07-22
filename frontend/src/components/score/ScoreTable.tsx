@@ -1,8 +1,6 @@
 import { FaPen } from "react-icons/fa";
-import { dummyScoreData } from "../../data/dummyScoreData"
 import { Button } from "../../ui/Button"
 import { sortScoreByNewest } from "../../utils/sortTableByOrder"
-import { calcTotalScore } from "../../utils/calcScore";
 import { useState } from "react";
 import { getPageNumbers } from "../../utils/getPageNumbers";
 import { formatDateSlash } from "../../utils/formatDate";
@@ -11,9 +9,9 @@ import { ScorePopUp } from "../../modules/ScorePopUp";
 
 const ITEMS_PER_PAGE = 5;
 
-export const ScoreTable = () => {
+export const ScoreTable = ({ scores }: { scores: scoreType[] }) => {
     const [page, setPage] = useState(1);
-    const sortScoreData = sortScoreByNewest(dummyScoreData);
+    const sortScoreData = sortScoreByNewest(scores);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     const [popUpData, setPopUpData] = useState<scoreType | null>(null);
 
@@ -58,9 +56,9 @@ export const ScoreTable = () => {
                                 {pageTables.map((data) => (
                                     <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
                                         <td className="py-3 px-4 text-gray-700">{formatDateSlash(data.examDate)}</td>
-                                        <td className="py-3 px-4 text-gray-700">{data.listening}</td>
-                                        <td className="py-3 px-4 text-gray-700">{data.reading}</td>
-                                        <td className="py-3 px-4 text-gray-700">{calcTotalScore(data.listening, data.reading)}</td>
+                                        <td className="py-3 px-4 text-gray-700">{data.listeningScore}</td>
+                                        <td className="py-3 px-4 text-gray-700">{data.readingScore}</td>
+                                        <td className="py-3 px-4 text-gray-700">{data.totalScore}</td>
                                         <td className="py-3 px-4 text-gray-500">{data.memo}</td>
                                         <td className="py-3 px-4">
                                             <button
