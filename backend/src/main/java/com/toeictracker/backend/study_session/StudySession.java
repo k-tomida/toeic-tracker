@@ -1,9 +1,8 @@
-package com.toeictracker.backend.user;
+package com.toeictracker.backend.study_session;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.DialectOverride;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
@@ -11,26 +10,28 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name="users")
-public class User {
+@Table(name = "study_sessions")
+public class StudySession {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String  email;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(nullable = false)
-    private String password;
+    private LocalDate date;
 
     @Column(nullable = false)
-    private String name;
+    private Integer duration;
 
-    @Column(name = "target_score")
-    private Integer targetScore;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Category category;
 
-    @Column(name="next_exam_date")
-    private LocalDate nextExamDate;
+    @Column(length = 500)
+    private String memo;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

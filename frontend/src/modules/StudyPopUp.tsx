@@ -1,42 +1,41 @@
 import { useState } from "react";
-import type { tableType } from "../types/tableType";
+import type { studySessionType, categoryType } from "../types/studySessionType";
 import { formatDate } from "../utils/formatDate";
 import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
-import type { categoryType } from "../types/categoryType";
+import { useCreateStudySession } from "../hooks/study_session/useCreateStudySession";
+import { useUpdateStudySession } from "../hooks/study_session/useUpdateStudySession";
+import { useDeleteStudySession } from "../hooks/study_session/useDeleteStudySession";
 
 type Props = {
     onClose: () => void;
-    data: tableType | null;
+    data: studySessionType | null;
 };
 
-const tagStyles: Record<string, string> = {
-    listening: "bg-blue-50 text-blue-800 border border-blue-200",
-    vocabulary: "bg-amber-50 text-amber-800 border border-amber-200",
-    grammar: "bg-green-50 text-green-800 border border-green-200",
-    mockExam: "bg-purple-50 text-purple-800 border border-purple-200",
+const tagStyles: Record<categoryType, string> = {
+    LISTENING: "bg-blue-50 text-blue-800 border border-blue-200",
+    VOCABULARY: "bg-amber-50 text-amber-800 border border-amber-200",
+    GRAMMAR: "bg-green-50 text-green-800 border border-green-200",
+    MOCK_EXAM: "bg-purple-50 text-purple-800 border border-purple-200",
 };
 
-const categoryLabelMap: Record<string, string> = {
-    listening: "リスニング",
-    vocabulary: "単語",
-    grammar: "文法",
-    mockExam: "模試"
+const categoryLabelMap: Record<categoryType, string> = {
+    LISTENING: "リスニング",
+    VOCABULARY: "単語",
+    GRAMMAR: "文法",
+    MOCK_EXAM: "模試"
 };
 
-const allCategories: categoryType[] = ["mockExam", "listening", "vocabulary", "grammar"];
+const allCategories: categoryType[] = ["LISTENING", "VOCABULARY", "GRAMMAR", "MOCK_EXAM"];
 
 export const StudyPopUp = ({ onClose, data }: Props) => {
+    const createMutation = useCreateStudySession();
+    const updateMutation = useUpdateStudySession();
+    const deleteMutation = useDeleteStudySession();
     const [date, setDate] = useState(data?.date ?? new Date().toISOString().slice(0, 10));
     const [duration, setDuration] = useState(data?.duration ?? 0);
-    const [category, setCategory] = useState(data?.category ?? []);
+    const [category, setCategory] = useState(data?.category ?? "LISTENING");
     const [memo, setMemo] = useState(data?.memo ?? "");
-
-    const toggleCategory = (c: categoryType) => {
-        setCategory((prev) =>
-            prev.includes(c) ? prev.filter((item) => item !== c) : [...prev, c]
-        );
-    };
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -73,14 +72,14 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                 </div>
                 {/* カテゴリ選択*/}
                 <div className="my-3">
-                    <h2 className="text-gray-600 mb-2">カテゴリ（複数選択可）</h2>
+                    <h2 className="text-gray-600 mb-2">カテゴリ</h2>
                     <div className="flex gap-3 py-1">
                         {allCategories.map((c) => (
                             <button
                                 key={c}
-                                onClick={() => toggleCategory(c)}
+                                onClick={() => setCategory(c)}
                                 className={`text-lg px-2 py-0.5 rounded-full font-medium hover:bg-gray-200
-                                    ${category.includes(c) ? tagStyles[c] : "bg-gray-100 text-gray-400"}`}
+                                    ${category === c ? tagStyles[c] : "bg-gray-100 text-gray-400"}`}
                             >
                                 {categoryLabelMap[c]}
                             </button>
@@ -100,14 +99,42 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                 {/* 削除ボタンは編集時のみ表示 */}
                 <div className="flex justify-between mt-7">
                     {data !== null ? (
-                        <Button onClick={onClose}>
+                        <Button onClick={() => {
+                            deleteMutation.mutate(data.id); onClose();
+                        }}>
                             <span className="flex gap-2 items-center">
                                 <FaRegTrashAlt /> 削除
                             </span>
-                        </Button>) : (<div />)}
-                    <Button onClick={onClose}>保存する</Button>
+                        </Button>
+                    ) : (<div />)}
+                    {data !== null ?
+                        <Button onClick={() => {
+                            updateMutation.mutate({
+                                id: data.id,
+                                updateStudySession: {
+                                    userId: 1,
+                                    date: date,
+                                    duration: duration,
+                                    category: category,
+                                    memo: memo,
+                                }
+                            });
+                            onClose();
+                        }}>保存する</Button>
+                        :
+                        <Button
+                            onClick={() => {
+                                createMutation.mutate({
+                                    userId: 1,
+                                    date: date,
+                                    duration: duration,
+                                    category: category,
+                                    memo: memo,
+                                });
+                                onClose();
+                            }}>追加する</Button>}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };

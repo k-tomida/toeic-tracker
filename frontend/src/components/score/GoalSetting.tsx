@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { ProgressBar } from "../../ui/ProgressBar";
 import { calcBestScore } from "../../utils/calcScore";
-import { useUser, useUserMutation } from "../../hooks/user/useUser";
+import { useUserMutation } from "../../hooks/user/useUser";
 import type { userType } from "../../types/userType";
 
 export const GoalSetting = ({ user }: { user: userType }) => {
-    const mutation=useUserMutation();
+    const mutation = useUserMutation();
     const [date, setDate] = useState(user.nextExamDate ?? new Date().toISOString().slice(0, 10));
     const [score, setScore] = useState(user.targetScore ?? 600);
 
@@ -48,12 +48,12 @@ export const GoalSetting = ({ user }: { user: userType }) => {
                 />
             </div>
             <div className="flex justify-center pt-3">
-                <button 
-                className="bg-green-500 rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700"
-                onClick={()=>mutation.mutate({
-                    targetScore: score,
-                    nextExamDate: date
-                })}>更新</button>
+                <button
+                    className="bg-green-500 rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700"
+                    onClick={() => mutation.mutate({
+                        targetScore: score,
+                        nextExamDate: date
+                    })}>更新</button>
             </div>
         </div>
     );

@@ -2,11 +2,9 @@ import { FaPen } from "react-icons/fa";
 import { changeTagByCategory } from "../../utils/changeTag";
 import { formatDate } from "../../utils/formatDate";
 import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
-import type { tableType } from "../../types/tableType";
+import type { studySessionType, categoryType } from "../../types/studySessionType";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";
 import { useMemo, useState } from "react";
-import { dummyStudySessions } from "../../data/dummyStudySession";
-import type { categoryType } from "../../types/categoryType";
 import type { periodType } from "../../types/periodType";
 import type { orderType } from "../../types/orderType";
 import { getPageNumbers } from "../../utils/getPageNumbers";
@@ -15,12 +13,12 @@ import { Select } from "../../ui/Select";
 import { Button } from "../../ui/Button";
 import { StudyPopUp } from "../../modules/StudyPopUp";
 
-const categoryOptions: { label: string, value: categoryType }[] = [
+const categoryOptions: { label: string, value: "all" | categoryType }[] = [
     { label: "すべてのカテゴリ", value: "all" },
-    { label: "リスニング", value: "listening" },
-    { label: "単語", value: "vocabulary" },
-    { label: "文法", value: "grammar" },
-    { label: "模試", value: "mockExam" },
+    { label: "リスニング", value: "LISTENING" },
+    { label: "単語", value: "VOCABULARY" },
+    { label: "文法", value: "GRAMMAR" },
+    { label: "模試", value: "MOCK_EXAM" },
 ];
 
 const periodOptions: { label: string, value: periodType }[] = [
@@ -38,13 +36,13 @@ const orderOptions: { label: string, value: orderType }[] = [
 
 const ITEMS_PER_PAGE = 10
 
-export const StudyTable = () => {
+export const StudyTable = ({ studySessions }: { studySessions: studySessionType[] }) => {
     const [page, setPage] = useState(1);
-    const [category, setCategory] = useState<categoryType>(categoryOptions[0].value);
+    const [category, setCategory] = useState<"all" | categoryType>(categoryOptions[0].value);
     const [period, setPeriod] = useState<periodType>(periodOptions[0].value);
     const [order, setOrder] = useState<orderType>(orderOptions[0].value);
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-    const [popUpData, setPopUpData] = useState<tableType | null>(null);
+    const [popUpData, setPopUpData] = useState<studySessionType | null>(null);
 
     const [prevFilters, setPrevFilters] = useState({ category, period, order });
 
@@ -58,17 +56,17 @@ export const StudyTable = () => {
         setPage(1);
     }
 
-    const filteredStudyTables = useMemo(() => {
+    const filteredStudyTables: studySessionType[] = useMemo(() => {
         const byCategory =
             category !== "all"
-                ? dummyStudySessions.filter((studyTable) =>
-                    studyTable.category.includes(category)
+                ? studySessions.filter((studyTable) =>
+                    studyTable.category === category
                 )
-                : dummyStudySessions;
+                : studySessions;
 
         const byPeriod = changeTableByPeriod(period, byCategory);
         return sortTableByOrder(order, byPeriod);
-    }, [category, period, order]);
+    }, [studySessions, category, period, order]);
 
     //ページネーション機能
     const startItem = (page - 1) * ITEMS_PER_PAGE + 1;
@@ -114,7 +112,7 @@ export const StudyTable = () => {
                                     <td className="py-3 px-4 text-gray-700">{formatDate(data.date)}</td>
                                     <td className="py-3 px-4">
                                         <div className="flex gap-1 flex-wrap">
-                                            {data.category.map((c) => changeTagByCategory(c))}
+                                            {changeTagByCategory(data.category)}
                                         </div>
                                     </td>
                                     <td className="py-3 px-4 text-gray-700">{data.duration}min</td>

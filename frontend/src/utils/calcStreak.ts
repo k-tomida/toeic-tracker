@@ -1,13 +1,12 @@
-import { dummyStudySessions } from "../data/dummyStudySession";
-import type { tableType } from "../types/tableType";
+import type { studySessionType } from "../types/studySessionType";
 import { sortTableByOrder } from "./sortTableByOrder";
 
-export const calcStreak = (): number => {
+export const calcStreak = (studySessions: studySessionType[]): number => {
     const todayStr = new Date().toISOString().slice(0, 10);
-    const data = sortTableByOrder("newest", dummyStudySessions);
+    const data = sortTableByOrder("newest", studySessions);
     if (data.length === 0) return 0;
 
-    const uniqueData: tableType[] = data.filter((element, index, self) => self.findIndex(e => e.date === element.date) === index);
+    const uniqueData = data.filter((element, index, self) => self.findIndex(e => e.date === element.date) === index);
 
     if (uniqueData[0].date !== todayStr) return 0;
 
@@ -30,11 +29,11 @@ export const calcStreak = (): number => {
     return streak;
 }
 
-export const calcMaxStreak = (): number => {
-    const data = sortTableByOrder("newest", dummyStudySessions);
+export const calcMaxStreak = (studySessions: studySessionType[]): number => {
+    const data = sortTableByOrder("newest", studySessions);
     if (data.length === 0) return 0;
 
-    const uniqueData: tableType[] = data.filter(
+    const uniqueData = data.filter(
         (element, index, self) =>
             self.findIndex(e => e.date === element.date) === index
     );

@@ -1,6 +1,6 @@
 import type { orderType } from "../types/orderType";
 import type { scoreType } from "../types/scoreType";
-import type { tableType } from "../types/tableType";
+import type { tableType } from "../types/studySessionType";
 import type { vocabularyOrderType, vocabularyType } from "../types/vocabularyType";
 
 
