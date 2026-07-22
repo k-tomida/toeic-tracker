@@ -1,4 +1,4 @@
-import { dummyStudySessions } from "../../data/dummyStudySession";
+import type { studySessionType } from "../../types/studySessionType";
 
 /** 
  * 引数のstartDateから一年間の日付を取得する
@@ -18,7 +18,7 @@ function getDatesForOneYear(startDate: Date): string[] {
     return dates;
 }
 
-export const HeatMap = () => {
+export const HeatMap = ({ studySessions }: { studySessions: studySessionType[] }) => {
     const dates = getDatesForOneYear(new Date("2026-01-01"));
 
     // 7行（日〜土）× 53列のグリッドに並べる==========
@@ -42,7 +42,7 @@ export const HeatMap = () => {
     // 7行（日〜土）× 53列のグリッドに並べる==========
 
     const getStudyTimeByDate = (date: string) => {
-        const studyData = dummyStudySessions.find(item => item.date === date);
+        const studyData = studySessions.find(item => item.date === date);
         return studyData ? studyData.duration : 0;
     }
 

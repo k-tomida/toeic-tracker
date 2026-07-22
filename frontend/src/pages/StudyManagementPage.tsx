@@ -14,8 +14,8 @@ export const StudyManagementPage = () => {
             <Header />
             <main className="max-w-7xl mx-auto px-4 py-6">
                 <div className="flex flex-wrap gap-4 mx-10 my-5">
-                    <StudyTimeSummary />
-                    <CategoryBreakdown />
+                    <StudyTimeSummary studySessions={data} />
+                    <CategoryBreakdown studySessions={data} />
                 </div>
                 <StudyTable studySessions={data} />
             </main>

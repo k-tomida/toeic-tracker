@@ -3,6 +3,9 @@ import type { studySessionType, categoryType } from "../types/studySessionType";
 import { formatDate } from "../utils/formatDate";
 import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
+import { useCreateStudySession } from "../hooks/study_session/useCreateStudySession";
+import { useUpdateStudySession } from "../hooks/study_session/useUpdateStudySession";
+import { useDeleteStudySession } from "../hooks/study_session/useDeleteStudySession";
 
 type Props = {
     onClose: () => void;
@@ -26,9 +29,12 @@ const categoryLabelMap: Record<categoryType, string> = {
 const allCategories: categoryType[] = ["LISTENING", "VOCABULARY", "GRAMMAR", "MOCK_EXAM"];
 
 export const StudyPopUp = ({ onClose, data }: Props) => {
+    const createMutation = useCreateStudySession();
+    const updateMutation = useUpdateStudySession();
+    const deleteMutation = useDeleteStudySession();
     const [date, setDate] = useState(data?.date ?? new Date().toISOString().slice(0, 10));
     const [duration, setDuration] = useState(data?.duration ?? 0);
-    const [category, setCategory] = useState(data?.category ?? []);
+    const [category, setCategory] = useState(data?.category ?? "LISTENING");
     const [memo, setMemo] = useState(data?.memo ?? "");
 
     return (
@@ -93,14 +99,42 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                 {/* 削除ボタンは編集時のみ表示 */}
                 <div className="flex justify-between mt-7">
                     {data !== null ? (
-                        <Button onClick={onClose}>
+                        <Button onClick={() => {
+                            deleteMutation.mutate(data.id); onClose();
+                        }}>
                             <span className="flex gap-2 items-center">
                                 <FaRegTrashAlt /> 削除
                             </span>
-                        </Button>) : (<div />)}
-                    <Button onClick={onClose}>保存する</Button>
+                        </Button>
+                    ) : (<div />)}
+                    {data !== null ?
+                        <Button onClick={() => {
+                            updateMutation.mutate({
+                                id: data.id,
+                                updateStudySession: {
+                                    userId: 1,
+                                    date: date,
+                                    duration: duration,
+                                    category: category,
+                                    memo: memo,
+                                }
+                            });
+                            onClose();
+                        }}>保存する</Button>
+                        :
+                        <Button
+                            onClick={() => {
+                                createMutation.mutate({
+                                    userId: 1,
+                                    date: date,
+                                    duration: duration,
+                                    category: category,
+                                    memo: memo,
+                                });
+                                onClose();
+                            }}>追加する</Button>}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };

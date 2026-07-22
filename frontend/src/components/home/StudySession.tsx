@@ -1,10 +1,10 @@
 import { changeTagByCategory } from "../../utils/changeTag";
 import { formatDate } from "../../utils/formatDate";
-import { dummyStudySessions } from "../../data/dummyStudySession";
 import { sortTableByOrder } from "../../utils/sortTableByOrder";
+import type { studySessionType } from "../../types/studySessionType";
 
-export const StudySession = () => {
-    const items = sortTableByOrder("newest", dummyStudySessions).slice(0, 5);
+export const StudySession = ({ studySessions }: { studySessions: studySessionType[] }) => {
+    const items = sortTableByOrder("newest", studySessions).slice(0, 5);
     return (
         <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0 min-w-[400px]">
             <p className="mb-5 text-xl font-medium text-gray-600">直近の学習セッション</p>
