@@ -41,16 +41,20 @@ export const HeatMap = ({ studySessions }: { studySessions: studySessionType[] }
     });
     // 7行（日〜土）× 53列のグリッドに並べる==========
 
-    const getStudyTimeByDate = (date: string) => {
-        const studyData = studySessions.find(item => item.date === date);
-        return studyData ? studyData.duration : 0;
+    const getStudyTimeByDate = (date: string):number => {
+        const studyData: studySessionType[]= studySessions.filter(item => item.date === date);
+        let studyTime=0;
+        studyData.forEach(d => {
+            studyTime+=d.duration
+        });
+        return studyTime;
     }
 
     const getColor = (count: number) => {
         if (count === 0) return "bg-gray-100";
         if (count <= 30) return "bg-green-200";
         if (count <= 60) return "bg-green-400";
-        if (count <= 90) return "bg-green-600";
+        if (count <= 120) return "bg-green-600";
         return "bg-green-800";
     };
 
