@@ -1,12 +1,14 @@
+import type { scoreType } from "../../types/scoreType";
 import { ProgressBar } from "../../ui/ProgressBar"
 import { calcBestScore } from "../../utils/calcScore"
 
 type Props = {
     targetScore: number;
+    scores: scoreType[]
 }
 
-export const GoalProgress = ({ targetScore }: Props) => {
-    const [total, listening, reading] = calcBestScore()
+export const GoalProgress = ({ targetScore, scores }: Props) => {
+    const [total, listening, reading] = calcBestScore(scores)
     const isAchieved = total >= targetScore;
     return (
         <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">

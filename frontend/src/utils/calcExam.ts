@@ -1,10 +1,10 @@
-import { dummyScoreData } from "../data/dummyScoreData";
+import type { scoreType } from "../types/scoreType";
 
-export const calcExamTimes = (): number => {
-    return dummyScoreData.length;
+export const calcExamTimes = (scores: scoreType[]): number => {
+    return scores.length;
 }
 
-export const calcDaysUntilNextExam = (nextExamDate: string|null): number | null => {
+export const calcDaysUntilNextExam = (nextExamDate: string | null): number | null => {
     if (!nextExamDate) return null;
 
     const today = new Date();
