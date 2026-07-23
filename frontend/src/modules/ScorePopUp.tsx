@@ -3,6 +3,9 @@ import { formatDateSlash } from "../utils/formatDate";
 import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
 import type { scoreType } from "../types/scoreType";
+import { useCreateScore } from "../hooks/score/useCreateScore";
+import { useUpdateScore } from "../hooks/score/useUpdateScore";
+import { useDeleteScore } from "../hooks/score/useDeleteScore";
 
 type Props = {
     onClose: () => void;
@@ -10,6 +13,9 @@ type Props = {
 };
 
 export const ScorePopUp = ({ onClose, data }: Props) => {
+    const createMutation = useCreateScore();
+    const updateMutation = useUpdateScore();
+    const deleteMutation = useDeleteScore();
     const [date, setDate] = useState(data?.examDate ?? new Date().toISOString().slice(0, 10));
     const [listening, setListening] = useState(data?.listeningScore ?? 0);
     const [reading, setReading] = useState(data?.readingScore ?? 0);
@@ -70,7 +76,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                 <div className="bg-green-50 border border-green-200 rounded-lg px-4 py-3 flex justify-between items-center">
                     <span className="text-sm text-green-800">合計スコア</span>
                     <span className="text-2xl font-bold text-green-600">
-                        {listening + reading}
+                        {(isNaN(listening) ? 0 : listening) + (isNaN(reading) ? 0 : reading)}
                     </span>
                 </div>
                 {/* メモ*/}
@@ -86,14 +92,39 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                 {/* 削除ボタンは編集時のみ表示 */}
                 <div className="flex justify-between mt-7">
                     {data !== null ?
-                        (<Button onClick={onClose}>
+                        (<Button onClick={() => { deleteMutation.mutate(data.id); onClose(); }}>
                             <span className="flex gap-2 items-center">
                                 <FaRegTrashAlt /> 削除
                             </span>
                         </Button>) : (<div />)}
-                    <Button onClick={onClose}>保存する</Button>
+                    {data !== null ?
+                        <Button onClick={() => {
+                            updateMutation.mutate({
+                                id: data.id,
+                                updateScore: {
+                                    userId: 1,
+                                    examDate: date,
+                                    listeningScore: listening,
+                                    readingScore: reading,
+                                    memo: memo,
+                                }
+                            });
+                            onClose();
+                        }}>保存する</Button>
+                        :
+                        <Button
+                            onClick={() => {
+                                createMutation.mutate({
+                                    userId: 1,
+                                    examDate: date,
+                                    listeningScore: listening,
+                                    readingScore: reading,
+                                    memo: memo,
+                                });
+                                onClose();
+                            }}>追加する</Button>}
                 </div>
             </div>
-        </div>
+        </div >
     );
 };

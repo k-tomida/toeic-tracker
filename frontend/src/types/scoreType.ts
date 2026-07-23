@@ -1,5 +1,5 @@
 export type scoreType = {
-    id: string;
+    id: number;
     examDate: string;
     totalScore: number;
     listeningScore: number;

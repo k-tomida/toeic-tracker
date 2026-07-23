@@ -1,10 +1,10 @@
 import type { orderType } from "../types/orderType";
 import type { scoreType } from "../types/scoreType";
-import type { tableType } from "../types/studySessionType";
+import type { studySessionType } from "../types/studySessionType";
 import type { vocabularyOrderType, vocabularyType } from "../types/vocabularyType";
 
 
-export const sortTableByOrder = (order: orderType, filteredStudyTables: tableType[]): tableType[] => {
+export const sortTableByOrder = (order: orderType, filteredStudyTables: studySessionType[]): studySessionType[] => {
     if (order === "newest") {
         return [...filteredStudyTables].sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
     }
@@ -18,8 +18,10 @@ export const sortTableByOrder = (order: orderType, filteredStudyTables: tableTyp
 }
 
 export const sortScoreByNewest = (scoreData: scoreType[]): scoreType[] => {
-
     return [...scoreData].sort((a, b) => Date.parse(b.examDate) - Date.parse(a.examDate));
+}
+export const sortScoreByOldest = (scoreData: scoreType[]): scoreType[] => {
+    return [...scoreData].sort((a, b) => Date.parse(a.examDate) - Date.parse(b.examDate));
 }
 
 export const sortVocabularyByOrder = (order: vocabularyOrderType, filteredStudyTables: vocabularyType[]): vocabularyType[] => {

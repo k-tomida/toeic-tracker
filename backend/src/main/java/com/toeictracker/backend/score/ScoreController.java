@@ -2,10 +2,7 @@ package com.toeictracker.backend.score;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +18,23 @@ public class ScoreController {
     public ResponseEntity<List<Score>> getScore(){
         List<Score> data=scoreService.getScore(1L);
         return ResponseEntity.ok(data);
+    }
+
+    @PostMapping
+    public ResponseEntity<Score> addScore(@RequestBody Score score){
+        Score data=scoreService.addScore(score);
+        return ResponseEntity.ok(data);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Score> updateScore(@PathVariable Long id, @RequestBody Score score){
+        Score data=scoreService.updateScore(id, score);
+        return ResponseEntity.ok(data);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteScore(@PathVariable Long id){
+        scoreService.deleteScore(id);
+        return ResponseEntity.noContent().build();
     }
 }
