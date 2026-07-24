@@ -1,12 +1,12 @@
 import type { periodType } from "../types/periodType";
-import type { tableType } from "../types/studySessionType";
+import type { studySessionType } from "../types/studySessionType";
 
 
-export const changeTableByPeriod = (period: periodType, filteredStudyTables: tableType[]): tableType[] => {
+export const changeTableByPeriod = (period: periodType, filteredStudyTables: studySessionType[]): studySessionType[] => {
     const today = new Date();
     const thisMonth = today.getMonth() + 1;
     const thisYear = today.getFullYear();
-    let chooseTables: tableType[] = []
+    let chooseTables: studySessionType[] = []
     if (period === "all") {
         chooseTables = filteredStudyTables;
     }

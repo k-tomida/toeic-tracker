@@ -26,10 +26,10 @@ export const sortScoreByOldest = (scoreData: scoreType[]): scoreType[] => {
 
 export const sortVocabularyByOrder = (order: vocabularyOrderType, filteredStudyTables: vocabularyType[]): vocabularyType[] => {
     if (order === "newest") {
-        return [...filteredStudyTables].sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+        return [...filteredStudyTables].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
     }
     if (order === "oldest") {
-        return [...filteredStudyTables].sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+        return [...filteredStudyTables].sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt));
     }
     if (order === "alphabetical") {
         return [...filteredStudyTables].sort((a, b) => a.word.localeCompare(b.word));

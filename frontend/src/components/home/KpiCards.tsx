@@ -10,13 +10,16 @@ import { calcStudyTimeInMonth } from "../../utils/calcStudyTime";
 import { calcScoreByNumber } from "../../utils/calcScore";
 import type { studySessionType } from "../../types/studySessionType";
 import type { scoreType } from "../../types/scoreType";
+import type { vocabularyType } from "../../types/vocabularyType";
+import { countVocabulary, countVocabularyByStatus } from "../../utils/calcVocabulary";
 
 type Props = {
     studySessions: studySessionType[];
-    scores: scoreType[]
+    scores: scoreType[];
+    vocabularies: vocabularyType[];
 }
 
-export const KpiCards = ({ studySessions, scores }: Props) => {
+export const KpiCards = ({ studySessions, scores, vocabularies }: Props) => {
     const today = new Date();
     const lastMonth = new Date();
     lastMonth.setMonth(today.getMonth() - 1);
@@ -31,7 +34,7 @@ export const KpiCards = ({ studySessions, scores }: Props) => {
             <KpiCard title={<span className="flex items-center gap-1"><AiOutlineFire />ストリーク</span>} value={calcStreak(studySessions)} unit="日" sub={`過去最高 ${calcMaxStreak(studySessions)}日`} />
             <KpiCard title={<span className="flex items-center gap-1"><FaRegClock />今月の学習時間</span>} value={calcStudyTimeInMonth(today, studySessions)} unit="h" sub={`先月比 ${studyTimeDiffStr}h`} />
             <KpiCard title={<span className="flex items-center gap-1"><TfiCup />最新スコア</span>} value={calcScoreByNumber(0, scores)} sub={`前回比 ${scoreDiffStr}`} />
-            <KpiCard title={<span className="flex items-center gap-1"><LuNotebookPen />登録語彙数</span>} value={342} sub="今週 +18語" />
+            <KpiCard title={<span className="flex items-center gap-1"><LuNotebookPen />登録語彙数</span>} value={countVocabulary(vocabularies)} sub={`習得済み ${countVocabularyByStatus(vocabularies, "ACQUIRED")}語`} />
         </div>
 
     )

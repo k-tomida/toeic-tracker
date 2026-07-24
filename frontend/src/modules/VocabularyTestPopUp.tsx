@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { dummyVocabulary } from "../data/dummyVocabulary";
 import { pickRandomWords } from "../utils/calcVocabulary";
+import type { scopeType, testCountType, vocabularyType } from "../types/vocabularyType";
 
 type Props = {
+    vocabularies: vocabularyType[]
     onClose: () => void;
-    scope: "all" | "unacquired";
-    test: "ten" | "twenty" | "all";
+    scope: scopeType;
+    test: testCountType;
 }
 
-export const VocabularyTestPopUp = ({ onClose, scope, test }: Props) => {
-    const [vocabularys] = useState(() => pickRandomWords(dummyVocabulary, scope, test));
+export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Props) => {
+    const [vocabularys] = useState(() => pickRandomWords(vocabularies, scope, test));
     const [number, setNumber] = useState(0);
     const [revealed, setRevealed] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);

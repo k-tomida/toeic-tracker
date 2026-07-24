@@ -3,7 +3,6 @@ import { Select } from "../../ui/Select";
 import { Button } from "../../ui/Button";
 import { useMemo, useState } from "react";
 import type { statusType, vocabularyOrderType, vocabularyType, wordClassType } from "../../types/vocabularyType";
-import { dummyVocabulary } from "../../data/dummyVocabulary";
 import { FaPen } from "react-icons/fa";
 import { changeTagByStatus, changeTagByWordClass } from "../../utils/changeTag";
 import { getPageNumbers } from "../../utils/getPageNumbers";
@@ -13,19 +12,19 @@ import { VocabularyPopUp } from "../../modules/VocabularyPopUp";
 
 const wordClassOptions: { label: string, value: "all" | wordClassType }[] = [
     { label: "すべての品詞", value: "all" },
-    { label: "名詞", value: "Noun" },
-    { label: "動詞", value: "Verb" },
-    { label: "形容詞", value: "Adjective" },
-    { label: "副詞", value: "Adverb" },
-    { label: "前置詞", value: "Preposition" },
-    { label: "接続詞", value: "Conjunction" },
-    { label: "助動詞", value: "AuxiliaryVerb" }
+    { label: "名詞", value: "NOUN" },
+    { label: "動詞", value: "VERB" },
+    { label: "形容詞", value: "ADJECTIVE" },
+    { label: "副詞", value: "ADVERB" },
+    { label: "前置詞", value: "PREPOSITION" },
+    { label: "接続詞", value: "CONJUNCTION" },
+    { label: "助動詞", value: "AUXILIARY_VERB" }
 ];
 
 const statusOptions: { label: string, value: "all" | statusType }[] = [
     { label: "習得状況 : すべて", value: "all" },
-    { label: "未習得", value: "unacquired" },
-    { label: "習得済み", value: "acquired" }
+    { label: "未習得", value: "UNACQUIRED" },
+    { label: "習得済み", value: "ACQUIRED" }
 ];
 
 const orderOptions: { label: string, value: vocabularyOrderType }[] = [
@@ -36,7 +35,7 @@ const orderOptions: { label: string, value: vocabularyOrderType }[] = [
 
 const ITEMS_PER_PAGE = 10
 
-export const VocabularyTable = () => {
+export const VocabularyTable = ({ vocabularies }: { vocabularies: vocabularyType[] }) => {
     const [page, setPage] = useState(1);
     const [wordClass, setWordClass] = useState<"all" | wordClassType>(wordClassOptions[0].value);
     const [status, setStatus] = useState<"all" | statusType>(statusOptions[0].value);
@@ -57,7 +56,7 @@ export const VocabularyTable = () => {
 
     //フィルタとソート
     const filteredStudyTables = useMemo(() => {
-        const byWordClass = wordClass !== "all" ? dummyVocabulary.filter((data) => data.class === wordClass) : dummyVocabulary;
+        const byWordClass = wordClass !== "all" ? vocabularies.filter((data) => data.wordClass === wordClass) : vocabularies;
         const byStatus = status !== "all" ? byWordClass.filter((data) => data.status === status) : byWordClass;
         return sortVocabularyByOrder(order, byStatus);
     }, [wordClass, status, order])
@@ -105,9 +104,9 @@ export const VocabularyTable = () => {
                             {pageTables.map((data) => (
                                 <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
                                     <td className="py-3 px-4 text-gray-700 text-lg font-bold">{data.word}</td>
-                                    <td className="py-3 px-4 text-gray-700">{changeTagByWordClass(data.class)}</td>
+                                    <td className="py-3 px-4 text-gray-700">{changeTagByWordClass(data.wordClass)}</td>
                                     <td className="py-3 px-4 text-gray-700">{data.meaning}</td>
-                                    <td className="py-3 px-4 text-gray-700">{changeTagByStatus(data.status)}</td>
+                                    <td className="py-3 px-4 text-gray-700">{changeTagByStatus(data.status, "span")}</td>
                                     <td className="py-3 px-4 text-gray-700">{data.memo}</td>
                                     <td className="py-3 px-4">
                                         <button

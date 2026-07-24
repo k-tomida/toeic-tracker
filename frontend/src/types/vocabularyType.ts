@@ -1,16 +1,27 @@
 export type vocabularyType = {
-    id: string;
+    id: number;
     word: string;
-    class: wordClassType;
+    wordClass: wordClassType;
     meaning: string;
     status: statusType;
-    date: string; // 追加日
+    createdAt: string; // 追加日
     memo?: string;
 };
 
-export type wordClassType = "Noun" | "Verb" | "Adjective" | "Adverb" | "Preposition" | "Conjunction" | "AuxiliaryVerb";
+export type wordClassType =
+    | "NOUN"
+    | "VERB"
+    | "ADJECTIVE"
+    | "ADVERB"
+    | "PREPOSITION"
+    | "CONJUNCTION"
+    | "AUXILIARY_VERB";
 
-export type statusType = "acquired" | "unacquired";
+export type statusType = "ACQUIRED" | "UNACQUIRED";
 
 export type vocabularyOrderType = "newest" | "oldest" | "alphabetical";
+
+export type scopeType = "all" | "unacquired";
+
+export type testCountType = "ten" | "twenty" | "all";
 

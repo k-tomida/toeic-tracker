@@ -7,7 +7,7 @@ export const StudySession = ({ studySessions }: { studySessions: studySessionTyp
     const items = sortTableByOrder("newest", studySessions).slice(0, 5);
     return (
         <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0 min-w-[400px]">
-            <p className="mb-5 text-xl font-medium text-gray-600">直近の学習セッション</p>
+            <p className="mb-5 text-xl font-medium text-gray-600">直近の学習記録</p>
             {items.map((data) => (
                 <div key={data.id} className="flex justify-between gap-3 py-3 m-2 border-b border-gray-200 last:border-b-0">
                     {/* 日付 */}
@@ -17,7 +17,7 @@ export const StudySession = ({ studySessions }: { studySessions: studySessionTyp
 
                     {/* カテゴリタグ */}
                     <div className="flex gap-1 flex-wrap flex-1">
-                        {changeTagByCategory(data.category)}
+                        {changeTagByCategory(data.category, "span")}
                     </div>
 
                     {/* 学習時間 */}
