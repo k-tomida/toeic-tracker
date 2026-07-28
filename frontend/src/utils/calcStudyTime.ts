@@ -1,8 +1,7 @@
-import { dummyStudySessions } from "../data/dummyStudySession"
-import type { categoryType } from "../types/categoryType";
+import type { categoryType, studySessionType } from "../types/studySessionType";
 import { sortTableByOrder } from "./sortTableByOrder";
 
-export const calcStudyTimeInWeek = (day: Date): number => {
+export const calcStudyTimeInWeek = (day: Date, data: studySessionType[]): number => {
     const start = new Date(day);
     start.setDate(day.getDate() - day.getDay());
     start.setHours(0, 0, 0, 0);
@@ -12,7 +11,7 @@ export const calcStudyTimeInWeek = (day: Date): number => {
 
     let count = 0;
 
-    dummyStudySessions.forEach((d) => {
+    data.forEach((d) => {
         const date = new Date(d.date);
         if (date >= start && date < end) {
             count += d.duration;
@@ -22,12 +21,12 @@ export const calcStudyTimeInWeek = (day: Date): number => {
     return Math.round(count / 60);
 };
 
-export const calcStudyTimeInMonth = (day: Date): number => {
+export const calcStudyTimeInMonth = (day: Date, data: studySessionType[]): number => {
     const thisMonth = day.getMonth() + 1;
     const thisYear = day.getFullYear();
     let count = 0;
 
-    dummyStudySessions.forEach((d) => {
+    data.forEach((d) => {
         const date = new Date(d.date);
         if (thisMonth === date.getMonth() + 1 && thisYear === date.getFullYear()) {
             count += d.duration;
@@ -37,36 +36,36 @@ export const calcStudyTimeInMonth = (day: Date): number => {
 
 }
 
-export const calcStudyTimeAll = (): number => {
+export const calcStudyTimeAll = (data: studySessionType[]): number => {
     let count = 0;
-    dummyStudySessions.forEach((d) => {
+    data.forEach((d) => {
         count += d.duration;
     })
 
     return Math.round(count / 60);
 }
 
-export const calcStudyTimeAverage = (): number => {
-    if (dummyStudySessions.length === 0) return 0;
-    return Math.round(calcStudyTimeAll() / dummyStudySessions.length * 10) / 10;
+export const calcStudyTimeAverage = (data: studySessionType[]): number => {
+    if (data.length === 0) return 0;
+    return Math.round(calcStudyTimeAll(data) / data.length * 10) / 10;
 }
 
-export const calcMonthsFromStart = (): number => {
-    if (dummyStudySessions.length === 0) return 0;
+export const calcMonthsFromStart = (data: studySessionType[]): number => {
+    if (data.length === 0) return 0;
     const today = new Date();
-    const data = sortTableByOrder("oldest", dummyStudySessions);
-    const startDate = new Date(data[0].date);
+    const sortData = sortTableByOrder("oldest", data);
+    const startDate = new Date(sortData[0].date);
     const years = today.getFullYear() - startDate.getFullYear();
     const months = today.getMonth() - startDate.getMonth();
     return years * 12 + months;
 }
 
-export const calcStudyTimeByCategory = (category: categoryType): number => {
+export const calcStudyTimeByCategory = (category: categoryType, data: studySessionType[]): number => {
     const thisMonth = new Date().getMonth() + 1;
     const thisYear = new Date().getFullYear();
     let count = 0;
 
-    dummyStudySessions.forEach((d) => {
+    data.forEach((d) => {
         const date = new Date(d.date);
         if (thisMonth === date.getMonth() + 1 && thisYear === date.getFullYear()) {
             if (d.category.includes(category)) {

@@ -32,7 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-# 環境変数・機密情報
-.env
-application.properties
-application-*.properties
+/src/main/resources/application.yaml

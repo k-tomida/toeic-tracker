@@ -1,15 +1,21 @@
 import { Bar, ComposedChart, LabelList, Legend, Line, ReferenceLine, XAxis, YAxis } from "recharts"
 import { formatTrendChartData } from "../../utils/formatChartData"
-import { dummyUser } from "../../data/dummyUser";
+import type { scoreType } from "../../types/scoreType";
 
-export const ScoreTrendChart = () => {
-    const scoreData = formatTrendChartData();
+type Props = {
+    targetScore: number;
+    scores: scoreType[]
+};
+
+export const ScoreTrendChart = ({ targetScore, scores }: Props) => {
+    const scoreData = formatTrendChartData(scores);
+    const chartWidth = Math.max(1100, scoreData.length * 120);
     return (
         <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">
             <p className="mb-3 text-xl font-medium text-gray-600">スコア推移</p>
             <div className="overflow-x-auto ">
                 <ComposedChart
-                    width={1100}
+                    width={chartWidth}
                     height={400}
                     data={scoreData}
                     barGap={8}
@@ -54,10 +60,10 @@ export const ScoreTrendChart = () => {
                         />
                     </Line>
                     <ReferenceLine
-                        y={dummyUser.targetScore}
+                        y={targetScore}
                         stroke="#eda100"
                         strokeDasharray="4 4"
-                        label={{ value: `目標 ${dummyUser.targetScore}`, position: "top", fill: "#c98500", fontSize: 14 }}
+                        label={{ value: `目標 ${targetScore}`, position: "top", fill: "#c98500", fontSize: 14 }}
                     />
                     <XAxis dataKey="examDate" />
                     <YAxis domain={[0, 990]} />

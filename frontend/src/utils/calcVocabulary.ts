@@ -1,35 +1,22 @@
-import { dummyVocabulary } from "../data/dummyVocabulary";
-import type { vocabularyType } from "../types/vocabularyType";
+import type { scopeType, statusType, testCountType, vocabularyType } from "../types/vocabularyType";
 
-export const countVocabulary = () => {
-    return dummyVocabulary.length;
+export const countVocabulary = (vocabularies: vocabularyType[]) => {
+    return vocabularies.length;
 }
 
-export const countAcquiredVocabulary = () => {
+export const countVocabularyByStatus = (vocabularies: vocabularyType[], status: statusType) => {
     let count = 0;
-    dummyVocabulary.forEach((data) => {
-        if (data.status === "acquired") {
+    vocabularies.forEach((data) => {
+        if (data.status === status) {
             count++;
         }
     })
     return count;
 }
 
-export const countUnacquiredVocabulary = () => {
-    let count = 0;
-    dummyVocabulary.forEach((data) => {
-        if (data.status === "unacquired") {
-            count++;
-        }
-    })
-    return count;
-}
-
-type scopeType = "all" | "unacquired";
-type testCountType = "ten" | "twenty" | "all";
 
 export const pickRandomWords = (words: vocabularyType[], scope: scopeType, count: testCountType): vocabularyType[] => {
-    const copyArray = scope === "all" ? [...words] : [...words].filter((d) => d.status === "unacquired");
+    const copyArray = scope === "all" ? [...words] : [...words].filter((d) => d.status === "UNACQUIRED");
 
     const changeTestToNumber: Record<testCountType, number> = {
         "ten": 10,
