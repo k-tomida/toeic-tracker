@@ -5,6 +5,8 @@ import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useCreateVocabulary } from "../hooks/vocabulary/useCreateVocabulary";
 import { changeTagByStatus } from "../utils/changeTag";
+import { useUpdateVocabulary } from "../hooks/vocabulary/useUpdateVocabulary";
+import { useDeleteVocabulary } from "../hooks/vocabulary/useDeleteVocabulary";
 
 type Props = {
     onClose: () => void;
@@ -25,6 +27,8 @@ const allStatus: statusType[] = ["UNACQUIRED", "ACQUIRED"];
 
 export const VocabularyPopUp = ({ onClose, data }: Props) => {
     const createMutation = useCreateVocabulary();
+    const updateMutation = useUpdateVocabulary();
+    const deleteMutation = useDeleteVocabulary();
     const [word, setWord] = useState(data?.word ?? "")
     const [wordClass, setWordClass] = useState<wordClassType>(data?.wordClass ?? "NOUN")
     const [meaning, setMeaning] = useState(data?.meaning ?? "")
@@ -83,13 +87,30 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                 </div>
                 <div className="flex justify-between mt-7">
                     {data !== null ? (
-                        <Button onClick={onClose}>
+                        <Button
+                            onClick={() => {
+                                deleteMutation.mutate(data.id);
+                                onClose();
+                            }}>
                             <span className="flex gap-2 items-center">
                                 <FaRegTrashAlt /> 削除
                             </span>
                         </Button>) : (<div />)}
                     {data !== null ?
-                        <Button onClick={onClose}>保存する</Button>
+                        <Button onClick={() => {
+                            updateMutation.mutate({
+                                id: data.id,
+                                updateVocabulary: {
+                                    userId: 1,
+                                    word: word,
+                                    wordClass: wordClass,
+                                    meaning: meaning,
+                                    status: status,
+                                    memo: memo,
+                                }
+                            });
+                            onClose();
+                        }}>保存する</Button>
                         :
                         <Button
                             onClick={() => {

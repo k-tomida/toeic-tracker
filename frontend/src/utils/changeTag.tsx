@@ -63,7 +63,7 @@ export const changeTagByWordClass = (wordClass: wordClassType) => {
         AUXILIARY_VERB: "助動詞",
     };
     return (
-        <span className={`text-sm px-2 py-0.5 rounded-full font-medium ${classTagStyles[wordClass]}`}>
+        <span className={`text-sm px-2 py-0.5 rounded-full font-medium truncate ${classTagStyles[wordClass]}`}>
             {classLabels[wordClass]}
         </span>
     );
@@ -82,7 +82,7 @@ export const changeTagByStatus = (status: statusType, type: "span" | "button", o
     };
     if (type === "span") {
         return (
-            <span className={`text-sm px-2 py-0.5 rounded-full font-medium ${statusTagStyles[status]}`}>
+            <span className={`text-sm px-2 py-0.5 rounded-full font-medium truncate ${statusTagStyles[status]}`}>
                 {statusLabels[status]}
             </span>
         );

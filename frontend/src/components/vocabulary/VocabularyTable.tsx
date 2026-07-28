@@ -59,7 +59,7 @@ export const VocabularyTable = ({ vocabularies }: { vocabularies: vocabularyType
         const byWordClass = wordClass !== "all" ? vocabularies.filter((data) => data.wordClass === wordClass) : vocabularies;
         const byStatus = status !== "all" ? byWordClass.filter((data) => data.status === status) : byWordClass;
         return sortVocabularyByOrder(order, byStatus);
-    }, [wordClass, status, order])
+    }, [vocabularies, wordClass, status, order])
 
     //ページネーション機能
     const startItem = (page - 1) * ITEMS_PER_PAGE + 1;
@@ -76,7 +76,6 @@ export const VocabularyTable = ({ vocabularies }: { vocabularies: vocabularyType
                     <Select name="wordClass" value={wordClass} onChange={setWordClass} options={wordClassOptions} />
                     <Select name="status" value={status} onChange={setStatus} options={statusOptions} />
                     <Select name="order" value={order} onChange={setOrder} options={orderOptions} />
-
                 </div>
                 <Button onClick={() => { setPopUpData(null); setIsPopUpOpen(true); }}>
                     <div className="flex items-center gap-3">

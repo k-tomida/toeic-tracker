@@ -25,3 +25,8 @@ export type scopeType = "all" | "unacquired";
 
 export type testCountType = "ten" | "twenty" | "all";
 
+export type sendTestType = {
+    id: number;
+    status: statusType;
+}
+

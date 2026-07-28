@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { pickRandomWords } from "../utils/calcVocabulary";
-import type { scopeType, testCountType, vocabularyType } from "../types/vocabularyType";
+import type { scopeType, sendTestType, statusType, testCountType, vocabularyType } from "../types/vocabularyType";
+import { useTestVocabulary } from "../hooks/vocabulary/useTestVocabulary";
 
 type Props = {
     vocabularies: vocabularyType[]
@@ -9,34 +10,91 @@ type Props = {
     test: testCountType;
 }
 
+type resultType = {
+    id: number;
+    word: string;
+    meaning: string;
+    status: statusType;
+}
+
 export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Props) => {
+    const mutation = useTestVocabulary();
     const [vocabularys] = useState(() => pickRandomWords(vocabularies, scope, test));
     const [number, setNumber] = useState(0);
     const [revealed, setRevealed] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
-
     const isFinished = number >= vocabularys.length;
-
-    const handleAnswer = (wasCorrect: boolean) => {
+    const result = useRef<resultType[]>([]);
+    const sendData = useRef<sendTestType[]>([]);
+    const handleAnswer = (wasCorrect: boolean, vocabulary: vocabularyType) => {
         if (wasCorrect) setCorrectCount((prev) => prev + 1);
         setNumber((prev) => prev + 1);
         setRevealed(false);
+        result.current.push({
+            id: vocabulary.id,
+            word: vocabulary.word,
+            meaning: vocabulary.meaning,
+            status: wasCorrect ? "ACQUIRED" : "UNACQUIRED"
+        })
+        sendData.current.push({
+            id: vocabulary.id,
+            status: wasCorrect ? "ACQUIRED" : "UNACQUIRED"
+        })
     };
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg mx-4">
+            <div className={`bg-white rounded-lg shadow-xl p-6 w-full mx-4 ${isFinished ? "max-w-2xl" : "max-w-lg"}`}>
                 {isFinished ? (
                     <div className="text-center">
-                        <p className="text-sm text-gray-500 mb-2">テスト結果</p>
-                        <p className="text-3xl font-medium mb-6">
-                            {correctCount} / {vocabularys.length}
+                        <p className="text-sm text-gray-500 mb-1.5">テスト結果</p>
+                        <p className="text-4xl font-semibold mb-1">
+                            <span className="text-green-600">{correctCount}</span>
+                            <span className="text-xl text-gray-500 font-normal"> / {vocabularys.length}</span>
                         </p>
+                        <p className="text-sm text-gray-500 mb-5">
+                            正答率 {Math.round((correctCount / vocabularys.length) * 100)}%
+                        </p>
+
+                        <div className="max-h-72 overflow-y-auto mb-5 border border-gray-200 rounded-lg">
+                            {result.current.map((r, i) => (
+                                <div
+                                    key={r.id}
+                                    className={
+                                        i !== result.current.length - 1
+                                            ? "flex items-center gap-2.5 px-3.5 py-2.5 border-b border-gray-200"
+                                            : "flex items-center gap-2.5 px-3.5 py-2.5"
+                                    }
+                                >
+                                    <span
+                                        className={
+                                            r.status === "ACQUIRED"
+                                                ? "w-2 h-2 rounded-full bg-green-500 shrink-0"
+                                                : "w-2 h-2 rounded-full bg-red-600 shrink-0"
+                                        }
+                                    />
+                                    <span className="font-medium w-42 shrink-0 truncate  text-left">{r.word}</span>
+                                    <span className="text-gray-500 flex-1 truncate text-left">{r.meaning}</span>
+                                    <span
+                                        className={
+                                            r.status === "ACQUIRED"
+                                                ? "text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full shrink-0"
+                                                : "text-xs text-red-800 bg-red-100 px-2 py-0.5 rounded-full shrink-0"
+                                        }
+                                    >
+                                        {r.status === "ACQUIRED" ? "わかった" : "わからなかった"}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+
                         <button
-                            onClick={onClose}
-                            className="bg-green-500 hover:bg-green-600 text-white rounded-md px-6 py-2.5"
+                            onClick={() => {
+                                mutation.mutate(sendData.current); onClose();
+                            }}
+                            className="w-full bg-green-500 hover:bg-green-600 text-white rounded-md px-6 py-2.5"
                         >
-                            閉じる
+                            保存する
                         </button>
                     </div>
                 ) : (
@@ -62,13 +120,13 @@ export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Prop
                         {revealed ? (
                             <div className="flex gap-2">
                                 <button
-                                    onClick={() => handleAnswer(false)}
+                                    onClick={() => handleAnswer(false, vocabularys[number])}
                                     className="flex-1 border border-gray-300 rounded-md py-2.5"
                                 >
                                     わからなかった
                                 </button>
                                 <button
-                                    onClick={() => handleAnswer(true)}
+                                    onClick={() => handleAnswer(true, vocabularys[number])}
                                     className="flex-1 bg-green-500 hover:bg-green-600 text-white rounded-md py-2.5"
                                 >
                                     わかった

@@ -32,25 +32,27 @@ export const VocabularyTest = ({ vocabularies }: { vocabularies: vocabularyType[
                             {countVocabulary(vocabularies)}語
                         </p>
                     </button>
-                    <button
-                        onClick={() => setScope("unacquired")}
-                        className={scope === "unacquired"
-                            ? "flex-1 text-left rounded-lg p-3 border-[1.5px] border-green-500 bg-green-50"
-                            : "flex-1 text-left rounded-lg p-3 border-[1.5px] border-gray-200"}
-                    >
-                        <p
-                            className={
-                                scope === "unacquired"
-                                    ? "font-medium text-green-800 mb-0.5"
-                                    : "font-medium text-gray-900 mb-0.5"
-                            }
+                    {countVocabularyByStatus(vocabularies, "UNACQUIRED") !== 0 ?
+                        <button
+                            onClick={() => setScope("unacquired")}
+                            className={scope === "unacquired"
+                                ? "flex-1 text-left rounded-lg p-3 border-[1.5px] border-green-500 bg-green-50"
+                                : "flex-1 text-left rounded-lg p-3 border-[1.5px] border-gray-200"}
                         >
-                            未習得のみ
-                        </p>
-                        <p className={scope === "unacquired" ? "text-sm text-green-600" : "text-sm text-gray-500"}>
-                            {countVocabularyByStatus(vocabularies, "UNACQUIRED")}語
-                        </p>
-                    </button>
+                            <p
+                                className={
+                                    scope === "unacquired"
+                                        ? "font-medium text-green-800 mb-0.5"
+                                        : "font-medium text-gray-900 mb-0.5"
+                                }
+                            >
+                                未習得のみ
+                            </p>
+                            <p className={scope === "unacquired" ? "text-sm text-green-600" : "text-sm text-gray-500"}>
+                                {countVocabularyByStatus(vocabularies, "UNACQUIRED")}語
+                            </p>
+                        </button> : <div></div>}
+
                 </div>
 
             </div>
