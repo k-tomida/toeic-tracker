@@ -6,24 +6,11 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { useCreateStudySession } from "../hooks/study_session/useCreateStudySession";
 import { useUpdateStudySession } from "../hooks/study_session/useUpdateStudySession";
 import { useDeleteStudySession } from "../hooks/study_session/useDeleteStudySession";
+import { changeTagByCategory } from "../utils/changeTag";
 
 type Props = {
     onClose: () => void;
     data: studySessionType | null;
-};
-
-const tagStyles: Record<categoryType, string> = {
-    LISTENING: "bg-blue-50 text-blue-800 border border-blue-200",
-    VOCABULARY: "bg-amber-50 text-amber-800 border border-amber-200",
-    GRAMMAR: "bg-green-50 text-green-800 border border-green-200",
-    MOCK_EXAM: "bg-purple-50 text-purple-800 border border-purple-200",
-};
-
-const categoryLabelMap: Record<categoryType, string> = {
-    LISTENING: "リスニング",
-    VOCABULARY: "単語",
-    GRAMMAR: "文法",
-    MOCK_EXAM: "模試"
 };
 
 const allCategories: categoryType[] = ["LISTENING", "VOCABULARY", "GRAMMAR", "MOCK_EXAM"];
@@ -74,16 +61,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                 <div className="my-3">
                     <h2 className="text-gray-600 mb-2">カテゴリ</h2>
                     <div className="flex gap-3 py-1">
-                        {allCategories.map((c) => (
-                            <button
-                                key={c}
-                                onClick={() => setCategory(c)}
-                                className={`text-lg px-2 py-0.5 rounded-full font-medium hover:bg-gray-200
-                                    ${category === c ? tagStyles[c] : "bg-gray-100 text-gray-400"}`}
-                            >
-                                {categoryLabelMap[c]}
-                            </button>
-                        ))}
+                        {allCategories.map(d => changeTagByCategory(d, "button", () => setCategory(d), d === category))}
                     </div>
                 </div>
                 {/* メモ*/}

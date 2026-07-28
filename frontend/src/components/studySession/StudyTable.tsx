@@ -112,7 +112,7 @@ export const StudyTable = ({ studySessions }: { studySessions: studySessionType[
                                     <td className="py-3 px-4 text-gray-700">{formatDate(data.date)}</td>
                                     <td className="py-3 px-4">
                                         <div className="flex gap-1 flex-wrap">
-                                            {changeTagByCategory(data.category)}
+                                            {changeTagByCategory(data.category, "span")}
                                         </div>
                                     </td>
                                     <td className="py-3 px-4 text-gray-700">{data.duration}min</td>
