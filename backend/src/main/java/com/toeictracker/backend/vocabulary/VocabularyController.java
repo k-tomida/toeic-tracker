@@ -10,7 +10,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/vocabularies")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
 public class VocabularyController {
 
     private final VocabularyService vocabularyService;

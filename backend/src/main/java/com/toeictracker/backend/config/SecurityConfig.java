@@ -43,7 +43,7 @@ public class SecurityConfig {
                 // 認可設定
                 .authorizeHttpRequests(auth -> auth
                         // ログイン・新規登録は認証不要
-                        .requestMatchers("/login", "register").permitAll()
+                        .requestMatchers("/login", "/register").permitAll()
 
                         // それ以外は認証必須
                         .anyRequest().authenticated()

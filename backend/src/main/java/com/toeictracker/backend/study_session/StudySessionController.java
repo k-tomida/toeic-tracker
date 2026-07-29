@@ -9,7 +9,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/study-sessions")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
 public class StudySessionController {
 
     private final StudySessionService studySessionService;

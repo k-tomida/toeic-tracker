@@ -1,4 +1,4 @@
-package com.toeictracker.backend.auth;
+package com.toeictracker.backend.auth.dto;
 
 public record RegisterRequest(
         String email,
