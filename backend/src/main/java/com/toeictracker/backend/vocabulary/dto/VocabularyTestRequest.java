@@ -1,4 +1,4 @@
-package com.toeictracker.backend.vocabulary.DTO;
+package com.toeictracker.backend.vocabulary.dto;
 
 public record VocabularyTestRequest(
         Long id,

@@ -2,17 +2,12 @@ package com.toeictracker.backend.study_session;
 
 import com.toeictracker.backend.study_session.dto.StudySessionRequest;
 import com.toeictracker.backend.study_session.dto.StudySessionResponse;
-import com.toeictracker.backend.study_session.dto.UpdateStudySessionRequest;
-import com.toeictracker.backend.user.User;
-import com.toeictracker.backend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/study-sessions")
@@ -40,10 +35,10 @@ public class StudySessionController {
     }
 
     @PostMapping
-    public ResponseEntity<StudySessionResponse> postStudySession(
+    public ResponseEntity<StudySessionResponse> addStudySession(
             Authentication authentication,
             @RequestBody StudySessionRequest request){
-        StudySession postStudySession=studySessionService.postStudySession(authentication.getName(), request);
+        StudySession postStudySession=studySessionService.addStudySession(authentication.getName(), request);
         StudySessionResponse response=new StudySessionResponse(
                 postStudySession.getId(),
                 postStudySession.getDate(),
@@ -58,7 +53,7 @@ public class StudySessionController {
     public ResponseEntity<StudySessionResponse> updateStudySession(
             Authentication authentication,
             @PathVariable Long id,
-            @RequestBody UpdateStudySessionRequest request){
+            @RequestBody StudySessionRequest request){
         StudySession updateStudySession=studySessionService.updateStudySession(authentication.getName(), id,request);
 
         StudySessionResponse response=new StudySessionResponse(

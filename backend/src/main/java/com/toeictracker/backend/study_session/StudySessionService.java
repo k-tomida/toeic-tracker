@@ -1,7 +1,6 @@
 package com.toeictracker.backend.study_session;
 
 import com.toeictracker.backend.study_session.dto.StudySessionRequest;
-import com.toeictracker.backend.study_session.dto.UpdateStudySessionRequest;
 import com.toeictracker.backend.user.User;
 import com.toeictracker.backend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class StudySessionService {
     }
 
     @CacheEvict(value = "getStudySessions", key = "#email")
-    public StudySession postStudySession(String email, StudySessionRequest request){
+    public StudySession addStudySession(String email, StudySessionRequest request){
         User user=userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
 
@@ -42,7 +41,7 @@ public class StudySessionService {
     }
 
     @CacheEvict(value="getStudySessions", key = "#email")
-    public StudySession updateStudySession(String email, Long id, UpdateStudySessionRequest request) {
+    public StudySession updateStudySession(String email, Long id, StudySessionRequest request) {
 
         User user=userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
@@ -50,7 +49,6 @@ public class StudySessionService {
         StudySession existingStudySession = studySessionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("学習記録が見つかりません"));
 
-        // 所有者チェック: このレコードが本当にログイン中のユーザーのものか確認
         if (!existingStudySession.getUserId().equals(user.getId())) {
             throw new AccessDeniedException("この学習記録を編集する権限がありません");
         }
