@@ -1,9 +1,10 @@
 package com.toeictracker.backend.user;
 
+import com.toeictracker.backend.user.dto.UpdateTargetScoreAndNextExamRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,22 +14,31 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Cacheable("getUser")
-    public User getUser(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません: id=" + id));
+    public User getUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
     }
 
     @CacheEvict(value = "getUser", allEntries = true)
-    public User updateUser(Long id, User updatedData) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません: id=" + id));
+    public User updateTargetScoreAndNextExam(String email, UpdateTargetScoreAndNextExamRequest request) {
+        User user =userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
 
-        // 受け取った User オブジェクトから必要な項目だけを取り出して更新
-        existingUser.setTargetScore(updatedData.getTargetScore());
-        existingUser.setNextExamDate(updatedData.getNextExamDate());
+        user.setTargetScore(request.targetScore());
+        user.setNextExamDate(request.nextExamDate());
 
-        return userRepository.save(existingUser);
+        return userRepository.save(user);
+    }
+
+    @CacheEvict(value = "getUser", allEntries = true)
+    public void updatePassword(String email, String password){
+        User user =userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 }

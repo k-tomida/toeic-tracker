@@ -1,10 +1,15 @@
 package com.toeictracker.backend.study_session;
 
+import com.toeictracker.backend.study_session.dto.StudySessionRequest;
+import com.toeictracker.backend.study_session.dto.UpdateStudySessionRequest;
+import com.toeictracker.backend.user.User;
+import com.toeictracker.backend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.access.AccessDeniedException;
 import java.util.List;
 
 @Service
@@ -12,34 +17,64 @@ import java.util.List;
 public class StudySessionService {
 
     private final StudySessionRepository studySessionRepository;
+    private final UserRepository userRepository;
 
-    @Cacheable("getStudySessions")
-    public List<StudySession> getAllStudySession(Long userId){
-        return studySessionRepository.findByUserId(userId);
+    @Cacheable(value = "getStudySessions", key = "#email")
+    public List<StudySession> getAllStudySession(String email){
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+        return studySessionRepository.findByUserId(user.getId());
     }
 
-    @CacheEvict(value = "getStudySessions", allEntries = true)
-    public StudySession postStudySession(StudySession studySession){
+    @CacheEvict(value = "getStudySessions", key = "#email")
+    public StudySession postStudySession(String email, StudySessionRequest request){
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+
+        StudySession studySession=new StudySession();
+        studySession.setUserId(user.getId());
+        studySession.setDate(request.date());
+        studySession.setDuration(request.duration());
+        studySession.setCategory(request.category());
+        studySession.setMemo(request.memo());
+
         return studySessionRepository.save(studySession);
     }
 
-    @CacheEvict(value="getStudySessions", allEntries = true)
-    public StudySession updateStudySession(Long id, StudySession studySession){
-         StudySession existingStudySession = studySessionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("学習記録が見つかりません: id=" + id));
+    @CacheEvict(value="getStudySessions", key = "#email")
+    public StudySession updateStudySession(String email, Long id, UpdateStudySessionRequest request) {
 
-        existingStudySession.setDate(studySession.getDate());
-        existingStudySession.setDuration(studySession.getDuration());
-        existingStudySession.setCategory(studySession.getCategory());
-        existingStudySession.setMemo(studySession.getMemo());
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+
+        StudySession existingStudySession = studySessionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("学習記録が見つかりません"));
+
+        // 所有者チェック: このレコードが本当にログイン中のユーザーのものか確認
+        if (!existingStudySession.getUserId().equals(user.getId())) {
+            throw new AccessDeniedException("この学習記録を編集する権限がありません");
+        }
+
+        existingStudySession.setDate(request.date());
+        existingStudySession.setDuration(request.duration());
+        existingStudySession.setCategory(request.category());
+        existingStudySession.setMemo(request.memo());
 
         return studySessionRepository.save(existingStudySession);
     }
 
-    @CacheEvict(value = "getStudySessions",allEntries = true)
-    public void deleteStudySession(Long id){
-        if (!studySessionRepository.existsById(id)) {
-            throw new RuntimeException("学習記録が見つかりません: id=" + id);
+    @CacheEvict(value = "getStudySessions", key = "#email")
+    public void deleteStudySession(String email,Long id){
+
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+
+        StudySession existingStudySession = studySessionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("学習記録が見つかりません"));
+
+        // 所有者チェック: このレコードが本当にログイン中のユーザーのものか確認
+        if (!existingStudySession.getUserId().equals(user.getId())) {
+            throw new AccessDeniedException("この学習記録を削除する権限がありません");
         }
         studySessionRepository.deleteById(id);
     }

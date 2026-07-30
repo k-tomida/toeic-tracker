@@ -1,8 +1,12 @@
 package com.toeictracker.backend.user;
 
+import com.toeictracker.backend.user.dto.UpdatePasswordRequest;
+import com.toeictracker.backend.user.dto.UpdateTargetScoreAndNextExamRequest;
+import com.toeictracker.backend.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -15,15 +19,40 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
-    public ResponseEntity<User> getUser() {
-        User user = userService.getUser(1L);
-        return ResponseEntity.ok(user); // 100% 成功時のみここに到達する
+    public ResponseEntity<UserResponse> getUser(Authentication authentication) {
+        User user = userService.getUser(authentication.getName());
+
+        UserResponse response=new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getTargetScore(),
+                user.getNextExamDate()
+        );
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/me")
-    public ResponseEntity<User> updateUser(@RequestBody User user) {
-        // リクエストボディでそのまま User を受け取り、更新後の User を返却
-        User updatedUser = userService.updateUser(1L, user);
-        return ResponseEntity.ok(updatedUser);
+    public ResponseEntity<UserResponse> updateTargetScoreAndNextExamDate(Authentication authentication, @RequestBody UpdateTargetScoreAndNextExamRequest request) {
+
+        User updatedUser = userService.updateTargetScoreAndNextExam(authentication.getName(), request);
+
+        UserResponse response = new UserResponse(
+                updatedUser.getId(),
+                updatedUser.getName(),
+                updatedUser.getEmail(),
+                updatedUser.getTargetScore(),
+                updatedUser.getNextExamDate()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<Void> updatePassword(Authentication authentication, @RequestBody UpdatePasswordRequest request){
+        userService.updatePassword(authentication.getName(), request.password());
+        return ResponseEntity.noContent().build();
     }
 }
+
+

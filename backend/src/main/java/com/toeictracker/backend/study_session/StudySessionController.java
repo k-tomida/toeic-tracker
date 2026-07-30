@@ -1,10 +1,18 @@
 package com.toeictracker.backend.study_session;
 
+import com.toeictracker.backend.study_session.dto.StudySessionRequest;
+import com.toeictracker.backend.study_session.dto.StudySessionResponse;
+import com.toeictracker.backend.study_session.dto.UpdateStudySessionRequest;
+import com.toeictracker.backend.user.User;
+import com.toeictracker.backend.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/study-sessions")
@@ -14,26 +22,60 @@ public class StudySessionController {
     private final StudySessionService studySessionService;
 
     @GetMapping
-    public ResponseEntity<List<StudySession>> getAllStudySession(){
-        List<StudySession> studySessions = studySessionService.getAllStudySession(1L);
-        return ResponseEntity.ok(studySessions);
+    public ResponseEntity<List<StudySessionResponse>> getAllStudySession(Authentication authentication) {
+        String email = authentication.getName();
+        List<StudySession> studySessions = studySessionService.getAllStudySession(email);
+
+        List<StudySessionResponse> responses = studySessions.stream()
+                .map(s -> new StudySessionResponse(
+                        s.getId(),
+                        s.getDate(),
+                        s.getDuration(),
+                        s.getCategory(),
+                        s.getMemo()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(responses);
     }
 
     @PostMapping
-    public ResponseEntity<StudySession> postStudySession(@RequestBody StudySession studySession){
-        StudySession postStudySession=studySessionService.postStudySession(studySession);
-        return ResponseEntity.ok(postStudySession);
+    public ResponseEntity<StudySessionResponse> postStudySession(
+            Authentication authentication,
+            @RequestBody StudySessionRequest request){
+        StudySession postStudySession=studySessionService.postStudySession(authentication.getName(), request);
+        StudySessionResponse response=new StudySessionResponse(
+                postStudySession.getId(),
+                postStudySession.getDate(),
+                postStudySession.getDuration(),
+                postStudySession.getCategory(),
+                postStudySession.getMemo()
+        );
+        return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudySession> updateStudySession(@PathVariable Long id,@RequestBody StudySession studySession){
-        StudySession updateStudySession=studySessionService.updateStudySession(id,studySession);
-        return ResponseEntity.ok(updateStudySession);
+    public ResponseEntity<StudySessionResponse> updateStudySession(
+            Authentication authentication,
+            @PathVariable Long id,
+            @RequestBody UpdateStudySessionRequest request){
+        StudySession updateStudySession=studySessionService.updateStudySession(authentication.getName(), id,request);
+
+        StudySessionResponse response=new StudySessionResponse(
+                updateStudySession.getId(),
+                updateStudySession.getDate(),
+                updateStudySession.getDuration(),
+                updateStudySession.getCategory(),
+                updateStudySession.getMemo()
+        );
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStudySession(@PathVariable Long id){
-        studySessionService.deleteStudySession(id);
+    public ResponseEntity<Void> deleteStudySession(
+            Authentication authentication,
+            @PathVariable Long id){
+        studySessionService.deleteStudySession(authentication.getName(),id);
         return ResponseEntity.noContent().build();
     }
 }
