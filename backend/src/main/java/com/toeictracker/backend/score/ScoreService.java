@@ -34,9 +34,9 @@ public class ScoreService {
         Score score=new Score();
         score.setUserId(user.getId());
         score.setExamDate(request.examDate());
-        score.setTotalScore(request.listeningScore()+ request.ReadingScore());
+        score.setTotalScore(request.listeningScore()+ request.readingScore());
         score.setListeningScore(request.listeningScore());
-        score.setReadingScore(request.ReadingScore());
+        score.setReadingScore(request.readingScore());
         score.setMemo(request.memo());
 
         return scoreRepository.save(score);
@@ -55,9 +55,9 @@ public class ScoreService {
         }
 
         existingScore.setExamDate(request.examDate());
-        existingScore.setTotalScore(request.listeningScore()+ request.ReadingScore());
+        existingScore.setTotalScore(request.listeningScore()+ request.readingScore());
         existingScore.setListeningScore(request.listeningScore());
-        existingScore.setReadingScore(request.ReadingScore());
+        existingScore.setReadingScore(request.readingScore());
         existingScore.setMemo(request.memo());
 
         return scoreRepository.save(existingScore);

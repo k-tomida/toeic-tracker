@@ -7,7 +7,6 @@ export const getVocabulary = async (): Promise<vocabularyType[]> => {
 }
 
 type addiVocabularyType = {
-    userId: number;
     word: string;
     wordClass: wordClassType;
     meaning: string;

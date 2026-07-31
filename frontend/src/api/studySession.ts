@@ -7,7 +7,6 @@ export const getStudySession = async (): Promise<studySessionType[]> => {
 }
 
 type apiStudySessionType = {
-    userId: number;
     date: string;
     duration: number;
     category: categoryType;

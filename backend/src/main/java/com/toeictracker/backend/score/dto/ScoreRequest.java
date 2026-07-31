@@ -5,6 +5,6 @@ import java.time.LocalDate;
 public record ScoreRequest(
         LocalDate examDate,
         Integer listeningScore,
-        Integer ReadingScore,
+        Integer readingScore,
         String memo
 ) {}

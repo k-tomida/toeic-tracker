@@ -102,7 +102,6 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                             updateMutation.mutate({
                                 id: data.id,
                                 updateScore: {
-                                    userId: 1,
                                     examDate: date,
                                     listeningScore: listening,
                                     readingScore: reading,
@@ -115,7 +114,6 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                         <Button
                             onClick={() => {
                                 createMutation.mutate({
-                                    userId: 1,
                                     examDate: date,
                                     listeningScore: listening,
                                     readingScore: reading,

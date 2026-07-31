@@ -32,7 +32,7 @@ public class AuthService {
 
         User user = new User();
         user.setEmail(request.email());
-        user.setName("kenta");
+        user.setName(request.name());
         user.setPassword(passwordEncoder.encode(request.password()));
 
         userRepository.save(user);

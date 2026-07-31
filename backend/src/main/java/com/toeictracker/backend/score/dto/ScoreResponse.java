@@ -7,6 +7,6 @@ public record ScoreResponse(
         LocalDate examDate,
         Integer totalScore,
         Integer listeningScore,
-        Integer ReadingScore,
+        Integer readingScore,
         String memo
 ) {}
