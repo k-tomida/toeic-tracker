@@ -1,5 +1,7 @@
 package com.toeictracker.backend.user;
 
+import com.toeictracker.backend.auth.dto.AuthResponse;
+import com.toeictracker.backend.user.dto.UpdateNameRequest;
 import com.toeictracker.backend.user.dto.UpdatePasswordRequest;
 import com.toeictracker.backend.user.dto.UpdateTargetScoreAndNextExamRequest;
 import com.toeictracker.backend.user.dto.UserResponse;
@@ -33,7 +35,9 @@ public class UserController {
     }
 
     @PutMapping("/me")
-    public ResponseEntity<UserResponse> updateTargetScoreAndNextExamDate(Authentication authentication, @RequestBody UpdateTargetScoreAndNextExamRequest request) {
+    public ResponseEntity<UserResponse> updateTargetScoreAndNextExamDate(
+            Authentication authentication,
+            @RequestBody UpdateTargetScoreAndNextExamRequest request) {
 
         User updatedUser = userService.updateTargetScoreAndNextExam(authentication.getName(), request);
 
@@ -49,10 +53,31 @@ public class UserController {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<Void> updatePassword(Authentication authentication, @RequestBody UpdatePasswordRequest request){
-        userService.updatePassword(authentication.getName(), request.password());
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<AuthResponse> updatePassword(
+            Authentication authentication,
+            @RequestBody UpdatePasswordRequest request){
+
+        AuthResponse response=userService.updatePassword(authentication.getName(), request);
+        return ResponseEntity.ok(response);
     }
+
+    @PutMapping("/name")
+    public ResponseEntity<UserResponse> updateName(
+            Authentication authentication,
+            @RequestBody UpdateNameRequest request){
+
+        User updatedUser=userService.updateName(authentication.getName(), request.name());
+        UserResponse response = new UserResponse(
+                updatedUser.getId(),
+                updatedUser.getName(),
+                updatedUser.getEmail(),
+                updatedUser.getTargetScore(),
+                updatedUser.getNextExamDate()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
 }
 
 

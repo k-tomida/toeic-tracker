@@ -73,4 +73,6 @@ public class StudySessionController {
         studySessionService.deleteStudySession(authentication.getName(),id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

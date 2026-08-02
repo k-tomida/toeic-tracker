@@ -3,5 +3,6 @@ package com.toeictracker.backend.user.dto;
 import java.time.LocalDate;
 
 public record UpdatePasswordRequest(
-        String password
+        String currentPassword,
+        String newPassword
 ) { }

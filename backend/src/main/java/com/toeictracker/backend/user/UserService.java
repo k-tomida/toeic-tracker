@@ -1,9 +1,15 @@
 package com.toeictracker.backend.user;
 
+import com.toeictracker.backend.auth.JwtProvider;
+import com.toeictracker.backend.auth.dto.AuthResponse;
+import com.toeictracker.backend.user.dto.UpdatePasswordRequest;
 import com.toeictracker.backend.user.dto.UpdateTargetScoreAndNextExamRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +21,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
     @Cacheable("getUser")
     public User getUser(String email) {
@@ -22,7 +30,7 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
     }
 
-    @CacheEvict(value = "getUser", allEntries = true)
+    @CacheEvict(value = "getUser", key = "#email")
     public User updateTargetScoreAndNextExam(String email, UpdateTargetScoreAndNextExamRequest request) {
         User user =userRepository.findByEmail(email)
                 .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
@@ -33,12 +41,34 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @CacheEvict(value = "getUser", allEntries = true)
-    public void updatePassword(String email, String password){
+    @CacheEvict(value = "getUser", key="#email")
+    public AuthResponse updatePassword(String email, UpdatePasswordRequest request){
+
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        email,
+                        request.currentPassword()
+                )
+        );
+
+        // 認証成功後、DBからUserエンティティを取得する
+        User user = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new IllegalStateException("ユーザーが見つかりません"));
+
+
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+
+        String token = jwtProvider.generateToken(user);
+        return new AuthResponse(token);
+    }
+
+    @CacheEvict(value = "getUser", key="#email")
+    public User updateName(String email, String name){
         User user =userRepository.findByEmail(email)
                 .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
 
-        user.setPassword(passwordEncoder.encode(password));
-        userRepository.save(user);
+        user.setName(name);
+        return userRepository.save(user);
     }
 }

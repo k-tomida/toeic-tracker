@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../hooks/auth/useAuth";
 
 // PublicOnlyRoute.tsx
 export const PublicOnlyRoute = () => {

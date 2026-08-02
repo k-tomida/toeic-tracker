@@ -34,6 +34,8 @@ public class AuthService {
         user.setEmail(request.email());
         user.setName(request.name());
         user.setPassword(passwordEncoder.encode(request.password()));
+        user.setTargetScore(request.targetScore());
+        user.setNextExamDate(request.nextExamDate());
 
         userRepository.save(user);
 

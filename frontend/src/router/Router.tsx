@@ -5,8 +5,8 @@ import { ScorePage } from "../pages/ScorePage"
 import { VocabularyPage } from "../pages/VocabularyPage"
 import { LoginPage } from "../pages/LoginPage"
 import { RegisterPage } from "../pages/RegisterPage"
-import { ProtectedRoute } from "../components/routeing/ProtectedRoute"
-import { PublicOnlyRoute } from "../components/routeing/PublicOnlyRoute"
+import { ProtectedRoute } from "./ProtectedRoute"
+import { PublicOnlyRoute } from "./PublicOnlyRoute"
 
 export const Router = () => {
     return (
