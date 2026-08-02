@@ -90,7 +90,6 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                             updateMutation.mutate({
                                 id: data.id,
                                 updateStudySession: {
-                                    userId: 1,
                                     date: date,
                                     duration: duration,
                                     category: category,
@@ -103,7 +102,6 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                         <Button
                             onClick={() => {
                                 createMutation.mutate({
-                                    userId: 1,
                                     date: date,
                                     duration: duration,
                                     category: category,

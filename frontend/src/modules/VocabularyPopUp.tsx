@@ -101,7 +101,6 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                             updateMutation.mutate({
                                 id: data.id,
                                 updateVocabulary: {
-                                    userId: 1,
                                     word: word,
                                     wordClass: wordClass,
                                     meaning: meaning,
@@ -115,7 +114,6 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                         <Button
                             onClick={() => {
                                 createMutation.mutate({
-                                    userId: 1,
                                     word: word,
                                     wordClass: wordClass,
                                     meaning: meaning,

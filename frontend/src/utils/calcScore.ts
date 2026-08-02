@@ -24,6 +24,9 @@ export const calcBestScore = (scores: scoreType[]): [number, number, number] => 
 };
 
 export const calcBestScoreAndDate = (scores: scoreType[]): [number, string] => {
+    if (scores.length === 0) {
+        return [0, ""];
+    }
     let best = 0;
     let date = "";
     scores.forEach((d) => {

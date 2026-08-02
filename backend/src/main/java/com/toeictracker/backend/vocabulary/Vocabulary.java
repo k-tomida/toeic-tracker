@@ -29,8 +29,9 @@ public class Vocabulary {
     @Column(nullable = false)
     private String meaning;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private Status status;
 
     @Column(length = 500)
     private String memo;

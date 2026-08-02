@@ -1,10 +1,14 @@
 package com.toeictracker.backend.vocabulary;
 
-import com.toeictracker.backend.vocabulary.DTO.VocabularyTestRequest;
+import com.toeictracker.backend.user.User;
+import com.toeictracker.backend.user.UserRepository;
+import com.toeictracker.backend.vocabulary.dto.VocabularyRequest;
+import com.toeictracker.backend.vocabulary.dto.VocabularyTestRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,50 +19,86 @@ import java.util.List;
 public class VocabularyService {
 
     private final VocabularyRepository vocabularyRepository;
+    private final UserRepository userRepository;
 
     @Cacheable("getVocabulary")
-    public List<Vocabulary> getVocabulary(Long userId){
-        return vocabularyRepository.findByUserId(userId);
+    public List<Vocabulary> getVocabulary(String email){
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+        return vocabularyRepository.findByUserId(user.getId());
     }
 
-    @CacheEvict(value = "getVocabulary", allEntries = true)
-    public Vocabulary addVocabulary(Vocabulary vocabulary){
+    @CacheEvict(value = "getVocabulary", key = "#email")
+    public Vocabulary addVocabulary(String email, VocabularyRequest request){
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+
+        Vocabulary vocabulary=new Vocabulary();
+        vocabulary.setUserId(user.getId());
+        vocabulary.setWord(request.word());
+        vocabulary.setWordClass(request.wordClass());
+        vocabulary.setMeaning(request.meaning());
+        vocabulary.setStatus(request.status());
+        vocabulary.setMemo(request.memo());
+
         return vocabularyRepository.save(vocabulary);
     }
 
-    @CacheEvict(value = "getVocabulary", allEntries = true)
-    public Vocabulary updateVocabulary(Long id, Vocabulary vocabulary){
-        Vocabulary existingVocabulary=vocabularyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("単語が見つかりません: id=" + id));
+    @CacheEvict(value = "getVocabulary", key = "#email")
+    public Vocabulary updateVocabulary(String email,Long id, VocabularyRequest request){
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
 
-        existingVocabulary.setWord(vocabulary.getWord());
-        existingVocabulary.setWordClass(vocabulary.getWordClass());
-        existingVocabulary.setMeaning(vocabulary.getMeaning());
-        existingVocabulary.setStatus(vocabulary.getStatus());
-        existingVocabulary.setMemo(vocabulary.getMemo());
+        Vocabulary existingVocabulary=vocabularyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("単語が見つかりません"));
+
+        if(!existingVocabulary.getUserId().equals(user.getId())){
+            throw new AccessDeniedException("この単語を編集する権限がありません");
+        }
+
+        existingVocabulary.setWord(request.word());
+        existingVocabulary.setWordClass(request.wordClass());
+        existingVocabulary.setMeaning(request.meaning());
+        existingVocabulary.setStatus(request.status());
+        existingVocabulary.setMemo(request.memo());
 
         return vocabularyRepository.save(existingVocabulary);
     }
 
-    @CacheEvict(value = "getVocabulary", allEntries = true)
-    public void deleteVocabulary(Long id){
-        if (!vocabularyRepository.existsById(id)) {
-            throw new RuntimeException("単語が見つかりません: id=" + id);
+    @CacheEvict(value = "getVocabulary", key="#email")
+    public void deleteVocabulary(String email, Long id){
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+
+        Vocabulary existingVocabulary=vocabularyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("単語が見つかりません"));
+
+        if(!existingVocabulary.getUserId().equals(user.getId())){
+            throw new AccessDeniedException("この単語を編集する権限がありません");
         }
+
         vocabularyRepository.deleteById(id);
     }
 
     @Transactional
-    @CacheEvict(value = "getVocabulary", allEntries = true)
-    public List<Vocabulary> testVocabulary(List<VocabularyTestRequest> requests) {
+    @CacheEvict(value = "getVocabulary", key = "#email")
+    public List<Vocabulary> testVocabulary(String email,List<VocabularyTestRequest> requests) {
+
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
 
         List<Vocabulary> result = new ArrayList<>();
-        for (VocabularyTestRequest request : requests) {
-            Vocabulary vocabulary = vocabularyRepository.findById(request.id())
-                    .orElseThrow();
 
-            vocabulary.setStatus(request.status());
-            result.add(vocabulary);
+        for (VocabularyTestRequest request : requests) {
+            Vocabulary existingVocabulary=vocabularyRepository.findById(request.id())
+                    .orElseThrow(() -> new RuntimeException("単語が見つかりません"));
+
+            if(!existingVocabulary.getUserId().equals(user.getId())){
+                throw new AccessDeniedException("この単語を編集する権限がありません");
+            }
+
+            existingVocabulary.setStatus(request.status());
+            result.add(existingVocabulary);
         }
 
         return vocabularyRepository.saveAll(result);

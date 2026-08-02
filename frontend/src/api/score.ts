@@ -7,7 +7,6 @@ export const getScore = async (): Promise<scoreType[]> => {
 }
 
 type addScoreType = {
-    userId: number;
     examDate: string;
     listeningScore: number;
     readingScore: number;

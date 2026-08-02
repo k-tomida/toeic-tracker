@@ -21,7 +21,7 @@ export const HomePage = () => {
     return <div>データの取得に失敗しました</div>;
   }
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen">
       <Header />
       <main className="max-w-7xl mx-auto px-4 py-6">
         <KpiCards studySessions={studySessionQuery.data} scores={scoreQuery.data} vocabularies={vocabularyQuery.data} />
