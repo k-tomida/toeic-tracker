@@ -13,7 +13,7 @@ type Props = {
 export const GoalSetting = ({ user, scores }: Props) => {
     const mutation = useUserMutation();
     const [date, setDate] = useState(user.nextExamDate ?? new Date().toISOString().slice(0, 10));
-    const [score, setScore] = useState(user.targetScore ?? 600);
+    const [score, setScore] = useState(user.targetScore ?? 0);
 
     const [bestScore] = calcBestScore(scores);
     const isAchieved = bestScore >= score;
