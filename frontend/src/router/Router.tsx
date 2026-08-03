@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router"
+import { Navigate, Route, Routes } from "react-router"
 import { HomePage } from "../pages/HomePage"
 import { StudyManagementPage } from "../pages/StudyManagementPage"
 import { ScorePage } from "../pages/ScorePage"
@@ -15,7 +15,9 @@ export const Router = () => {
                 <Route path="/login" element={<LoginPage />} />
             </Route>
 
+            <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/register" element={<RegisterPage />} />
+
 
             <Route element={<ProtectedRoute />} >
                 <Route path="/dash-board" element={<HomePage />} />

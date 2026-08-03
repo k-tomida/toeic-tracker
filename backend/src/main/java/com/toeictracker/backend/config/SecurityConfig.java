@@ -75,7 +75,8 @@ public class SecurityConfig {
 
         // フロントエンド(Vite開発サーバー)からのアクセスのみ許可する
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "https://toeic-tracker-eta.vercel.app"
         ));
 
         // REST APIで使用するHTTPメソッドを許可する
