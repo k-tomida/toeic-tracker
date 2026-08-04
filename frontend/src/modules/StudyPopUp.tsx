@@ -7,6 +7,8 @@ import { useCreateStudySession } from "../hooks/study_session/useCreateStudySess
 import { useUpdateStudySession } from "../hooks/study_session/useUpdateStudySession";
 import { useDeleteStudySession } from "../hooks/study_session/useDeleteStudySession";
 import { changeTagByCategory } from "../utils/changeTag";
+import { useForm } from "react-hook-form";
+import type { studySessionFormType } from "../types/studySessionFormType";
 
 type Props = {
     onClose: () => void;
@@ -19,10 +21,26 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
     const createMutation = useCreateStudySession();
     const updateMutation = useUpdateStudySession();
     const deleteMutation = useDeleteStudySession();
-    const [date, setDate] = useState(data?.date ?? new Date().toISOString().slice(0, 10));
-    const [duration, setDuration] = useState(data?.duration ?? 0);
-    const [category, setCategory] = useState(data?.category ?? "LISTENING");
-    const [memo, setMemo] = useState(data?.memo ?? "");
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<studySessionFormType>({
+        defaultValues: {
+            date: data?.date ?? new Date().toISOString().slice(0, 10),
+            duration: data?.duration ?? 0,
+            category: data?.category ?? "LISTENING",
+            memo: data?.memo ?? ""
+        }
+    })
+
+    const category = watch("category");
+
+    const onSubmit = (value: studySessionFormType) => {
+        if (data !== null) {
+            updateMutation.mutate({ id: data.id, updateStudySession: value }, { onSuccess: onClose });
+        }
+        else {
+            createMutation.mutate(value, { onSuccess: onClose });
+        }
+    }
+
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -37,79 +55,64 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                     </button>
                 </div>
                 {/* 日付と学習時間*/}
-                <div className="flex justify-between my-3">
-                    <div>
-                        <h2 className="text-gray-600 mb-1">日付</h2>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="flex justify-between my-3">
+                        <div>
+                            <label className="text-gray-600 mb-1">日付</label>
+                            <input
+                                {...register("date")}
+                                type="date"
+                                className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-gray-600 mb-1">学習時間（分）</label>
+                            <input
+                                {...register("duration", {
+                                    required: "学習時間を入力してください",
+                                    valueAsNumber: true,
+                                    min: { value: 0, message: "0分以上で入力してください" },
+                                    max: { value: 1440, message: "1440分以下で入力してください" },
+                                })}
+                                type="number"
+                                className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
+                            />
+                        </div>
+                    </div>
+                    {/* カテゴリ選択*/}
+                    <div className="my-3">
+                        <h2 className="text-gray-600 mb-2">カテゴリ</h2>
+                        <div className="flex gap-3 py-1">
+                            {allCategories.map(c =>
+                                changeTagByCategory(c, "radio", undefined, c === category, register("category"))
+                            )}
+                        </div>
+                    </div>
+                    {/* メモ*/}
+                    <div className="my-3">
+                        <label className="text-gray-600 mb-2">メモ（任意）</label>
                         <input
-                            type="date"
-                            value={date}
-                            onChange={(e) => setDate(e.target.value)}
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
+                            {...register("memo", {
+                                maxLength: { value: 500, message: "500文字以下で入力してください" }
+                            })}
+                            type="text"
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
                         />
                     </div>
-                    <div>
-                        <h2 className="text-gray-600 mb-1">学習時間（分）</h2>
-                        <input
-                            type="number"
-                            value={duration}
-                            onChange={(e) => setDuration(parseInt(e.target.value))}
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
-                        />
+                    {/* 削除ボタンは編集時のみ表示 */}
+                    <div className="flex justify-between mt-7">
+                        {data !== null ? (
+                            <Button onClick={() => {
+                                deleteMutation.mutate(data.id); onClose();
+                            }}>
+                                <span className="flex gap-2 items-center">
+                                    <FaRegTrashAlt /> 削除
+                                </span>
+                            </Button>
+                        ) : (<div />)}
+
                     </div>
-                </div>
-                {/* カテゴリ選択*/}
-                <div className="my-3">
-                    <h2 className="text-gray-600 mb-2">カテゴリ</h2>
-                    <div className="flex gap-3 py-1">
-                        {allCategories.map(d => changeTagByCategory(d, "button", () => setCategory(d), d === category))}
-                    </div>
-                </div>
-                {/* メモ*/}
-                <div className="my-3">
-                    <h2 className="text-gray-600 mb-2">メモ（任意）</h2>
-                    <input
-                        type="text"
-                        value={memo}
-                        onChange={(e) => setMemo(e.target.value)}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
-                    />
-                </div>
-                {/* 削除ボタンは編集時のみ表示 */}
-                <div className="flex justify-between mt-7">
-                    {data !== null ? (
-                        <Button onClick={() => {
-                            deleteMutation.mutate(data.id); onClose();
-                        }}>
-                            <span className="flex gap-2 items-center">
-                                <FaRegTrashAlt /> 削除
-                            </span>
-                        </Button>
-                    ) : (<div />)}
-                    {data !== null ?
-                        <Button onClick={() => {
-                            updateMutation.mutate({
-                                id: data.id,
-                                updateStudySession: {
-                                    date: date,
-                                    duration: duration,
-                                    category: category,
-                                    memo: memo,
-                                }
-                            });
-                            onClose();
-                        }}>保存する</Button>
-                        :
-                        <Button
-                            onClick={() => {
-                                createMutation.mutate({
-                                    date: date,
-                                    duration: duration,
-                                    category: category,
-                                    memo: memo,
-                                });
-                                onClose();
-                            }}>追加する</Button>}
-                </div>
+                </form>
             </div>
         </div >
     );
