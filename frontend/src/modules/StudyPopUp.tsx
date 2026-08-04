@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { studySessionType, categoryType } from "../types/studySessionType";
 import { formatDate } from "../utils/formatDate";
 import { Button } from "../ui/Button";
@@ -7,7 +6,7 @@ import { useCreateStudySession } from "../hooks/study_session/useCreateStudySess
 import { useUpdateStudySession } from "../hooks/study_session/useUpdateStudySession";
 import { useDeleteStudySession } from "../hooks/study_session/useDeleteStudySession";
 import { changeTagByCategory } from "../utils/changeTag";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import type { studySessionFormType } from "../types/studySessionFormType";
 
 type Props = {
@@ -21,7 +20,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
     const createMutation = useCreateStudySession();
     const updateMutation = useUpdateStudySession();
     const deleteMutation = useDeleteStudySession();
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<studySessionFormType>({
+    const { register, handleSubmit, control, formState: { errors } } = useForm<studySessionFormType>({
         defaultValues: {
             date: data?.date ?? new Date().toISOString().slice(0, 10),
             duration: data?.duration ?? 0,
@@ -30,7 +29,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
         }
     })
 
-    const category = watch("category");
+    const category = useWatch({ control, name: "category" });
 
     const onSubmit = (value: studySessionFormType) => {
         if (data !== null) {
@@ -56,7 +55,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                 </div>
                 {/* 日付と学習時間*/}
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex justify-between my-3">
+                    <div className="flex justify-between my-3 gap-2">
                         <div>
                             <label className="text-gray-600 mb-1">日付</label>
                             <input
@@ -71,12 +70,15 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                                 {...register("duration", {
                                     required: "学習時間を入力してください",
                                     valueAsNumber: true,
-                                    min: { value: 0, message: "0分以上で入力してください" },
+                                    min: { value: 1, message: "1分以上で入力してください" },
                                     max: { value: 1440, message: "1440分以下で入力してください" },
                                 })}
                                 type="number"
                                 className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
                             />
+                            {errors.duration && (
+                                <p className="mt-1 text-sm text-red-600">{errors.duration.message}</p>
+                            )}
                         </div>
                     </div>
                     {/* カテゴリ選択*/}
@@ -84,7 +86,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                         <h2 className="text-gray-600 mb-2">カテゴリ</h2>
                         <div className="flex gap-3 py-1">
                             {allCategories.map(c =>
-                                changeTagByCategory(c, "radio", undefined, c === category, register("category"))
+                                changeTagByCategory(c, "radio", c === category, register("category"))
                             )}
                         </div>
                     </div>
@@ -111,7 +113,29 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                             </Button>
                         ) : (<div />)}
 
+                        {data !== null ?
+                            <button
+                                type="submit"
+                                disabled={updateMutation.isPending}
+                                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
+                            >
+                                {updateMutation.isPending ? "保存中..." : "保存する"}
+                            </button>
+                            :
+                            <button
+                                type="submit"
+                                disabled={createMutation.isPending}
+                                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
+                            >
+                                {createMutation.isPending ? "追加中..." : "追加する"}
+
+                            </button>}
                     </div>
+                    {(createMutation.isError || updateMutation.isError || deleteMutation.isError) && (
+                        <p className="mt-1 text-sm text-red-600">
+                            失敗しました。もう一度お試しください。
+                        </p>
+                    )}
                 </form>
             </div>
         </div >

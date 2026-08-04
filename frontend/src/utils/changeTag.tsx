@@ -1,9 +1,15 @@
 import type { ReactNode } from "react";
 import type { categoryType } from "../types/studySessionType";
 import type { statusType, wordClassType } from "../types/vocabularyType";
+import type { UseFormRegisterReturn } from "react-hook-form";
 
 // カテゴリ別にタグの色を変える関数
-export const changeTagByCategory = (category: categoryType, type: "span" | "button", onClick?: () => void, checked?: boolean): ReactNode => {
+export const changeTagByCategory = (
+    category: categoryType,
+    type: "span" | "radio",
+    checked?: boolean,
+    registerProps?: UseFormRegisterReturn<"category">
+): ReactNode => {
 
     const tagStyles: Record<"all" | categoryType, string> = {
         LISTENING: "bg-blue-50 text-blue-800 border border-blue-200",
@@ -20,26 +26,31 @@ export const changeTagByCategory = (category: categoryType, type: "span" | "butt
         MOCK_EXAM: "模試",
         all: "すべてのカテゴリ",
     };
+
     if (type === "span") {
         return (
-            <span
-                className={`text-sm px-2 py-0.5 rounded-full font-medium ${tagStyles[category]}`}
-            >
+            <span className={`text-sm px-2 py-0.5 rounded-full font-medium ${tagStyles[category]}`}>
                 {categoryLabelMap[category]}
             </span>
         );
-    };
-    if (type === "button") {
+    }
+
+    if (type === "radio") {
         return (
-            <button
-                className={`text-lg px-2 py-0.5 rounded-full font-medium ${checked ? tagStyles[category] : "bg-gray-100 text-gray-700 border border-gray-200"}`}
+            <label
                 key={category}
-                onClick={onClick}
+                className={`text-lg px-2 py-0.5 rounded-full font-medium cursor-pointer ${checked ? tagStyles[category] : "bg-gray-100 text-gray-700 border border-gray-200"}`}
             >
+                <input
+                    type="radio"
+                    value={category}
+                    className="sr-only"
+                    {...registerProps}
+                />
                 {categoryLabelMap[category]}
-            </button>
+            </label>
         );
-    };
+    }
 };
 
 export const changeTagByWordClass = (wordClass: wordClassType) => {

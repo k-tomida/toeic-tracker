@@ -4,7 +4,7 @@ import type { scoreType } from "../types/scoreType";
 import { useCreateScore } from "../hooks/score/useCreateScore";
 import { useUpdateScore } from "../hooks/score/useUpdateScore";
 import { useDeleteScore } from "../hooks/score/useDeleteScore";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import type { scoreFormType } from "../types/scoreFormType";
 
 type Props = {
@@ -16,7 +16,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
     const createMutation = useCreateScore();
     const updateMutation = useUpdateScore();
     const deleteMutation = useDeleteScore();
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<scoreFormType>({
+    const { register, handleSubmit, control, formState: { errors } } = useForm<scoreFormType>({
         defaultValues: {
             examDate: data?.examDate ?? new Date().toISOString().slice(0, 10),
             listeningScore: data?.listeningScore ?? 0,
@@ -24,8 +24,8 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
             memo: data?.memo ?? "",
         }
     });
-    const listening = watch("listeningScore");
-    const reading = watch("readingScore");
+    const listening = useWatch({ control, name: "listeningScore" });
+    const reading = useWatch({ control, name: "readingScore" });
 
     const onSubmit = (value: scoreFormType) => {
         if (data !== null) {
