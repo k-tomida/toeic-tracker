@@ -20,7 +20,10 @@ export const postScore = async (addScore: addScoreType): Promise<scoreType> => {
 
 type updateScoreType = {
     id: number;
-    updateScore: addScoreType;
+    examDate: string;
+    listeningScore: number;
+    readingScore: number;
+    memo: string;
 }
 
 export const updateScore = async ({ id, updateScore }: updateScoreType): Promise<scoreType> => {
