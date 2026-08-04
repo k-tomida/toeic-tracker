@@ -1,3 +1,4 @@
+import type { scoreFormType } from "../types/scoreFormType";
 import type { scoreType } from "../types/scoreType";
 import { apiClient } from "./client";
 
@@ -6,24 +7,14 @@ export const getScore = async (): Promise<scoreType[]> => {
     return data;
 }
 
-type addScoreType = {
-    examDate: string;
-    listeningScore: number;
-    readingScore: number;
-    memo: string;
-}
-
-export const postScore = async (addScore: addScoreType): Promise<scoreType> => {
+export const postScore = async (addScore: scoreFormType): Promise<scoreType> => {
     const { data } = await apiClient.post("/scores", addScore);
     return data;
 }
 
 type updateScoreType = {
     id: number;
-    examDate: string;
-    listeningScore: number;
-    readingScore: number;
-    memo: string;
+    updateScore: scoreFormType
 }
 
 export const updateScore = async ({ id, updateScore }: updateScoreType): Promise<scoreType> => {

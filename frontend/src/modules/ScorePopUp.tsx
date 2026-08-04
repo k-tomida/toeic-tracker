@@ -5,24 +5,18 @@ import { useCreateScore } from "../hooks/score/useCreateScore";
 import { useUpdateScore } from "../hooks/score/useUpdateScore";
 import { useDeleteScore } from "../hooks/score/useDeleteScore";
 import { useForm } from "react-hook-form";
+import type { scoreFormType } from "../types/scoreFormType";
 
 type Props = {
     onClose: () => void;
     data: scoreType | null;
 };
 
-type ScoreForm = {
-    examDate: string;
-    listeningScore: number;
-    readingScore: number;
-    memo: string;
-};
-
 export const ScorePopUp = ({ onClose, data }: Props) => {
     const createMutation = useCreateScore();
     const updateMutation = useUpdateScore();
     const deleteMutation = useDeleteScore();
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<ScoreForm>({
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<scoreFormType>({
         defaultValues: {
             examDate: data?.examDate ?? new Date().toISOString().slice(0, 10),
             listeningScore: data?.listeningScore ?? 0,
@@ -33,9 +27,9 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
     const listening = watch("listeningScore");
     const reading = watch("readingScore");
 
-    const onSubmit = (value: ScoreForm) => {
+    const onSubmit = (value: scoreFormType) => {
         if (data !== null) {
-            updateMutation.mutate({ id: data.id, ...value }, { onSuccess: onClose });
+            updateMutation.mutate({ id: data.id, updateScore: value }, { onSuccess: onClose });
         } else {
             createMutation.mutate(value, { onSuccess: onClose });
         }
