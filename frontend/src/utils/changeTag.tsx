@@ -80,7 +80,11 @@ export const changeTagByWordClass = (wordClass: wordClassType) => {
     );
 };
 
-export const changeTagByStatus = (status: statusType, type: "span" | "button", onClick?: () => void, checked?: boolean) => {
+export const changeTagByStatus = (
+    status: statusType,
+    type: "span" | "radio",
+    checked?: boolean,
+    registerProps?: UseFormRegisterReturn<"status">) => {
 
     const statusTagStyles: Record<statusType, string> = {
         ACQUIRED: "bg-emerald-50 text-emerald-800 border border-emerald-200",
@@ -98,15 +102,21 @@ export const changeTagByStatus = (status: statusType, type: "span" | "button", o
             </span>
         );
     };
-    if (type === "button") {
+    if (type === "radio") {
         return (
-            <span
-                className={`text-lg px-8 py-2 rounded-full font-medium ${checked ? statusTagStyles[status] : "bg-gray-100 text-gray-700 border border-gray-200"}`}
+            <label
                 key={status}
-                onClick={onClick}
+                className={`text-lg px-8 py-2 rounded-full font-medium ${checked ? statusTagStyles[status] : "bg-gray-100 text-gray-700 border border-gray-200"}`}
             >
+                <input
+                    type="radio"
+                    value={status}
+                    className="sr-only"
+                    {...registerProps}
+                />
                 {statusLabels[status]}
-            </span>
+            </label>
+
         );
     };
 
