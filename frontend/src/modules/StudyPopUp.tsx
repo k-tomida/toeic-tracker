@@ -95,7 +95,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                         <label className="text-gray-600 mb-2">メモ（任意）</label>
                         <input
                             {...register("memo", {
-                                maxLength: { value: 500, message: "500文字以下で入力してください" }
+                                maxLength: { value: 200, message: "200文字以下で入力してください" }
                             })}
                             type="text"
                             className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
