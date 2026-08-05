@@ -1,12 +1,12 @@
-import { useState } from "react";
 import type { statusType, vocabularyType, wordClassType } from "../types/vocabularyType";
-import { Select } from "../ui/Select";
 import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useCreateVocabulary } from "../hooks/vocabulary/useCreateVocabulary";
 import { changeTagByStatus } from "../utils/changeTag";
 import { useUpdateVocabulary } from "../hooks/vocabulary/useUpdateVocabulary";
 import { useDeleteVocabulary } from "../hooks/vocabulary/useDeleteVocabulary";
+import { useForm, useWatch } from "react-hook-form";
+import type { vocabularyFormType } from "../types/vocabularyFormType";
 
 type Props = {
     onClose: () => void;
@@ -29,11 +29,27 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
     const createMutation = useCreateVocabulary();
     const updateMutation = useUpdateVocabulary();
     const deleteMutation = useDeleteVocabulary();
-    const [word, setWord] = useState(data?.word ?? "")
-    const [wordClass, setWordClass] = useState<wordClassType>(data?.wordClass ?? "NOUN")
-    const [meaning, setMeaning] = useState(data?.meaning ?? "")
-    const [status, setStatus] = useState<statusType>(data?.status ?? "UNACQUIRED");
-    const [memo, setMemo] = useState(data?.memo ?? "");
+    const { register, handleSubmit, control, formState: { errors } } = useForm<vocabularyFormType>({
+        defaultValues: {
+            word: data?.word ?? "",
+            wordClass: data?.wordClass ?? "NOUN",
+            meaning: data?.meaning ?? "",
+            status: data?.status ?? "UNACQUIRED",
+            memo: data?.memo ?? ""
+        }
+    })
+
+    const status = useWatch({ control, name: "status" });
+
+    const onSubmit = (value: vocabularyFormType) => {
+        if (data !== null) {
+            updateMutation.mutate({ id: data.id, updateVocabulary: value }, { onSuccess: onClose });
+        } else {
+            createMutation.mutate(value, { onSuccess: onClose });
+        }
+    }
+
+
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg mx-4">
@@ -46,83 +62,104 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                         ✕
                     </button>
                 </div>
-                <div className="flex justify-between my-4">
-                    <div>
-                        <h2 className="text-gray-600 mb-1">単語</h2>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <div className="flex justify-between my-4">
+                        <div>
+                            <label className="text-gray-600 mb-1">単語</label>
+                            <input
+                                {...register("word", {
+                                    required: "単語を入力してください",
+                                    maxLength: { value: 50, message: "50文字以内で入力してください" }
+                                })}
+                                type="text"
+                                placeholder="例 : people"
+                                className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56" />
+                            {errors.word && (
+                                <p className="mt-1 text-sm text-red-600">{errors.word.message}</p>
+                            )}
+                        </div>
+                        <div>
+                            <label className="text-gray-600 mb-1">品詞</label>
+                            <select
+                                {...register("wordClass")}
+                                className="py-2 border border-gray-400 rounded-md bg-white w-56"
+                            >
+                                {wordClassOptions.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                    <div className="my-2">
+                        <label className="text-gray-600 mb-1">意味</label>
                         <input
+                            {...register("meaning", {
+                                required: "意味を入力してください",
+                                maxLength: { value: 100, message: "100文字以内で入力してください" }
+                            })}
                             type="text"
-                            value={word}
-                            placeholder="例 : people"
-                            onChange={(e) => setWord(e.target.value)}
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56" />
+                            placeholder="例 : 人々"
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full" />
+                        {errors.meaning && (
+                            <p className="mt-1 text-sm text-red-600">{errors.meaning.message}</p>
+                        )}
                     </div>
-                    <div>
-                        <h2 className="text-gray-600 mb-1">品詞</h2>
-                        <Select name="wordClass" value={wordClass} onChange={setWordClass} options={wordClassOptions} />
+                    <div className="my-3">
+                        <h2 className="text-gray-600 mb-1">ステータス</h2>
+                        <div className="flex gap-6 justify-center">
+                            {allStatus.map((s => changeTagByStatus(s, "radio", s === status, register("status"))))}
+                        </div>
                     </div>
-                </div>
-                <div className="my-2">
-                    <h2 className="text-gray-600 mb-1">意味</h2>
-                    <input
-                        type="text"
-                        value={meaning}
-                        placeholder="例 : 人々"
-                        onChange={(e) => setMeaning(e.target.value)}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full" />
-                </div>
-                <div className="my-3">
-                    <h2 className="text-gray-600 mb-1">ステータス</h2>
-                    <div className="flex gap-6 justify-center">
-                        {allStatus.map((s => changeTagByStatus(s, "button", () => setStatus(s), s === status)))}
+                    <div className="my-3">
+                        <label className="text-gray-600 mb-2">メモ（任意）</label>
+                        <input
+                            {...register("memo", {
+                                maxLength: { value: 200, message: "200文字以内で入力してください" }
+                            })}
+                            type="text"
+                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
+                        />
+                        {errors.memo && (
+                            <p className="mt-1 text-sm text-red-600">{errors.memo.message}</p>
+                        )}
                     </div>
-                </div>
-                <div className="my-3">
-                    <h2 className="text-gray-600 mb-2">メモ（任意）</h2>
-                    <input
-                        type="text"
-                        value={memo}
-                        onChange={(e) => setMemo(e.target.value)}
-                        className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
-                    />
-                </div>
-                <div className="flex justify-between mt-7">
-                    {data !== null ? (
-                        <Button
-                            onClick={() => {
-                                deleteMutation.mutate(data.id);
-                                onClose();
-                            }}>
-                            <span className="flex gap-2 items-center">
-                                <FaRegTrashAlt /> 削除
-                            </span>
-                        </Button>) : (<div />)}
-                    {data !== null ?
-                        <Button onClick={() => {
-                            updateMutation.mutate({
-                                id: data.id,
-                                updateVocabulary: {
-                                    word: word,
-                                    wordClass: wordClass,
-                                    meaning: meaning,
-                                    status: status,
-                                    memo: memo,
-                                }
-                            });
-                            onClose();
-                        }}>保存する</Button>
-                        :
-                        <Button
-                            onClick={() => {
-                                createMutation.mutate({
-                                    word: word,
-                                    wordClass: wordClass,
-                                    meaning: meaning,
-                                    status: status,
-                                    memo: memo,
-                                });
-                                onClose();
-                            }}>追加する</Button>}
-                </div>
+                    <div className="flex justify-between mt-7">
+                        {data !== null ? (
+                            <Button
+                                onClick={() => {
+                                    deleteMutation.mutate(data.id);
+                                    onClose();
+                                }}>
+                                <span className="flex gap-2 items-center">
+                                    <FaRegTrashAlt /> 削除
+                                </span>
+                            </Button>) : (<div />)}
+                        {data !== null ?
+                            <button
+                                type="submit"
+                                disabled={updateMutation.isPending}
+                                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
+                            >
+                                {updateMutation.isPending ? "保存中..." : "保存する"}
+                            </button>
+                            :
+                            <button
+                                type="submit"
+                                disabled={createMutation.isPending}
+                                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
+                            >
+                                {createMutation.isPending ? "追加中..." : "追加する"}
+
+                            </button>}
+                    </div>
+                    {(createMutation.isError || updateMutation.isError || deleteMutation.isError) && (
+                        <p className="mt-1 text-sm text-red-600">
+                            失敗しました。もう一度お試しください。
+                        </p>
+                    )}
+                </form>
             </div>
         </div >
     )
