@@ -1,5 +1,6 @@
 package com.toeictracker.backend.vocabulary;
 
+import com.toeictracker.backend.exception.ResourceNotFoundException;
 import com.toeictracker.backend.user.User;
 import com.toeictracker.backend.user.UserRepository;
 import com.toeictracker.backend.vocabulary.dto.VocabularyRequest;
@@ -24,14 +25,14 @@ public class VocabularyService {
     @Cacheable("getVocabulary")
     public List<Vocabulary> getVocabulary(String email){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
         return vocabularyRepository.findByUserId(user.getId());
     }
 
     @CacheEvict(value = "getVocabulary", key = "#email")
     public Vocabulary addVocabulary(String email, VocabularyRequest request){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
         Vocabulary vocabulary=new Vocabulary();
         vocabulary.setUserId(user.getId());
@@ -47,10 +48,10 @@ public class VocabularyService {
     @CacheEvict(value = "getVocabulary", key = "#email")
     public Vocabulary updateVocabulary(String email,Long id, VocabularyRequest request){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
         Vocabulary existingVocabulary=vocabularyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("単語が見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("単語が見つかりません"));
 
         if(!existingVocabulary.getUserId().equals(user.getId())){
             throw new AccessDeniedException("この単語を編集する権限がありません");
@@ -68,10 +69,10 @@ public class VocabularyService {
     @CacheEvict(value = "getVocabulary", key="#email")
     public void deleteVocabulary(String email, Long id){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
         Vocabulary existingVocabulary=vocabularyRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("単語が見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("単語が見つかりません"));
 
         if(!existingVocabulary.getUserId().equals(user.getId())){
             throw new AccessDeniedException("この単語を編集する権限がありません");
@@ -85,13 +86,13 @@ public class VocabularyService {
     public List<Vocabulary> testVocabulary(String email,List<VocabularyTestRequest> requests) {
 
         User user=userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
         List<Vocabulary> result = new ArrayList<>();
 
         for (VocabularyTestRequest request : requests) {
             Vocabulary existingVocabulary=vocabularyRepository.findById(request.id())
-                    .orElseThrow(() -> new RuntimeException("単語が見つかりません"));
+                    .orElseThrow(() -> new ResourceNotFoundException("単語が見つかりません"));
 
             if(!existingVocabulary.getUserId().equals(user.getId())){
                 throw new AccessDeniedException("この単語を編集する権限がありません");

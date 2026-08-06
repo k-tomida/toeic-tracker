@@ -1,5 +1,6 @@
 package com.toeictracker.backend.score;
 
+import com.toeictracker.backend.exception.ResourceNotFoundException;
 import com.toeictracker.backend.score.dto.ScoreRequest;
 import com.toeictracker.backend.study_session.StudySession;
 import com.toeictracker.backend.user.User;
@@ -22,14 +23,14 @@ public class ScoreService {
     @Cacheable("getScore")
     public List<Score> getScore(String email){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
         return scoreRepository.findByUserId(user.getId());
     }
 
     @CacheEvict(value = "getScore", key="#email")
     public Score addScore(String email, ScoreRequest request){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
         Score score=new Score();
         score.setUserId(user.getId());
@@ -45,10 +46,10 @@ public class ScoreService {
     @CacheEvict(value = "getScore", key = "#email")
     public Score updateScore(String email, Long id, ScoreRequest request){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
         Score existingScore = scoreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("スコア記録が見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("スコア記録が見つかりません"));
 
         if (!existingScore.getUserId().equals(user.getId())) {
             throw new AccessDeniedException("このスコア記録を編集する権限がありません");
@@ -66,10 +67,10 @@ public class ScoreService {
     @CacheEvict(value = "getScore", key = "#email")
     public void deleteScore(String email, Long id){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
         Score existingScore = scoreRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("スコア記録が見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("スコア記録が見つかりません"));
 
         if (!existingScore.getUserId().equals(user.getId())) {
             throw new AccessDeniedException("このスコア記録を削除する権限がありません");
