@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useRegister } from "../hooks/auth/useRegister";
 import { Link } from "react-router";
+import { ClipLoader } from "react-spinners";
 
 type RegisterForm = {
     email: string;
@@ -130,7 +131,7 @@ export const RegisterPage = () => {
                         disabled={registerMutation.isPending}
                         className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white font-medium py-2 rounded-md text-sm transition-colors"
                     >
-                        {registerMutation.isPending ? "登録中..." : "新規登録"}
+                        {registerMutation.isPending ? <ClipLoader size={20} /> : "新規登録"}
                     </button>
                 </form>
 

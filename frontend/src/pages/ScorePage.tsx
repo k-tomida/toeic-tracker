@@ -5,14 +5,34 @@ import { ScoreTable } from "../components/score/ScoreTable"
 import { ScoreTrendChart } from "../components/score/ScoreTrendChart"
 import { useGetScore } from "../hooks/score/useGetScore"
 import { useUser } from "../hooks/user/useUser"
+import { ErrorPage } from "./ErrorPage"
+import { LoadingPage } from "./LoadingPage"
 
 export const ScorePage = () => {
     const userQuery = useUser();
     const scoreQuery = useGetScore();
 
-    if (userQuery.isLoading || scoreQuery.isLoading) return <div>読み込み中...</div>;
+    if (userQuery.isLoading || scoreQuery.isLoading) {
+        return (
+            <div className="min-h-screen">
+                <Header />
+                <LoadingPage />
+            </div>
+        )
+    };
+
     if (userQuery.isError || scoreQuery.isError ||
-        !userQuery.data || !scoreQuery.data) return <div>データの取得に失敗しました</div>;
+        !userQuery.data || !scoreQuery.data) {
+        return (
+            <div className="min-h-screen">
+                <Header />
+                <ErrorPage onRetry={() => {
+                    userQuery.refetch();
+                    scoreQuery.refetch();
+                }} />
+            </div>
+        )
+    }
     return (
         <div className="min-h-screen">
             <Header />
