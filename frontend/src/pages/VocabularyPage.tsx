@@ -3,11 +3,30 @@ import { VocabularySummary } from "../components/vocabulary/VocabularySummary"
 import { VocabularyTable } from "../components/vocabulary/VocabularyTable"
 import { VocabularyTest } from "../components/vocabulary/VocabularyTest"
 import { useGetVocabulary } from "../hooks/vocabulary/useGetVocabulary"
+import { ErrorPage } from "./ErrorPage"
+import { LoadingPage } from "./LoadingPage"
 
 export const VocabularyPage = () => {
     const { data, isLoading, isError } = useGetVocabulary();
-    if (isLoading) return <p>読み込み中．．．</p>
-    if (isError || !data) return <p>データの取得に失敗しました</p>
+    if (isLoading) {
+        return (
+            <div className="min-h-screen">
+                <Header />
+                <LoadingPage />
+            </div>
+        )
+    };
+
+    if (isError || !data) {
+        return (
+            <div className="min-h-screen">
+                <Header />
+                <ErrorPage onRetry={() => {
+                    useGetVocabulary().refetch();
+                }} />
+            </div>
+        )
+    }
     return (
         <div className="min-h-screen">
             <Header />

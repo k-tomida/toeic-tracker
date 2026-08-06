@@ -8,6 +8,8 @@ import { useGetScore } from "../hooks/score/useGetScore";
 import { useStudySession } from "../hooks/study_session/useStudySession";
 import { useUser } from "../hooks/user/useUser";
 import { useGetVocabulary } from "../hooks/vocabulary/useGetVocabulary";
+import { ErrorPage } from "./ErrorPage";
+import { LoadingPage } from "./LoadingPage";
 
 export const HomePage = () => {
   const userQuery = useUser();
@@ -15,11 +17,30 @@ export const HomePage = () => {
   const scoreQuery = useGetScore();
   const vocabularyQuery = useGetVocabulary();
 
-  if (userQuery.isLoading || studySessionQuery.isLoading || scoreQuery.isLoading || vocabularyQuery.isLoading) return <div>読み込み中...</div>;
+  if (userQuery.isLoading || studySessionQuery.isLoading || scoreQuery.isLoading || vocabularyQuery.isLoading) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <LoadingPage />
+      </div>
+    )
+  };
+
   if (userQuery.isError || studySessionQuery.isError || scoreQuery.isError || vocabularyQuery.isError ||
     !userQuery.data || !studySessionQuery.data || !scoreQuery.data || !vocabularyQuery.data) {
-    return <div>データの取得に失敗しました</div>;
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <ErrorPage onRetry={() => {
+          userQuery.refetch();
+          studySessionQuery.refetch();
+          scoreQuery.refetch();
+          vocabularyQuery.refetch();
+        }} />
+      </div>
+    )
   }
+
   return (
     <div className="min-h-screen">
       <Header />

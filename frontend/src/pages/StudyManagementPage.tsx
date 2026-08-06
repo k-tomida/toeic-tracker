@@ -3,12 +3,31 @@ import { StudyTable } from "../components/studySession/StudyTable";
 import { StudyTimeSummary } from "../components/studySession/StudyTimeSummary";
 import { CategoryBreakdown } from "../components/studySession/CategoryBreakdown";
 import { useStudySession } from "../hooks/study_session/useStudySession";
+import { LoadingPage } from "./LoadingPage";
+import { ErrorPage } from "./ErrorPage";
 
 export const StudyManagementPage = () => {
     const { data, isLoading, isError } = useStudySession();
 
-    if (isLoading) return <div>読み込み中...</div>;
-    if (isError || !data) return <div>データの取得に失敗しました</div>;
+    if (isLoading) {
+        return (
+            <div className="min-h-screen">
+                <Header />
+                <LoadingPage />
+            </div>
+        )
+    };
+
+    if (isError || !data) {
+        return (
+            <div className="min-h-screen">
+                <Header />
+                <ErrorPage onRetry={() => {
+                    useStudySession().refetch();
+                }} />
+            </div>
+        )
+    }
     return (
         <div className="min-h-screen">
             <Header />

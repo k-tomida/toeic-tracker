@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useLogin } from "../hooks/auth/useLogin";
 import { Link } from "react-router";
 import type { LoginRequest } from "../api/user";
+import { ClipLoader } from "react-spinners";
 
 
 export const LoginPage = () => {
@@ -75,7 +76,7 @@ export const LoginPage = () => {
                         disabled={loginMutation.isPending}
                         className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white font-medium py-2 rounded-md text-sm transition-colors"
                     >
-                        {loginMutation.isPending ? "ログイン中..." : "ログイン"}
+                        {loginMutation.isPending ? <ClipLoader size={20} /> : "ログイン"}
                     </button>
                 </form>
 
