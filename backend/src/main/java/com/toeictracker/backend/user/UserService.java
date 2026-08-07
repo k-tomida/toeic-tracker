@@ -54,7 +54,7 @@ public class UserService {
 
         // 認証成功後、DBからUserエンティティを取得する
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new IllegalStateException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new IllegalStateException("サーバー内部でエラーが発生しました"));
 
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
