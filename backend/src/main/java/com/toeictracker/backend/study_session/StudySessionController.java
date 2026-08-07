@@ -2,6 +2,7 @@ package com.toeictracker.backend.study_session;
 
 import com.toeictracker.backend.study_session.dto.StudySessionRequest;
 import com.toeictracker.backend.study_session.dto.StudySessionResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -37,7 +38,7 @@ public class StudySessionController {
     @PostMapping
     public ResponseEntity<StudySessionResponse> addStudySession(
             Authentication authentication,
-            @RequestBody StudySessionRequest request){
+            @Valid @RequestBody StudySessionRequest request){
         StudySession postStudySession=studySessionService.addStudySession(authentication.getName(), request);
         StudySessionResponse response=new StudySessionResponse(
                 postStudySession.getId(),
@@ -53,7 +54,7 @@ public class StudySessionController {
     public ResponseEntity<StudySessionResponse> updateStudySession(
             Authentication authentication,
             @PathVariable Long id,
-            @RequestBody StudySessionRequest request){
+            @Valid @RequestBody StudySessionRequest request){
         StudySession updateStudySession=studySessionService.updateStudySession(authentication.getName(), id,request);
 
         StudySessionResponse response=new StudySessionResponse(

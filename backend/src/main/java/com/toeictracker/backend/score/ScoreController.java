@@ -2,6 +2,7 @@ package com.toeictracker.backend.score;
 
 import com.toeictracker.backend.score.dto.ScoreRequest;
 import com.toeictracker.backend.score.dto.ScoreResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,7 @@ public class ScoreController {
     @PostMapping
     public ResponseEntity<ScoreResponse> addScore(
             Authentication authentication,
-            @RequestBody ScoreRequest request){
+            @Valid @RequestBody ScoreRequest request){
         Score data=scoreService.addScore(authentication.getName(), request);
         ScoreResponse response=new ScoreResponse(
                 data.getId(),
@@ -51,7 +52,7 @@ public class ScoreController {
     public ResponseEntity<ScoreResponse> updateScore(
             Authentication authentication,
             @PathVariable Long id,
-            @RequestBody ScoreRequest request){
+            @Valid @RequestBody ScoreRequest request){
         Score data=scoreService.updateScore(authentication.getName(), id,request);
 
         ScoreResponse response=new ScoreResponse(
