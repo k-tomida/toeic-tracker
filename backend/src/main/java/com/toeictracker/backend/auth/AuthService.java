@@ -59,7 +59,7 @@ public class AuthService {
 
         // 認証成功後、DBからUserエンティティを取得する
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new IllegalStateException("サーバー内部でエラーが発生しました"));
+                .orElseThrow(() -> new RuntimeException("サーバー内部でエラーが発生しました"));
 
         String token = jwtProvider.generateToken(user);
         return new AuthResponse(token);

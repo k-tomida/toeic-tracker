@@ -1,13 +1,17 @@
 package com.toeictracker.backend.exception;
 
 import com.toeictracker.backend.auth.EmailAlreadyExistsException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 
-import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +49,34 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST, "入力内容に誤りがあります");
         problemDetail.setProperty("errors", errors);
         return problemDetail;
+    }
+
+    //許可されていないHTTPリクエストが送られてきたとき
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ProblemDetail handleHttpRequestNotSupported(){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.METHOD_NOT_ALLOWED,"このHTTPメソッドは許可されていません");
+    }
+
+    //requestのJsonの型が間違っているとき
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ProblemDetail handleHttpMessageNotReadable(){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,"リクエストの形式が不正です");
+    }
+
+    //DB制約に反しているとき
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ProblemDetail handleDataIntegrityViolation() {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "データの登録または更新に失敗しました");
+    }
+    
+    @ExceptionHandler(AuthenticationException.class)
+    public ProblemDetail handleAuthenticationException() {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED,"メールアドレスまたはパスワードが正しくありません");
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleException(){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "予期しないエラーが発生しました");
     }
 
 }
