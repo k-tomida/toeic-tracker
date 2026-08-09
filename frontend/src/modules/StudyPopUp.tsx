@@ -133,7 +133,8 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                     </div>
                     {(createMutation.isError || updateMutation.isError || deleteMutation.isError) && (
                         <p className="mt-1 text-sm text-red-600">
-                            失敗しました。もう一度お試しください。
+                            {createMutation.error?.message || updateMutation.error?.message || deleteMutation.error?.message ||
+                                "失敗しました。もう一度お試しください。"}
                         </p>
                     )}
                 </form>

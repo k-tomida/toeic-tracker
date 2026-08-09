@@ -67,7 +67,7 @@ export const LoginPage = () => {
 
                     {loginMutation.isError && (
                         <p className="text-sm text-red-600 text-center">
-                            メールアドレスまたはパスワードが正しくありません
+                            {loginMutation.error.message}
                         </p>
                     )}
 

@@ -2,17 +2,11 @@
 import { useForm } from "react-hook-form";
 import { FaTimes } from "react-icons/fa";
 import { useUpdatePassword } from "../hooks/user/useUpdatePassword";
+import type { UpdatePasswordRequest } from "../api/user";
 
 type Props = {
     onClose: () => void;
 };
-
-type FormValues = {
-    currentPassword: string;
-    newPassword: string;
-    confirmPassword: string;
-};
-
 
 export const ChangePasswordPopUp = ({ onClose }: Props) => {
     const mutation = useUpdatePassword();
@@ -21,13 +15,12 @@ export const ChangePasswordPopUp = ({ onClose }: Props) => {
         handleSubmit,
         watch,
         formState: { errors },
-    } = useForm<FormValues>();
+    } = useForm<UpdatePasswordRequest>();
 
     const newPassword = watch("newPassword");
 
-    const onSubmit = (data: FormValues) => {
-        const { confirmPassword, ...payload } = data;
-        mutation.mutate(payload, {
+    const onSubmit = (data: UpdatePasswordRequest) => {
+        mutation.mutate(data, {
             onSuccess: onClose,
         });
     };
@@ -90,7 +83,7 @@ export const ChangePasswordPopUp = ({ onClose }: Props) => {
 
                     {mutation.isError && (
                         <p className="text-sm text-red-600 text-center">
-                            パスワードが正しくありません
+                            {mutation.error.message}
                         </p>
                     )}
 

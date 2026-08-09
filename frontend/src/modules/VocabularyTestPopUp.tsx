@@ -19,27 +19,36 @@ type resultType = {
 
 export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Props) => {
     const mutation = useTestVocabulary();
-    const [vocabularys] = useState(() => pickRandomWords(vocabularies, scope, test));
+    const [testVocabularies] = useState(() => pickRandomWords(vocabularies, scope, test));
     const [number, setNumber] = useState(0);
     const [revealed, setRevealed] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
-    const isFinished = number >= vocabularys.length;
-    const result = useRef<resultType[]>([]);
+    const isFinished = number >= testVocabularies.length;
+    const [result, setResult] = useState<resultType[]>([]);
     const sendData = useRef<sendTestType[]>([]);
+
     const handleAnswer = (wasCorrect: boolean, vocabulary: vocabularyType) => {
-        if (wasCorrect) setCorrectCount((prev) => prev + 1);
+        if (wasCorrect) {
+            setCorrectCount((prev) => prev + 1);
+        }
+
         setNumber((prev) => prev + 1);
         setRevealed(false);
-        result.current.push({
-            id: vocabulary.id,
-            word: vocabulary.word,
-            meaning: vocabulary.meaning,
-            status: wasCorrect ? "ACQUIRED" : "UNACQUIRED"
-        })
+
+        setResult((prev) => [
+            ...prev,
+            {
+                id: vocabulary.id,
+                word: vocabulary.word,
+                meaning: vocabulary.meaning,
+                status: wasCorrect ? "ACQUIRED" : "UNACQUIRED",
+            },
+        ]);
+
         sendData.current.push({
             id: vocabulary.id,
-            status: wasCorrect ? "ACQUIRED" : "UNACQUIRED"
-        })
+            status: wasCorrect ? "ACQUIRED" : "UNACQUIRED",
+        });
     };
 
     return (
@@ -50,18 +59,18 @@ export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Prop
                         <p className="text-sm text-gray-500 mb-1.5">テスト結果</p>
                         <p className="text-4xl font-semibold mb-1">
                             <span className="text-green-600">{correctCount}</span>
-                            <span className="text-xl text-gray-500 font-normal"> / {vocabularys.length}</span>
+                            <span className="text-xl text-gray-500 font-normal"> / {testVocabularies.length}</span>
                         </p>
                         <p className="text-sm text-gray-500 mb-5">
-                            正答率 {Math.round((correctCount / vocabularys.length) * 100)}%
+                            正答率 {Math.round((correctCount / testVocabularies.length) * 100)}%
                         </p>
 
                         <div className="max-h-72 overflow-y-auto mb-5 border border-gray-200 rounded-lg">
-                            {result.current.map((r, i) => (
+                            {result.map((r, i) => (
                                 <div
                                     key={r.id}
                                     className={
-                                        i !== result.current.length - 1
+                                        i !== result.length - 1
                                             ? "flex items-center gap-2.5 px-3.5 py-2.5 border-b border-gray-200"
                                             : "flex items-center gap-2.5 px-3.5 py-2.5"
                                     }
@@ -87,26 +96,31 @@ export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Prop
                                 </div>
                             ))}
                         </div>
-
+                        {mutation.isError &&
+                            <p className="my-1 text-sm text-red-600 text-center">
+                                {mutation.error.message}
+                            </p>
+                        }
                         <button
                             onClick={() => {
-                                mutation.mutate(sendData.current); onClose();
+                                mutation.mutate(sendData.current, { onSuccess: onClose });
                             }}
+                            disabled={mutation.isPending}
                             className="w-full bg-green-500 hover:bg-green-600 text-white rounded-md px-6 py-2.5"
                         >
-                            保存する
+                            {mutation.isPending ? "保存中..." : "保存する"}
                         </button>
                     </div>
                 ) : (
                     <div>
                         <p className="text-xs text-gray-400 text-right mb-2">
-                            {number + 1} / {vocabularys.length}
+                            {number + 1} / {testVocabularies.length}
                         </p>
                         <p className="text-center text-sm text-gray-500 mb-2">この単語の意味は？</p>
-                        <p className="text-center text-2xl font-medium mb-4">{vocabularys[number].word}</p>
+                        <p className="text-center text-2xl font-medium mb-4">{testVocabularies[number].word}</p>
 
                         <div className="relative border border-gray-200 rounded-md min-h-[56px] flex items-center justify-center mb-4">
-                            <p>{vocabularys[number].meaning}</p>
+                            <p>{testVocabularies[number].meaning}</p>
                             {!revealed && (
                                 <button
                                     onClick={() => setRevealed(true)}
@@ -120,13 +134,13 @@ export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Prop
                         {revealed ? (
                             <div className="flex gap-2">
                                 <button
-                                    onClick={() => handleAnswer(false, vocabularys[number])}
+                                    onClick={() => handleAnswer(false, testVocabularies[number])}
                                     className="flex-1 border border-gray-300 rounded-md py-2.5"
                                 >
                                     わからなかった
                                 </button>
                                 <button
-                                    onClick={() => handleAnswer(true, vocabularys[number])}
+                                    onClick={() => handleAnswer(true, testVocabularies[number])}
                                     className="flex-1 bg-green-500 hover:bg-green-600 text-white rounded-md py-2.5"
                                 >
                                     わかった

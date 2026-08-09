@@ -2,6 +2,7 @@ package com.toeictracker.backend.user;
 
 import com.toeictracker.backend.auth.JwtProvider;
 import com.toeictracker.backend.auth.dto.AuthResponse;
+import com.toeictracker.backend.exception.ResourceNotFoundException;
 import com.toeictracker.backend.user.dto.UpdatePasswordRequest;
 import com.toeictracker.backend.user.dto.UpdateTargetScoreAndNextExamRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,13 +28,13 @@ public class UserService {
     @Cacheable("getUser")
     public User getUser(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("ユーザーが見つかりません"));
     }
 
     @CacheEvict(value = "getUser", key = "#email")
     public User updateTargetScoreAndNextExam(String email, UpdateTargetScoreAndNextExamRequest request) {
         User user =userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
         user.setTargetScore(request.targetScore());
         user.setNextExamDate(request.nextExamDate());
@@ -43,18 +44,16 @@ public class UserService {
 
     @CacheEvict(value = "getUser", key="#email")
     public AuthResponse updatePassword(String email, UpdatePasswordRequest request){
+        User user =userRepository.findByEmail(email)
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        email,
-                        request.currentPassword()
-                )
-        );
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+            throw new InvalidCurrentPasswordException("現在のパスワードが正しくありません");
+        }
 
-        // 認証成功後、DBからUserエンティティを取得する
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new IllegalStateException("ユーザーが見つかりません"));
-
+        if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
+            throw new SamePasswordException("現在のパスワードと異なるパスワードを設定してください");
+        }
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
@@ -66,7 +65,7 @@ public class UserService {
     @CacheEvict(value = "getUser", key="#email")
     public User updateName(String email, String name){
         User user =userRepository.findByEmail(email)
-                .orElseThrow(()->new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
         user.setName(name);
         return userRepository.save(user);

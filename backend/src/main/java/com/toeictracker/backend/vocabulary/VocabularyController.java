@@ -3,6 +3,7 @@ package com.toeictracker.backend.vocabulary;
 import com.toeictracker.backend.vocabulary.dto.VocabularyRequest;
 import com.toeictracker.backend.vocabulary.dto.VocabularyResponse;
 import com.toeictracker.backend.vocabulary.dto.VocabularyTestRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -36,7 +37,7 @@ public class VocabularyController {
     @PostMapping
     public ResponseEntity<VocabularyResponse> addVocabulary(
             Authentication authentication,
-            @RequestBody VocabularyRequest request){
+            @Valid @RequestBody VocabularyRequest request){
         Vocabulary vocabulary=vocabularyService.addVocabulary(authentication.getName(), request);
         VocabularyResponse response=new VocabularyResponse(
                 vocabulary.getId(),
@@ -55,7 +56,7 @@ public class VocabularyController {
     public ResponseEntity<VocabularyResponse> updateVocabulary(
             Authentication authentication,
             @PathVariable Long id,
-            @RequestBody VocabularyRequest request){
+            @Valid @RequestBody VocabularyRequest request){
         Vocabulary vocabulary=vocabularyService.updateVocabulary(authentication.getName(), id, request);
         VocabularyResponse response=new VocabularyResponse(
                 vocabulary.getId(),
@@ -81,7 +82,7 @@ public class VocabularyController {
     @PutMapping("/test")
     public ResponseEntity<List<VocabularyResponse>> testVocabulary(
             Authentication authentication,
-            @RequestBody List<VocabularyTestRequest> request){
+            @Valid @RequestBody List<VocabularyTestRequest> request){
         List<Vocabulary> vocabularies=vocabularyService.testVocabulary(authentication.getName(), request);
         List<VocabularyResponse> responses=vocabularies.stream()
                 .map(vocabulary -> new VocabularyResponse(
