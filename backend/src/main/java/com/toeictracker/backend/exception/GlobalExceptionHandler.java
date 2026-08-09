@@ -1,6 +1,8 @@
 package com.toeictracker.backend.exception;
 
 import com.toeictracker.backend.auth.EmailAlreadyExistsException;
+import com.toeictracker.backend.user.InvalidCurrentPasswordException;
+import com.toeictracker.backend.user.SamePasswordException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -29,6 +31,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ProblemDetail handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
+    //パスワード変更時に現在のパスワードが間違っていた時
+    @ExceptionHandler(InvalidCurrentPasswordException.class)
+    public ProblemDetail handleInvalidCurrentPassword(InvalidCurrentPasswordException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    //パスワード変更時に現在のパスワードと変更するパスワードが同じ時
+    @ExceptionHandler(SamePasswordException.class)
+    public ProblemDetail handleSamePassword(SamePasswordException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
     //アクセス権限がないとき
@@ -68,7 +82,7 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleDataIntegrityViolation() {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "データの登録または更新に失敗しました");
     }
-    
+
     @ExceptionHandler(AuthenticationException.class)
     public ProblemDetail handleAuthenticationException() {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED,"メールアドレスまたはパスワードが正しくありません");

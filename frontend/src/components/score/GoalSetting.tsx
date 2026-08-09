@@ -2,11 +2,11 @@ import { useState } from "react";
 import { ProgressBar } from "../../ui/ProgressBar";
 import { calcBestScore } from "../../utils/calcScore";
 import { useUserMutation } from "../../hooks/user/useUser";
-import type { userType } from "../../types/userType";
+import type { UserType } from "../../types/userType";
 import type { scoreType } from "../../types/scoreType";
 
 type Props = {
-    user: userType;
+    user: UserType;
     scores: scoreType[]
 }
 
@@ -53,6 +53,11 @@ export const GoalSetting = ({ user, scores }: Props) => {
                     className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
                 />
             </div>
+            {mutation.isError &&
+                <p className="mt-1 text-sm text-red-600 text-center">
+                    {mutation.error.message}
+                </p>
+            }
             <div className="flex justify-center pt-3">
                 <button
                     className="bg-green-500 rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700"
@@ -61,6 +66,7 @@ export const GoalSetting = ({ user, scores }: Props) => {
                         nextExamDate: date
                     })}>更新</button>
             </div>
+
         </div>
     );
 };

@@ -67,6 +67,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                                         valueAsNumber: true,
                                         min: { value: 5, message: "5以上で入力してください" },
                                         max: { value: 495, message: "495以下で入力してください" },
+                                        validate: value => value % 5 === 0 || "5点刻みで入力してください"
                                     })}
                                     type="number"
                                     className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-40"
@@ -87,6 +88,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                                         valueAsNumber: true,
                                         min: { value: 5, message: "5以上で入力してください" },
                                         max: { value: 495, message: "495以下で入力してください" },
+                                        validate: value => value % 5 === 0 || "5点刻みで入力してください"
                                     })}
                                     type="number"
                                     className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-40"
@@ -152,7 +154,8 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                     </div>
                     {(createMutation.isError || updateMutation.isError || deleteMutation.isError) && (
                         <p className="mt-1 text-sm text-red-600">
-                            失敗しました。もう一度お試しください。
+                            {createMutation.error?.message || updateMutation.error?.message || deleteMutation.error?.message ||
+                                "失敗しました。もう一度お試しください。"}
                         </p>
                     )}
                 </form>

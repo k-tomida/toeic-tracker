@@ -122,7 +122,7 @@ export const RegisterPage = () => {
 
                     {registerMutation.isError && (
                         <p className="text-sm text-red-600 text-center">
-                            登録に失敗しました。時間をおいて再度お試しください
+                            {registerMutation.error.message}
                         </p>
                     )}
 

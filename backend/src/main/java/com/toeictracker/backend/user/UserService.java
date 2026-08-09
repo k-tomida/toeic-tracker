@@ -44,18 +44,16 @@ public class UserService {
 
     @CacheEvict(value = "getUser", key="#email")
     public AuthResponse updatePassword(String email, UpdatePasswordRequest request){
+        User user =userRepository.findByEmail(email)
+                .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        email,
-                        request.currentPassword()
-                )
-        );
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+            throw new InvalidCurrentPasswordException("現在のパスワードが正しくありません");
+        }
 
-        // 認証成功後、DBからUserエンティティを取得する
-        User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new IllegalStateException("サーバー内部でエラーが発生しました"));
-
+        if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
+            throw new SamePasswordException("現在のパスワードと異なるパスワードを設定してください");
+        }
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);

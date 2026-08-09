@@ -11,6 +11,10 @@ public record UpdatePasswordRequest(
 
         @NotBlank(message = "新しいパスワードを入力してください")
         @Size(min = 8, max = 100, message = "新しいパスワードは8～100文字で入力してください")
-        String newPassword
+        String newPassword,
+
+        @NotBlank(message = "確認用パスワードを入力してください")
+        @Size(min = 8, max = 100, message = "確認用パスワードは8～100文字で入力してください")
+        String confirmPassword
 
 ) {}
