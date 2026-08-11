@@ -1,6 +1,7 @@
 package com.toeictracker.backend.exception;
 
 import com.toeictracker.backend.auth.EmailAlreadyExistsException;
+import com.toeictracker.backend.auth.UserNotFoundException;
 import com.toeictracker.backend.user.InvalidCurrentPasswordException;
 import com.toeictracker.backend.user.SamePasswordException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -81,6 +82,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrityViolation() {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "データの登録または更新に失敗しました");
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ProblemDetail handleUserNotFound(){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "ユーザーが見つかりません");
     }
 
     @ExceptionHandler(AuthenticationException.class)
