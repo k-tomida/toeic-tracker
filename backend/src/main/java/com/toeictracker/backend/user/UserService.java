@@ -51,6 +51,10 @@ public class UserService {
             throw new InvalidCurrentPasswordException("現在のパスワードが正しくありません");
         }
 
+        if (!request.newPassword().equals(request.confirmPassword())) {
+            throw new PasswordMismatchException("新しいパスワードと確認用パスワードが一致しません");
+        }
+
         if (passwordEncoder.matches(request.newPassword(), user.getPassword())) {
             throw new SamePasswordException("現在のパスワードと異なるパスワードを設定してください");
         }

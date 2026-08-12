@@ -3,6 +3,7 @@ package com.toeictracker.backend.exception;
 import com.toeictracker.backend.auth.EmailAlreadyExistsException;
 import com.toeictracker.backend.auth.UserNotFoundException;
 import com.toeictracker.backend.user.InvalidCurrentPasswordException;
+import com.toeictracker.backend.user.PasswordMismatchException;
 import com.toeictracker.backend.user.SamePasswordException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SamePasswordException.class)
     public ProblemDetail handleSamePassword(SamePasswordException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    //新しいパスワードと確認用パスワードが一致しないとき
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ProblemDetail handlePasswordMismatch(PasswordMismatchException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     //アクセス権限がないとき
