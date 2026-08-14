@@ -318,4 +318,95 @@ class AuthControllerTest {
 
         verify(authService).login(any(LoginRequest.class));
     }
+
+    @Test
+    void login_emailが空の場合は400を返す() throws Exception {
+        //given
+        LoginRequest request=new LoginRequest(
+                "",
+                "password123"
+        );
+
+        //when & then
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).login(any(LoginRequest.class));
+    }
+
+    @Test
+    void login_email形式が不正の場合は400を返す() throws Exception {
+        //given
+        LoginRequest request=new LoginRequest(
+                "invalid-email",
+                "password123"
+        );
+
+        //when & then
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).login(any(LoginRequest.class));
+    }
+
+    @Test
+    void login_passwordが空の場合は400を返す() throws Exception{
+        //given
+        LoginRequest request=new LoginRequest(
+                "test@example.com",
+                ""
+        );
+
+        //when & then
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).login(any(LoginRequest.class));
+    }
+
+    @Test
+    void login_passwordが8文字未満の場合は400を返す() throws Exception{
+        //given
+        //given
+        LoginRequest request=new LoginRequest(
+                "test@example.com",
+                "1234567"
+        );
+
+        //when & then
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).login(any(LoginRequest.class));
+    }
+
+    @Test
+    void login_passwordが100文字を超える場合は400を返す() throws Exception{
+        //given
+        String password="a".repeat(101);
+
+        //given
+        LoginRequest request=new LoginRequest(
+                "test@example.com",
+                password
+        );
+
+        //when & then
+        mockMvc.perform(post("/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+
+        verify(authService, never()).login(any(LoginRequest.class));
+    }
+
+
 }
