@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +72,13 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST, "入力内容に誤りがあります");
         problemDetail.setProperty("errors", errors);
         return problemDetail;
+    }
+
+    // バリデーション
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ProblemDetail handleHandlerMethodValidation(HandlerMethodValidationException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "入力内容に誤りがあります"
+        );
     }
 
     //許可されていないHTTPリクエストが送られてきたとき
