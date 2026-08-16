@@ -8,7 +8,12 @@ export const calcDaysUntilNextExam = (nextExamDate: string | null): number | nul
     if (!nextExamDate) return null;
 
     const today = new Date();
-    const examDate = new Date(nextExamDate);
+    today.setHours(0, 0, 0, 0);
+
+    const [year, month, day] = nextExamDate.split("-").map(Number);
+    const examDate = new Date(year, month - 1, day);
+
     const diffMs = examDate.getTime() - today.getTime();
-    return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    return Math.round(diffMs / (1000 * 60 * 60 * 24));
 };
