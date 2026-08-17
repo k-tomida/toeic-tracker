@@ -3,7 +3,7 @@ import { changeTagByCategory } from "../../utils/changeTag";
 import { formatDate } from "../../utils/formatDate";
 import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
 import type { studySessionType, categoryType } from "../../types/studySessionType";
-import { sortTableByOrder } from "../../utils/sortTableByOrder";
+import { sortTableByOrder } from "../../utils/sortData";
 import { useMemo, useState } from "react";
 import type { periodType } from "../../types/periodType";
 import type { orderType } from "../../types/orderType";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ProgressBar } from "../../ui/ProgressBar";
 import { calcBestScore } from "../../utils/calcScore";
-import { useUserMutation } from "../../hooks/user/useUser";
+import { useUpdateUser } from "../../hooks/user/useUpdateUser";
 import type { UserType } from "../../types/userType";
 import type { scoreType } from "../../types/scoreType";
 
@@ -11,7 +11,7 @@ type Props = {
 }
 
 export const GoalSetting = ({ user, scores }: Props) => {
-    const mutation = useUserMutation();
+    const mutation = useUpdateUser();
     const [date, setDate] = useState(user.nextExamDate ?? new Date().toISOString().slice(0, 10));
     const [score, setScore] = useState(user.targetScore ?? 0);
 

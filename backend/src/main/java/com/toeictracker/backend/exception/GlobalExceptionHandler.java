@@ -1,7 +1,9 @@
 package com.toeictracker.backend.exception;
 
 import com.toeictracker.backend.auth.EmailAlreadyExistsException;
+import com.toeictracker.backend.auth.UserNotFoundException;
 import com.toeictracker.backend.user.InvalidCurrentPasswordException;
+import com.toeictracker.backend.user.PasswordMismatchException;
 import com.toeictracker.backend.user.SamePasswordException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +48,12 @@ public class GlobalExceptionHandler {
         return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
+    //新しいパスワードと確認用パスワードが一致しないとき
+    @ExceptionHandler(PasswordMismatchException.class)
+    public ProblemDetail handlePasswordMismatch(PasswordMismatchException ex){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     //アクセス権限がないとき
     @ExceptionHandler(AccessDeniedException.class)
     public ProblemDetail handleAccessDenied(AccessDeniedException ex){
@@ -65,6 +74,13 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    // バリデーション
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ProblemDetail handleHandlerMethodValidation(HandlerMethodValidationException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "入力内容に誤りがあります"
+        );
+    }
+
     //許可されていないHTTPリクエストが送られてきたとき
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ProblemDetail handleHttpRequestNotSupported(){
@@ -81,6 +97,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrityViolation() {
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, "データの登録または更新に失敗しました");
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ProblemDetail handleUserNotFound(){
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "ユーザーが見つかりません");
     }
 
     @ExceptionHandler(AuthenticationException.class)

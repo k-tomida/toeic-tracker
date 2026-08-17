@@ -1,5 +1,5 @@
 import type { categoryType, studySessionType } from "../types/studySessionType";
-import { sortTableByOrder } from "./sortTableByOrder";
+import { sortTableByOrder } from "./sortData";
 
 export const calcStudyTimeInWeek = (day: Date, data: studySessionType[]): number => {
     const start = new Date(day);
@@ -18,7 +18,7 @@ export const calcStudyTimeInWeek = (day: Date, data: studySessionType[]): number
         }
     });
 
-    return Math.round(count / 60);
+    return Math.round(count / 60 * 10) / 10;
 };
 
 export const calcStudyTimeInMonth = (day: Date, data: studySessionType[]): number => {
@@ -32,7 +32,7 @@ export const calcStudyTimeInMonth = (day: Date, data: studySessionType[]): numbe
             count += d.duration;
         }
     })
-    return Math.round(count / 60);
+    return Math.round(count / 60 * 10) / 10;
 
 }
 
@@ -42,7 +42,7 @@ export const calcStudyTimeAll = (data: studySessionType[]): number => {
         count += d.duration;
     })
 
-    return Math.round(count / 60);
+    return Math.round(count / 60 * 10) / 10;
 }
 
 export const calcStudyTimeAverage = (data: studySessionType[]): number => {
@@ -73,6 +73,6 @@ export const calcStudyTimeByCategory = (category: categoryType, data: studySessi
             }
         }
     })
-    return Math.round(count / 60);
+    return Math.round(count / 60 * 10) / 10;
 }
 

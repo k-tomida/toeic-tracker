@@ -24,7 +24,7 @@ export const changeTableByPeriod = (period: periodType, filteredStudyTables: stu
             if (thisMonth === 1) {
                 return (year === thisYear - 1) && (month === 12);
             }
-            return month === thisMonth - 1;
+            return (year === thisYear) && (month === thisMonth - 1);
         })
     }
     else if (period === "lastThreeMonth") {

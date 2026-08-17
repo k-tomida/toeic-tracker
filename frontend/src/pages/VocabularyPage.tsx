@@ -7,7 +7,7 @@ import { ErrorPage } from "./ErrorPage"
 import { LoadingPage } from "./LoadingPage"
 
 export const VocabularyPage = () => {
-    const { data, isLoading, isError } = useGetVocabulary();
+    const { data, isLoading, isError, refetch } = useGetVocabulary();
     if (isLoading) {
         return (
             <div className="min-h-screen">
@@ -21,9 +21,7 @@ export const VocabularyPage = () => {
         return (
             <div className="min-h-screen">
                 <Header />
-                <ErrorPage onRetry={() => {
-                    useGetVocabulary().refetch();
-                }} />
+                <ErrorPage onRetry={() => refetch()} />
             </div>
         )
     }

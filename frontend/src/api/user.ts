@@ -36,7 +36,6 @@ export type UpdatePasswordRequest = {
 
 export const updateUser = async (request: UpdateUserRequest): Promise<UserType> => {
     const { data } = await apiClient.put("/users/me", request);
-    console.log(data);
     return data;
 }
 

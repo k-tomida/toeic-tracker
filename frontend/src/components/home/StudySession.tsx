@@ -1,6 +1,6 @@
 import { changeTagByCategory } from "../../utils/changeTag";
 import { formatDate } from "../../utils/formatDate";
-import { sortTableByOrder } from "../../utils/sortTableByOrder";
+import { sortTableByOrder } from "../../utils/sortData";
 import type { studySessionType } from "../../types/studySessionType";
 
 export const StudySession = ({ studySessions }: { studySessions: studySessionType[] }) => {

@@ -1,6 +1,6 @@
 import { FaPen } from "react-icons/fa";
 import { Button } from "../../ui/Button"
-import { sortScoreByNewest } from "../../utils/sortTableByOrder"
+import { sortScoreByNewest } from "../../utils/sortData"
 import { useState } from "react";
 import { getPageNumbers } from "../../utils/getPageNumbers";
 import { formatDateSlash } from "../../utils/formatDate";

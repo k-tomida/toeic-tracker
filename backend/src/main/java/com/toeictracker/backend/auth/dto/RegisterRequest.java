@@ -12,7 +12,6 @@ public record RegisterRequest(
 
         @NotBlank(message = "emailを入力してください")
         @Email(message = "email形式で入力してください")
-        @Size(max = 254, message = "emailは254文字で入力してください")
         String email,
 
         @NotBlank(message = "名前を入力してください")

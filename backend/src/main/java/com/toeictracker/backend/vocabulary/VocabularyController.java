@@ -82,7 +82,7 @@ public class VocabularyController {
     @PutMapping("/test")
     public ResponseEntity<List<VocabularyResponse>> testVocabulary(
             Authentication authentication,
-            @Valid @RequestBody List<VocabularyTestRequest> request){
+            @RequestBody List<@Valid VocabularyTestRequest> request){
         List<Vocabulary> vocabularies=vocabularyService.testVocabulary(authentication.getName(), request);
         List<VocabularyResponse> responses=vocabularies.stream()
                 .map(vocabulary -> new VocabularyResponse(

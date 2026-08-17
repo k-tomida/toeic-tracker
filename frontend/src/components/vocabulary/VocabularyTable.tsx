@@ -6,7 +6,7 @@ import type { statusType, vocabularyOrderType, vocabularyType, wordClassType } f
 import { FaPen } from "react-icons/fa";
 import { changeTagByStatus, changeTagByWordClass } from "../../utils/changeTag";
 import { getPageNumbers } from "../../utils/getPageNumbers";
-import { sortVocabularyByOrder } from "../../utils/sortTableByOrder";
+import { sortVocabularyByOrder } from "../../utils/sortData";
 import { VocabularyPopUp } from "../../modules/VocabularyPopUp";
 
 

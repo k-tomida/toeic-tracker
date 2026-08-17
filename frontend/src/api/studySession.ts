@@ -13,7 +13,7 @@ export const postStudySession = async (postStudySession: studySessionFormType): 
     return data;
 }
 
-type updateStudySessionType = {
+export type updateStudySessionType = {
     id: number;
     updateStudySession: studySessionFormType
 }

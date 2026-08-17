@@ -8,12 +8,12 @@ export const StudyTimeSummary = ({ studySessions }: { studySessions: studySessio
 
     const lastWeek = new Date(today);
     lastWeek.setDate(today.getDate() - 7);
-    const diffWeek = calcStudyTimeInWeek(today, studySessions) - calcStudyTimeInWeek(lastWeek, studySessions);
+    const diffWeek = Math.round(calcStudyTimeInWeek(today, studySessions) - calcStudyTimeInWeek(lastWeek, studySessions) * 10) / 10;
     const diffStrWeek = diffWeek >= 0 ? `+${diffWeek}` : `${diffWeek}`;
 
     const lastMonth = new Date(today);
     lastMonth.setMonth(today.getMonth() - 1);
-    const diffMonth = calcStudyTimeInMonth(today, studySessions) - calcStudyTimeInMonth(lastMonth, studySessions);
+    const diffMonth = Math.round(calcStudyTimeInMonth(today, studySessions) - calcStudyTimeInMonth(lastMonth, studySessions) * 10) / 10;
     const diffStrMonth = diffMonth >= 0 ? `+${diffMonth}` : `${diffMonth}`;
 
     return (

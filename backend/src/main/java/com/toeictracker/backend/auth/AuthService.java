@@ -26,7 +26,7 @@ public class AuthService {
      */
     public AuthResponse register(RegisterRequest request) {
 
-        if (userRepository.findByEmail(request.email()).isPresent()) {
+        if (userRepository.existsByEmail(request.email())) {
             throw new EmailAlreadyExistsException("メールアドレスは既に登録されています。");
         }
 
@@ -59,7 +59,7 @@ public class AuthService {
 
         // 認証成功後、DBからUserエンティティを取得する
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("サーバー内部でエラーが発生しました"));
+                .orElseThrow(() -> new UserNotFoundException("ユーザーが見つかりません"));
 
         String token = jwtProvider.generateToken(user);
         return new AuthResponse(token);
