@@ -2,12 +2,12 @@ import { Header } from "../components/Header"
 import { StudyTable } from "../components/studySession/StudyTable";
 import { StudyTimeSummary } from "../components/studySession/StudyTimeSummary";
 import { CategoryBreakdown } from "../components/studySession/CategoryBreakdown";
-import { useStudySession } from "../hooks/study_session/useStudySession";
+import { useGetStudySession } from "../hooks/study_session/useGetStudySession";
 import { LoadingPage } from "./LoadingPage";
 import { ErrorPage } from "./ErrorPage";
 
 export const StudyManagementPage = () => {
-    const { data, isLoading, isError } = useStudySession();
+    const { data, isLoading, isError, refetch } = useGetStudySession();
 
     if (isLoading) {
         return (
@@ -22,9 +22,7 @@ export const StudyManagementPage = () => {
         return (
             <div className="min-h-screen">
                 <Header />
-                <ErrorPage onRetry={() => {
-                    useStudySession().refetch();
-                }} />
+                <ErrorPage onRetry={() => refetch()} />
             </div>
         )
     }

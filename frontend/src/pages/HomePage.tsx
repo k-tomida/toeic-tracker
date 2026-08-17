@@ -5,7 +5,7 @@ import { KpiCards } from "../components/home/KpiCards";
 import { ScoreChart } from "../components/home/ScoreChart";
 import { StudySession } from "../components/home/StudySession";
 import { useGetScore } from "../hooks/score/useGetScore";
-import { useStudySession } from "../hooks/study_session/useStudySession";
+import { useGetStudySession } from "../hooks/study_session/useGetStudySession";
 import { useUser } from "../hooks/user/useUser";
 import { useGetVocabulary } from "../hooks/vocabulary/useGetVocabulary";
 import { ErrorPage } from "./ErrorPage";
@@ -13,7 +13,7 @@ import { LoadingPage } from "./LoadingPage";
 
 export const HomePage = () => {
   const userQuery = useUser();
-  const studySessionQuery = useStudySession();
+  const studySessionQuery = useGetStudySession();
   const scoreQuery = useGetScore();
   const vocabularyQuery = useGetVocabulary();
 
