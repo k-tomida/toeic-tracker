@@ -12,7 +12,7 @@ export const postScore = async (addScore: scoreFormType): Promise<scoreType> => 
     return data;
 }
 
-type updateScoreType = {
+export type updateScoreType = {
     id: number;
     updateScore: scoreFormType
 }

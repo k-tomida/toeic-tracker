@@ -15,23 +15,23 @@ describe("useAuth", () => {
         };
 
         const wrapper = ({ children }: { children: ReactNode }) => (
-            <AuthContext.Provider value= { contextValue } >
-            { children }
+            <AuthContext.Provider value={contextValue} >
+                {children}
             </AuthContext.Provider>
         );
 
-    const { result } = renderHook(() => useAuth(), {
-        wrapper,
+        const { result } = renderHook(() => useAuth(), {
+            wrapper,
+        });
+
+        expect(result.current).toEqual(contextValue);
     });
 
-    expect(result.current).toEqual(contextValue);
-});
-
-it("AuthProviderの外で使用した場合、エラーを投げる", () => {
-    expect(() => {
-        renderHook(() => useAuth());
-    }).toThrow(
-        "useAuth must be used within an AuthProvider"
-    );
-});
+    it("AuthProviderの外で使用した場合、エラーを投げる", () => {
+        expect(() => {
+            renderHook(() => useAuth());
+        }).toThrow(
+            "useAuth must be used within an AuthProvider"
+        );
+    });
 });
