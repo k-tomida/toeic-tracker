@@ -13,7 +13,7 @@ export const postVocabulary = async (addVocabulary: vocabularyFormType): Promise
     return data;
 }
 
-type updateVocabularyType = {
+export type updateVocabularyType = {
     id: number;
     updateVocabulary: vocabularyFormType;
 }
