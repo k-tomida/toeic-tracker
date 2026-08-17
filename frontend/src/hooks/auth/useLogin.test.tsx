@@ -114,4 +114,26 @@ describe("useLogin", () => {
             expect(navigateMock).toHaveBeenCalledWith("/dash-board");
         });
     });
+
+    it("ログイン失敗時、認証処理と画面遷移を行わない", async () => {
+        vi.mocked(login).mockRejectedValue(new Error("login failed"));
+
+        const { result } = renderHook(() => useLogin(), {
+            wrapper: createWrapper(),
+        });
+
+        act(() => {
+            result.current.mutate({
+                email: "test@example.com",
+                password: "wrong-password",
+            });
+        });
+
+        await waitFor(() => {
+            expect(result.current.isError).toBe(true);
+        });
+
+        expect(loginContextMock).not.toHaveBeenCalled();
+        expect(navigateMock).not.toHaveBeenCalled();
+    });
 });
