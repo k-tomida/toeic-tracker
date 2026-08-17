@@ -1,5 +1,5 @@
 import type { studySessionType } from "../types/studySessionType";
-import { sortTableByOrder } from "./sortTableByOrder";
+import { sortTableByOrder } from "./sortData";
 
 export const calcStreak = (studySessions: studySessionType[]): number => {
     const todayStr = new Date().toISOString().slice(0, 10);

@@ -1,5 +1,5 @@
 import type { categoryType, studySessionType } from "../types/studySessionType";
-import { sortTableByOrder } from "./sortTableByOrder";
+import { sortTableByOrder } from "./sortData";
 
 export const calcStudyTimeInWeek = (day: Date, data: studySessionType[]): number => {
     const start = new Date(day);
