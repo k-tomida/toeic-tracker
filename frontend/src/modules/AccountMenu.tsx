@@ -2,7 +2,7 @@
 import { PiPencil } from "react-icons/pi";
 import { FaChevronDown, FaLock, FaChevronUp } from "react-icons/fa";
 import { BiLogOut, BiUser } from "react-icons/bi";
-import { useUser } from "../hooks/user/useUser";
+import { useGetUser } from "../hooks/user/useGetUser";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../hooks/auth/useAuth";
 import { ChangeNamePopUp } from "./ChangeNamePopUp";
@@ -10,7 +10,7 @@ import { ChangePasswordPopUp } from "./ChangePasswordPopUp";
 import { ClipLoader } from "react-spinners";
 
 export const AccountMenu = () => {
-    const { data, isPending, isError } = useUser();
+    const { data, isPending, isError } = useGetUser();
     const { logout } = useAuth();
     const [pulldown, setPulldown] = useState(false);
     const [namePopUpOpen, setNamePopUpOpen] = useState(false);

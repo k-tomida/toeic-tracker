@@ -6,13 +6,13 @@ import { ScoreChart } from "../components/home/ScoreChart";
 import { StudySession } from "../components/home/StudySession";
 import { useGetScore } from "../hooks/score/useGetScore";
 import { useGetStudySession } from "../hooks/study_session/useGetStudySession";
-import { useUser } from "../hooks/user/useUser";
+import { useGetUser } from "../hooks/user/useGetUser";
 import { useGetVocabulary } from "../hooks/vocabulary/useGetVocabulary";
 import { ErrorPage } from "./ErrorPage";
 import { LoadingPage } from "./LoadingPage";
 
 export const HomePage = () => {
-  const userQuery = useUser();
+  const userQuery = useGetUser();
   const studySessionQuery = useGetStudySession();
   const scoreQuery = useGetScore();
   const vocabularyQuery = useGetVocabulary();

@@ -4,12 +4,12 @@ import { ScoreSummary } from "../components/score/ScoreSummay"
 import { ScoreTable } from "../components/score/ScoreTable"
 import { ScoreTrendChart } from "../components/score/ScoreTrendChart"
 import { useGetScore } from "../hooks/score/useGetScore"
-import { useUser } from "../hooks/user/useUser"
+import { useGetUser } from "../hooks/user/useGetUser"
 import { ErrorPage } from "./ErrorPage"
 import { LoadingPage } from "./LoadingPage"
 
 export const ScorePage = () => {
-    const userQuery = useUser();
+    const userQuery = useGetUser();
     const scoreQuery = useGetScore();
 
     if (userQuery.isLoading || scoreQuery.isLoading) {
