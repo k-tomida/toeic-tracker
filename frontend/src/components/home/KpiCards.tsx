@@ -23,7 +23,7 @@ export const KpiCards = ({ studySessions, scores, vocabularies }: Props) => {
     const today = new Date();
     const lastMonth = new Date();
     lastMonth.setMonth(today.getMonth() - 1);
-    const studyTimeDiff = calcStudyTimeInMonth(today, studySessions) - calcStudyTimeInMonth(lastMonth, studySessions);
+    const studyTimeDiff = Math.round(calcStudyTimeInMonth(today, studySessions) - calcStudyTimeInMonth(lastMonth, studySessions) * 10) / 10;
     const studyTimeDiffStr = studyTimeDiff >= 0 ? `+${studyTimeDiff}` : `${studyTimeDiff}`;
 
     const scoreDiff = calcScoreByNumber(0, scores) - calcScoreByNumber(1, scores);

@@ -1,6 +1,5 @@
 import type { studySessionType, categoryType } from "../types/studySessionType";
 import { formatDate } from "../utils/formatDate";
-import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useCreateStudySession } from "../hooks/study_session/useCreateStudySession";
 import { useUpdateStudySession } from "../hooks/study_session/useUpdateStudySession";
@@ -40,6 +39,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
         }
     }
 
+    const isPending = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -61,6 +61,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                             <input
                                 {...register("date")}
                                 type="date"
+                                disabled={isPending}
                                 className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
                             />
                         </div>
@@ -74,6 +75,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                                     max: { value: 1440, message: "1440分以下で入力してください" },
                                 })}
                                 type="number"
+                                disabled={isPending}
                                 className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
                             />
                             {errors.duration && (
@@ -86,7 +88,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                         <h2 className="text-gray-600 mb-2">カテゴリ</h2>
                         <div className="flex gap-3 py-1">
                             {allCategories.map(c =>
-                                changeTagByCategory(c, "radio", c === category, register("category"))
+                                changeTagByCategory(c, "radio", c === category, register("category"), isPending)
                             )}
                         </div>
                     </div>
@@ -98,25 +100,27 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                                 maxLength: { value: 200, message: "200文字以下で入力してください" }
                             })}
                             type="text"
+                            disabled={isPending}
                             className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
                         />
                     </div>
                     {/* 削除ボタンは編集時のみ表示 */}
                     <div className="flex justify-between mt-7">
                         {data !== null ? (
-                            <Button onClick={() => {
-                                deleteMutation.mutate(data.id); onClose();
-                            }}>
-                                <span className="flex gap-2 items-center">
-                                    <FaRegTrashAlt /> 削除
-                                </span>
-                            </Button>
-                        ) : (<div />)}
+                            <button
+                                type="button"
+                                disabled={isPending}
+                                onClick={() => deleteMutation.mutate(data.id, { onSuccess: onClose })}
+                                className="px-4 py-2 text-lg border border-gray-300 rounded-md hover:bg-gray-50"
+                            >
+                                <span className="flex items-center gap-1"><FaRegTrashAlt className="h-5 w-5" /> 削除</span>
+                            </button>
+                        ) : <div />}
 
                         {data !== null ?
                             <button
                                 type="submit"
-                                disabled={updateMutation.isPending}
+                                disabled={isPending}
                                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
                             >
                                 {updateMutation.isPending ? "保存中..." : "保存する"}
@@ -124,7 +128,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                             :
                             <button
                                 type="submit"
-                                disabled={createMutation.isPending}
+                                disabled={isPending}
                                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
                             >
                                 {createMutation.isPending ? "追加中..." : "追加する"}

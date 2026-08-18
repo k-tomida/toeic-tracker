@@ -19,8 +19,8 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
     const { register, handleSubmit, control, formState: { errors } } = useForm<scoreFormType>({
         defaultValues: {
             examDate: data?.examDate ?? new Date().toISOString().slice(0, 10),
-            listeningScore: data?.listeningScore ?? 0,
-            readingScore: data?.readingScore ?? 0,
+            listeningScore: data?.listeningScore ?? 5,
+            readingScore: data?.readingScore ?? 5,
             memo: data?.memo ?? "",
         }
     });
@@ -34,6 +34,9 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
             createMutation.mutate(value, { onSuccess: onClose });
         }
     };
+
+    const isPending = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
+
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg mx-4">
@@ -53,6 +56,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                         <input
                             {...register("examDate")}
                             type="date"
+                            disabled={isPending}
                             className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
                         />
                     </div>
@@ -70,6 +74,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                                         validate: value => value % 5 === 0 || "5点刻みで入力してください"
                                     })}
                                     type="number"
+                                    disabled={isPending}
                                     className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-40"
                                 />
                                 <span className="text-gray-600 text-lg">/495</span>
@@ -91,6 +96,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                                         validate: value => value % 5 === 0 || "5点刻みで入力してください"
                                     })}
                                     type="number"
+                                    disabled={isPending}
                                     className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-40"
                                 />
                                 <span className="text-gray-600 text-lg">/495</span>
@@ -116,6 +122,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                                 maxLength: { value: 200, message: "200文字以内で入力してください" }
                             })}
                             type="text"
+                            disabled={isPending}
                             className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
                         />
                         {errors.memo && (
@@ -127,6 +134,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                         {data !== null ? (
                             <button
                                 type="button"
+                                disabled={isPending}
                                 onClick={() => deleteMutation.mutate(data.id, { onSuccess: onClose })}
                                 className="px-4 py-2 text-lg border border-gray-300 rounded-md hover:bg-gray-50"
                             >
@@ -137,7 +145,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                         {data !== null ?
                             <button
                                 type="submit"
-                                disabled={updateMutation.isPending}
+                                disabled={isPending}
                                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
                             >
                                 {updateMutation.isPending ? "保存中..." : "保存する"}
@@ -145,7 +153,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                             :
                             <button
                                 type="submit"
-                                disabled={createMutation.isPending}
+                                disabled={isPending}
                                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
                             >
                                 {createMutation.isPending ? "追加中..." : "追加する"}
