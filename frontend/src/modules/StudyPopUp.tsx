@@ -1,6 +1,5 @@
 import type { studySessionType, categoryType } from "../types/studySessionType";
 import { formatDate } from "../utils/formatDate";
-import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useCreateStudySession } from "../hooks/study_session/useCreateStudySession";
 import { useUpdateStudySession } from "../hooks/study_session/useUpdateStudySession";
@@ -121,7 +120,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                         {data !== null ?
                             <button
                                 type="submit"
-                                disabled={updateMutation.isPending}
+                                disabled={isPending}
                                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
                             >
                                 {updateMutation.isPending ? "保存中..." : "保存する"}
@@ -129,7 +128,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                             :
                             <button
                                 type="submit"
-                                disabled={createMutation.isPending}
+                                disabled={isPending}
                                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
                             >
                                 {createMutation.isPending ? "追加中..." : "追加する"}

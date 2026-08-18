@@ -1,5 +1,4 @@
 import type { statusType, vocabularyType, wordClassType } from "../types/vocabularyType";
-import { Button } from "../ui/Button";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useCreateVocabulary } from "../hooks/vocabulary/useCreateVocabulary";
 import { changeTagByStatus } from "../utils/changeTag";
@@ -144,7 +143,7 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                         {data !== null ?
                             <button
                                 type="submit"
-                                disabled={updateMutation.isPending}
+                                disabled={isPending}
                                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
                             >
                                 {updateMutation.isPending ? "保存中..." : "保存する"}
@@ -152,7 +151,7 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                             :
                             <button
                                 type="submit"
-                                disabled={createMutation.isPending}
+                                disabled={isPending}
                                 className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md"
                             >
                                 {createMutation.isPending ? "追加中..." : "追加する"}
