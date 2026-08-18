@@ -26,6 +26,7 @@ export const GoalSetting = ({ user, scores }: Props) => {
                 <p className="py-3">
                     <input
                         type="number"
+                        disabled={mutation.isPending}
                         value={score}
                         max={990}
                         min={0}
@@ -48,6 +49,7 @@ export const GoalSetting = ({ user, scores }: Props) => {
                 <p className="text-lg text-gray-500">次回受験予定日</p>
                 <input
                     type="date"
+                    disabled={mutation.isPending}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                     className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
@@ -64,7 +66,7 @@ export const GoalSetting = ({ user, scores }: Props) => {
                     onClick={() => mutation.mutate({
                         targetScore: score,
                         nextExamDate: date
-                    })}>更新</button>
+                    })}>{mutation.isPending ? "更新中..." : "更新"}</button>
             </div>
 
         </div>

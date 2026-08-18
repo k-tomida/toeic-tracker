@@ -1,4 +1,4 @@
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaBookOpen } from "react-icons/fa";
 import { changeTagByCategory } from "../../utils/changeTag";
 import { formatDate } from "../../utils/formatDate";
 import { changeTableByPeriod } from "../../utils/changeTableByPeriod";
@@ -12,6 +12,7 @@ import { CiFilter } from "react-icons/ci";
 import { Select } from "../../ui/Select";
 import { Button } from "../../ui/Button";
 import { StudyPopUp } from "../../modules/StudyPopUp";
+import { EmptyTable } from "../../modules/EmptyTable";
 
 const categoryOptions: { label: string, value: "all" | categoryType }[] = [
     { label: "すべてのカテゴリ", value: "all" },
@@ -93,7 +94,11 @@ export const StudyTable = ({ studySessions }: { studySessions: studySessionType[
                 </Button>
             </div>
             {filteredStudyTables.length === 0 ? (
-                <div>データがありません</div>
+                <EmptyTable
+                    icon={<FaBookOpen className="w-8 h-8" />}
+                    title="学習記録がまだありません"
+                    description="学習内容を登録して、毎日の成果を記録しましょう"
+                />
             ) : (
                 <div className="w-full border border-gray-200 rounded-lg overflow-hidden">
                     <table className="w-full border-collapse">

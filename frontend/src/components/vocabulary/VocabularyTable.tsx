@@ -1,4 +1,5 @@
 import { CiFilter } from "react-icons/ci";
+import { FaLanguage } from "react-icons/fa";
 import { Select } from "../../ui/Select";
 import { Button } from "../../ui/Button";
 import { useMemo, useState } from "react";
@@ -8,6 +9,7 @@ import { changeTagByStatus, changeTagByWordClass } from "../../utils/changeTag";
 import { getPageNumbers } from "../../utils/getPageNumbers";
 import { sortVocabularyByOrder } from "../../utils/sortData";
 import { VocabularyPopUp } from "../../modules/VocabularyPopUp";
+import { EmptyTable } from "../../modules/EmptyTable";
 
 
 const wordClassOptions: { label: string, value: "all" | wordClassType }[] = [
@@ -85,7 +87,11 @@ export const VocabularyTable = ({ vocabularies }: { vocabularies: vocabularyType
                 </Button>
             </div>
             {filteredStudyTables.length === 0 ? (
-                <div>データがありません</div>
+                <EmptyTable
+                    icon={<FaLanguage className="w-8 h-8" />}
+                    title="単語がまだ登録されていません"
+                    description="覚えたい単語を登録して学習を始めましょう"
+                />
             ) : (
                 <div className="w-full border border-gray-200 rounded-lg overflow-hidden">
                     <table className="w-full border-collapse">
