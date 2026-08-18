@@ -11,15 +11,15 @@ export const GoalProgress = ({ targetScore, scores }: Props) => {
     const [total, listening, reading] = calcBestScore(scores)
     const isAchieved = total >= targetScore;
     return (
-        <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">
+        <div className="w-full bg-white rounded-xl p-4 border border-gray-300">
             <p className="mb-3 text-xl font-medium text-gray-600">目標スコア達成率</p>
-            <div className="flex justify-between items-end">
-                <span className="ml-4 text-5xl">{total} <span className="text-xl text-gray-500">/ {targetScore}</span></span>
+            <div className="flex flex-col gap-2 sm:flex-row sm:justify-between sm:items-end">
+                <span className="text-4xl sm:ml-4 sm:text-5xl">{total} <span className="text-gray-500 text-xl sm:mr-4">/ {targetScore}</span></span>
                 {isAchieved ?
                     (<span className="mr-4 text-gray-500 text-xl">目標達成 🎉</span>) :
                     (<span className="mr-4 text-gray-500">あと<span className="text-xl text-black">{targetScore - total}点</span></span>)}
             </div>
-            <div className="m-4">
+            <div className="mx-0 mt-4 sm:m-4">
                 <ProgressBar current={total} target={targetScore} barHeight="h-5" />
                 <div className="flex justify-between mt-2">
                     <span className="text-gray-500">0</span>
@@ -30,9 +30,9 @@ export const GoalProgress = ({ targetScore, scores }: Props) => {
                 </div>
             </div>
 
-            <div className="flex justify-between gap-10 mx-5 flex-wrap">
+            <div className="grid grid-cols-1 gap-6 mx-0 lg:grid-cols-2 lg:gap-10 lg:mx-5">
 
-                <div className="flex-1 min-w-[280px]">
+                <div className="w-full min-w-0">
                     <div className="flex justify-between items-center text-lg">
                         <div className="m-2 flex items-center gap-2">
                             <div className="h-3 w-3 bg-sky-600 rounded-full"></div>
@@ -49,7 +49,7 @@ export const GoalProgress = ({ targetScore, scores }: Props) => {
                     </div>
                 </div>
 
-                <div className="flex-1 min-w-[280px]">
+                <div className="w-full min-w-0">
                     <div className="flex justify-between items-center text-lg">
                         <div className="m-2 flex items-center gap-2">
                             <div className="h-3 w-3 bg-violet-600 rounded-full"></div>
