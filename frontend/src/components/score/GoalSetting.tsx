@@ -19,9 +19,9 @@ export const GoalSetting = ({ user, scores }: Props) => {
     const isAchieved = bestScore >= score;
 
     return (
-        <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-[400px]">
+        <div className="w-full bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0">
             <h2 className="mb-3 text-xl font-medium text-gray-600">目標設定</h2>
-            <div className="m-2">
+            <div className="mx-0 my-2 sm:m-2">
                 <p className="text-lg text-gray-500">目標スコア</p>
                 <p className="py-3">
                     <input
@@ -45,14 +45,14 @@ export const GoalSetting = ({ user, scores }: Props) => {
                     )}
                 </div>
             </div>
-            <div className="m-2">
+            <div className="mx-0 my-2 sm:m-2">
                 <p className="text-lg text-gray-500">次回受験予定日</p>
                 <input
                     type="date"
                     disabled={mutation.isPending}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base sm:text-lg"
                 />
             </div>
             {mutation.isError &&
@@ -62,11 +62,16 @@ export const GoalSetting = ({ user, scores }: Props) => {
             }
             <div className="flex justify-center pt-3">
                 <button
-                    className="bg-green-500 rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700"
+                    type="button"
+                    disabled={mutation.isPending}
+                    className="w-full max-w-[400px] bg-green-500 rounded-lg p-3 text-white hover:bg-green-600 active:bg-green-700 disabled:bg-green-300"
                     onClick={() => mutation.mutate({
                         targetScore: score,
                         nextExamDate: date
-                    })}>{mutation.isPending ? "更新中..." : "更新"}</button>
+                    })}
+                >
+                    {mutation.isPending ? "更新中..." : "更新"}
+                </button>
             </div>
 
         </div>

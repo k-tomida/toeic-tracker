@@ -36,13 +36,15 @@ export const ScorePage = () => {
     return (
         <div className="min-h-screen">
             <Header />
-            <main className="max-w-7xl mx-auto px-4 py-6">
-                <div className="flex flex-wrap gap-4 mx-10 my-5">
-                    <ScoreSummary nextExamDate={userQuery.data.nextExamDate} scores={scoreQuery.data} />
-                    <GoalSetting user={userQuery.data} scores={scoreQuery.data} />
+            <main className="w-full max-w-7xl mx-auto px-4 py-6">
+                <div className="w-full max-w-5xl mx-auto space-y-4 sm:space-y-6">
+                    <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                        <ScoreSummary nextExamDate={userQuery.data.nextExamDate} scores={scoreQuery.data} />
+                        <GoalSetting user={userQuery.data} scores={scoreQuery.data} />
+                    </div>
+                    <ScoreTrendChart targetScore={userQuery.data.targetScore} scores={scoreQuery.data} />
+                    <ScoreTable scores={scoreQuery.data} />
                 </div>
-                <ScoreTrendChart targetScore={userQuery.data.targetScore} scores={scoreQuery.data} />
-                <ScoreTable scores={scoreQuery.data} />
             </main>
         </div>
     )
