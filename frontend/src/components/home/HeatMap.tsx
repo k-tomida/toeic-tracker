@@ -41,11 +41,11 @@ export const HeatMap = ({ studySessions }: { studySessions: studySessionType[] }
     });
     // 7行（日〜土）× 53列のグリッドに並べる==========
 
-    const getStudyTimeByDate = (date: string):number => {
-        const studyData: studySessionType[]= studySessions.filter(item => item.date === date);
-        let studyTime=0;
+    const getStudyTimeByDate = (date: string): number => {
+        const studyData: studySessionType[] = studySessions.filter(item => item.date === date);
+        let studyTime = 0;
         studyData.forEach(d => {
-            studyTime+=d.duration
+            studyTime += d.duration
         });
         return studyTime;
     }
@@ -62,8 +62,8 @@ export const HeatMap = ({ studySessions }: { studySessions: studySessionType[] }
 
 
     return (
-        <div className="bg-white rounded-xl p-4 overflow-x-auto m-10 border border-gray-300">
-            <div className="min-w-fit pr-4">
+        <div className="w-full bg-white rounded-xl p-4 overflow-x-auto border border-gray-300">
+            <div className="min-w-max pr-4">
                 <p className="mb-3 text-xl font-medium text-gray-600">学習アクティビティ</p>
                 <div className="ml-10">
                     {/* 月ラベル */}

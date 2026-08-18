@@ -35,7 +35,7 @@ const orderOptions: { label: string, value: orderType }[] = [
     { label: "学習時間が長い順", value: "longest" },
 ];
 
-const ITEMS_PER_PAGE = 10
+const ITEMS_PER_PAGE = 10;
 
 export const StudyTable = ({ studySessions }: { studySessions: studySessionType[] }) => {
     const [page, setPage] = useState(1);
@@ -47,7 +47,7 @@ export const StudyTable = ({ studySessions }: { studySessions: studySessionType[
 
     const [prevFilters, setPrevFilters] = useState({ category, period, order });
 
-    //filterがレンダリング前と違う場合ページを1にする
+    // filterがレンダリング前と違う場合ページを1にする
     if (
         prevFilters.category !== category ||
         prevFilters.period !== period ||
@@ -69,30 +69,37 @@ export const StudyTable = ({ studySessions }: { studySessions: studySessionType[
         return sortTableByOrder(order, byPeriod);
     }, [studySessions, category, period, order]);
 
-    //ページネーション機能
+    // ページネーション機能
     const startItem = (page - 1) * ITEMS_PER_PAGE + 1;
     const endItem = Math.min(page * ITEMS_PER_PAGE, filteredStudyTables.length);
     const pageTables = filteredStudyTables.slice(startItem - 1, endItem);
     const totalPages = Math.ceil(filteredStudyTables.length / ITEMS_PER_PAGE);
 
-
     return (
-        <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">
-            <p className="mb-3 text-xl font-medium text-gray-600">学習記録履歴</p>
-            <div className="flex items-center justify-between m-5">
-                <div className="flex justify-center gap-5 bg-emerald-50 border border-emerald-200 p-3 rounded-lg items-center flex-wrap">
-                    <CiFilter size={28} />
-                    <Select name="category" value={category} onChange={setCategory} options={categoryOptions} />
-                    <Select name="period" value={period} onChange={setPeriod} options={periodOptions} />
-                    <Select name="order" value={order} onChange={setOrder} options={orderOptions} />
-                </div>
+        <div className="w-full bg-white rounded-xl p-4 border border-gray-300">
+            <div className="flex items-center justify-between gap-3 mb-4">
+                <p className="text-xl font-medium text-gray-600">
+                    学習記録履歴
+                </p>
+
                 <Button onClick={() => { setPopUpData(null); setIsPopUpOpen(true); }}>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 whitespace-nowrap">
                         <span>+</span>
                         <span>学習記録を追加</span>
                     </div>
                 </Button>
             </div>
+
+            <div className="flex w-full items-start gap-3 mb-5 bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                <CiFilter size={28} className="shrink-0 mt-2" />
+
+                <div className="grid min-w-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-3">
+                    <Select name="category" value={category} onChange={setCategory} options={categoryOptions} />
+                    <Select name="period" value={period} onChange={setPeriod} options={periodOptions} />
+                    <Select name="order" value={order} onChange={setOrder} options={orderOptions} />
+                </div>
+            </div>
+
             {filteredStudyTables.length === 0 ? (
                 <EmptyTable
                     icon={<FaBookOpen className="w-8 h-8" />}
@@ -101,45 +108,64 @@ export const StudyTable = ({ studySessions }: { studySessions: studySessionType[
                 />
             ) : (
                 <div className="w-full border border-gray-200 rounded-lg overflow-hidden">
-                    <table className="w-full border-collapse">
-                        <thead>
-                            <tr className="text-left text-sm text-emerald-900 bg-emerald-50">
-                                <th className="py-3 px-4 font-medium w-40">日付</th>
-                                <th className="py-3 px-4 font-medium w-80">カテゴリ</th>
-                                <th className="py-3 px-4 font-medium w-40">学習時間</th>
-                                <th className="py-3 px-4 font-medium w-100">メモ</th>
-                                <th className="py-3 px-4"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {pageTables.map((data) => (
-                                <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
-                                    <td className="py-3 px-4 text-gray-700">{formatDate(data.date)}</td>
-                                    <td className="py-3 px-4">
-                                        <div className="flex gap-1 flex-wrap">
-                                            {changeTagByCategory(data.category, "span")}
-                                        </div>
-                                    </td>
-                                    <td className="py-3 px-4 text-gray-700">{data.duration}min</td>
-                                    <td className="py-3 px-4 text-gray-500">{data.memo}</td>
-                                    <td className="py-3 px-4">
-                                        <button
-                                            className="cursor-pointer text-gray-400 hover:bg-gray-200 p-2 border border-gray-300 rounded-md"
-                                            onClick={() => { setPopUpData(data); setIsPopUpOpen(true); }}>
-                                            <FaPen />
-                                        </button>
-                                    </td>
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-[760px] border-collapse">
+                            <thead>
+                                <tr className="text-left text-sm text-emerald-900 bg-emerald-50">
+                                    <th className="py-3 px-4 font-medium w-32">日付</th>
+                                    <th className="py-3 px-4 font-medium w-40">カテゴリ</th>
+                                    <th className="py-3 px-4 font-medium w-32">学習時間</th>
+                                    <th className="py-3 px-4 font-medium">メモ</th>
+                                    <th className="py-3 px-4 w-16"></th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
 
-                    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
-                        <span>全{filteredStudyTables.length}件中 {startItem}〜{endItem}件表示</span>
-                        <div className="flex gap-1">
+                            <tbody>
+                                {pageTables.map((data) => (
+                                    <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
+                                        <td className="py-3 px-4 text-gray-700 whitespace-nowrap">
+                                            {formatDate(data.date)}
+                                        </td>
+
+                                        <td className="py-3 px-4">
+                                            <div className="flex gap-1 flex-wrap">
+                                                {changeTagByCategory(data.category, "span")}
+                                            </div>
+                                        </td>
+
+                                        <td className="py-3 px-4 text-gray-700 whitespace-nowrap">
+                                            {data.duration}min
+                                        </td>
+
+                                        <td className="py-3 px-4 text-gray-500">
+                                            {data.memo}
+                                        </td>
+
+                                        <td className="py-3 px-4">
+                                            <button
+                                                type="button"
+                                                className="cursor-pointer text-gray-400 hover:bg-gray-200 p-2 border border-gray-300 rounded-md"
+                                                onClick={() => { setPopUpData(data); setIsPopUpOpen(true); }}
+                                            >
+                                                <FaPen />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-3 px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500 sm:flex-row sm:justify-between">
+                        <span>
+                            全{filteredStudyTables.length}件中 {startItem}〜{endItem}件表示
+                        </span>
+
+                        <div className="flex flex-wrap justify-center gap-1">
                             {getPageNumbers(page, totalPages).map((num, i) => (
                                 <button
                                     key={i}
+                                    type="button"
                                     onClick={() => typeof num === "number" && setPage(num)}
                                     disabled={num === "..."}
                                     className={`px-3 py-1 rounded-md text-sm transition-colors ${num === page
@@ -156,6 +182,7 @@ export const StudyTable = ({ studySessions }: { studySessions: studySessionType[
                     </div>
                 </div>
             )}
+
             {isPopUpOpen && (
                 <StudyPopUp
                     onClose={() => setIsPopUpOpen(false)}
@@ -164,4 +191,4 @@ export const StudyTable = ({ studySessions }: { studySessions: studySessionType[
             )}
         </div>
     );
-}
+};

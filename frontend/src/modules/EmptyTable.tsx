@@ -24,7 +24,7 @@ export const EmptyTable = ({
             </p>
 
             {description && (
-                <p className="mt-2 text-sm text-gray-500">
+                <p className="mt-2 text-xs sm:text-sm text-gray-500">
                     {description}
                 </p>
             )}

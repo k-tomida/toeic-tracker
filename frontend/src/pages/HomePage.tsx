@@ -45,12 +45,14 @@ export const HomePage = () => {
     <div className="min-h-screen">
       <Header />
       <main className="max-w-7xl mx-auto px-4 py-6">
-        <KpiCards studySessions={studySessionQuery.data} scores={scoreQuery.data} vocabularies={vocabularyQuery.data} />
-        <HeatMap studySessions={studySessionQuery.data} />
-        <GoalProgress targetScore={userQuery.data.targetScore} scores={scoreQuery.data} />
-        <div className="flex flex-wrap gap-4 mx-10">
-          <ScoreChart scores={scoreQuery.data} />
-          <StudySession studySessions={studySessionQuery.data} />
+        <div className="w-full max-w-5xl mx-auto space-y-6">
+          <KpiCards studySessions={studySessionQuery.data} scores={scoreQuery.data} vocabularies={vocabularyQuery.data} />
+          <HeatMap studySessions={studySessionQuery.data} />
+          <GoalProgress targetScore={userQuery.data.targetScore} scores={scoreQuery.data} />
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            <ScoreChart scores={scoreQuery.data} />
+            <StudySession studySessions={studySessionQuery.data} />
+          </div>
         </div>
       </main>
     </div>

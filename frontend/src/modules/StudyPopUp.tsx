@@ -22,7 +22,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
     const { register, handleSubmit, control, formState: { errors } } = useForm<studySessionFormType>({
         defaultValues: {
             date: data?.date ?? new Date().toISOString().slice(0, 10),
-            duration: data?.duration ?? 0,
+            duration: data?.duration ?? 1,
             category: data?.category ?? "LISTENING",
             memo: data?.memo ?? ""
         }
@@ -42,31 +42,39 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
     const isPending = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg mx-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-start">
                     {/* タイトルを追加/編集で出し分け */}
                     <h2 className="text-lg font-semibold">
                         {data !== null ? formatDate(data.date) : "学習記録を追加"}
                     </h2>
-                    <button className="font-semibold text-gray-500 px-2 py-1 border border-gray-300 rounded hover:bg-gray-200" onClick={onClose}>
+                    <button
+                        type="button"
+                        className="font-semibold text-gray-500 px-2 py-1 border border-gray-300 rounded hover:bg-gray-200"
+                        onClick={onClose}
+                    >
                         ✕
                     </button>
                 </div>
                 {/* 日付と学習時間*/}
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex justify-between my-3 gap-2">
-                        <div>
-                            <label className="text-gray-600 mb-1">日付</label>
+                    <div className="grid grid-cols-1 gap-3 my-3 sm:grid-cols-2">
+                        <div className="min-w-0">
+                            <label className="block text-gray-600 mb-1">
+                                日付
+                            </label>
                             <input
                                 {...register("date")}
                                 type="date"
                                 disabled={isPending}
-                                className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base sm:text-lg"
                             />
                         </div>
-                        <div>
-                            <label className="text-gray-600 mb-1">学習時間（分）</label>
+                        <div className="min-w-0">
+                            <label className="block text-gray-600 mb-1">
+                                学習時間（分）
+                            </label>
                             <input
                                 {...register("duration", {
                                     required: "学習時間を入力してください",
@@ -76,7 +84,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                                 })}
                                 type="number"
                                 disabled={isPending}
-                                className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56"
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base sm:text-lg"
                             />
                             {errors.duration && (
                                 <p className="mt-1 text-sm text-red-600">{errors.duration.message}</p>
@@ -86,7 +94,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                     {/* カテゴリ選択*/}
                     <div className="my-3">
                         <h2 className="text-gray-600 mb-2">カテゴリ</h2>
-                        <div className="flex gap-3 py-1">
+                        <div className="flex flex-wrap gap-2 py-1 sm:gap-3">
                             {allCategories.map(c =>
                                 changeTagByCategory(c, "radio", c === category, register("category"), isPending)
                             )}
@@ -101,11 +109,11 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                             })}
                             type="text"
                             disabled={isPending}
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base sm:text-lg"
                         />
                     </div>
                     {/* 削除ボタンは編集時のみ表示 */}
-                    <div className="flex justify-between mt-7">
+                    <div className="flex flex-wrap justify-between gap-3 mt-7">
                         {data !== null ? (
                             <button
                                 type="button"

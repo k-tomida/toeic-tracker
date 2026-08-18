@@ -23,14 +23,14 @@ export const KpiCards = ({ studySessions, scores, vocabularies }: Props) => {
     const today = new Date();
     const lastMonth = new Date();
     lastMonth.setMonth(today.getMonth() - 1);
-    const studyTimeDiff = Math.round(calcStudyTimeInMonth(today, studySessions) - calcStudyTimeInMonth(lastMonth, studySessions) * 10) / 10;
+    const studyTimeDiff = Math.round((calcStudyTimeInMonth(today, studySessions) - calcStudyTimeInMonth(lastMonth, studySessions)) * 10) / 10;
     const studyTimeDiffStr = studyTimeDiff >= 0 ? `+${studyTimeDiff}` : `${studyTimeDiff}`;
 
     const scoreDiff = calcScoreByNumber(0, scores) - calcScoreByNumber(1, scores);
     const scoreDiffStr = scoreDiff >= 0 ? `+${scoreDiff}` : `${scoreDiff}`;
 
     return (
-        <div className="flex max-w-7xl lg:mx-8 mx-auto justify-between flex-wrap ">
+        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <KpiCard title={<span className="flex items-center gap-1"><AiOutlineFire />ストリーク</span>} value={calcStreak(studySessions)} unit="日" sub={`過去最高 ${calcMaxStreak(studySessions)}日`} />
             <KpiCard title={<span className="flex items-center gap-1"><FaRegClock />今月の学習時間</span>} value={calcStudyTimeInMonth(today, studySessions)} unit="h" sub={`先月比 ${studyTimeDiffStr}h`} />
             <KpiCard title={<span className="flex items-center gap-1"><TfiCup />最新スコア</span>} value={calcScoreByNumber(0, scores)} sub={`前回比 ${scoreDiffStr}`} />

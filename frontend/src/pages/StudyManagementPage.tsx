@@ -29,14 +29,15 @@ export const StudyManagementPage = () => {
     return (
         <div className="min-h-screen">
             <Header />
-            <main className="max-w-7xl mx-auto px-4 py-6">
-                <div className="flex flex-wrap gap-4 mx-10 my-5">
-                    <StudyTimeSummary studySessions={data} />
-                    <CategoryBreakdown studySessions={data} />
+            <main className="w-full max-w-7xl mx-auto px-4 py-6">
+                <div className="w-full max-w-5xl mx-auto space-y-4 sm:space-y-6">
+                    <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                        <StudyTimeSummary studySessions={data} />
+                        <CategoryBreakdown studySessions={data} />
+                    </div>
+                    <StudyTable studySessions={data} />
                 </div>
-                <StudyTable studySessions={data} />
             </main>
-
         </div>
     );
 };
