@@ -1,4 +1,5 @@
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaChartLine } from "react-icons/fa";
+import { EmptyTable } from "../../modules/EmptyTable";
 import { Button } from "../../ui/Button"
 import { sortScoreByNewest } from "../../utils/sortData"
 import { useState } from "react";
@@ -39,7 +40,12 @@ export const ScoreTable = ({ scores }: { scores: scoreType[] }) => {
             </div>
             <div className="mt-3">
                 {sortScoreData.length === 0 ?
-                    (<div>テーブルがありません</div>) :
+                    (<EmptyTable
+                        icon={<FaChartLine className="w-8 h-8" />}
+                        title="スコアがまだ登録されていません"
+                        description="「スコアを追加」から最初のTOEICスコアを登録しましょう"
+                    />)
+                    :
                     (<div className="w-full border border-gray-200 rounded-lg overflow-hidden">
                         <table className="w-full border-collapse">
                             <thead>
