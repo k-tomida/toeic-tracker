@@ -27,7 +27,7 @@ export const StudyManagementPage = () => {
         )
     }
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen">
             <Header />
             <main className="w-full max-w-7xl mx-auto px-4 py-6">
                 <div className="w-full max-w-5xl mx-auto space-y-4 sm:space-y-6">

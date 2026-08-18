@@ -52,8 +52,8 @@ export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Prop
     };
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className={`bg-white rounded-lg shadow-xl p-6 w-full mx-4 ${isFinished ? "max-w-2xl" : "max-w-lg"}`}>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className={`bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-h-[90vh] overflow-y-auto ${isFinished ? "max-w-2xl" : "max-w-lg"}`}>
                 {isFinished ? (
                     <div className="text-center">
                         <p className="text-sm text-gray-500 mb-1.5">テスト結果</p>
@@ -71,28 +71,41 @@ export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Prop
                                     key={r.id}
                                     className={
                                         i !== result.length - 1
-                                            ? "flex items-center gap-2.5 px-3.5 py-2.5 border-b border-gray-200"
-                                            : "flex items-center gap-2.5 px-3.5 py-2.5"
+                                            ? "flex items-start gap-2.5 px-3.5 py-2.5 border-b border-gray-200"
+                                            : "flex items-start gap-2.5 px-3.5 py-2.5"
                                     }
                                 >
                                     <span
                                         className={
                                             r.status === "ACQUIRED"
-                                                ? "w-2 h-2 rounded-full bg-green-500 shrink-0"
-                                                : "w-2 h-2 rounded-full bg-red-600 shrink-0"
+                                                ? "w-2 h-2 mt-2 rounded-full bg-green-500 shrink-0"
+                                                : "w-2 h-2 mt-2 rounded-full bg-red-600 shrink-0"
                                         }
                                     />
-                                    <span className="font-medium w-42 shrink-0 truncate  text-left">{r.word}</span>
-                                    <span className="text-gray-500 flex-1 truncate text-left">{r.meaning}</span>
-                                    <span
-                                        className={
-                                            r.status === "ACQUIRED"
-                                                ? "text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full shrink-0"
-                                                : "text-xs text-red-800 bg-red-100 px-2 py-0.5 rounded-full shrink-0"
-                                        }
-                                    >
-                                        {r.status === "ACQUIRED" ? "わかった" : "わからなかった"}
-                                    </span>
+
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <span className="font-medium truncate text-left">
+                                                {r.word}
+                                            </span>
+
+                                            <span
+                                                className={
+                                                    r.status === "ACQUIRED"
+                                                        ? "text-xs text-green-700 bg-green-100 px-2 py-0.5 rounded-full shrink-0"
+                                                        : "text-xs text-red-800 bg-red-100 px-2 py-0.5 rounded-full shrink-0"
+                                                }
+                                            >
+                                                {r.status === "ACQUIRED"
+                                                    ? "わかった"
+                                                    : "わからなかった"}
+                                            </span>
+                                        </div>
+
+                                        <p className="mt-1 text-sm text-gray-500 text-left break-words">
+                                            {r.meaning}
+                                        </p>
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -117,12 +130,13 @@ export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Prop
                             {number + 1} / {testVocabularies.length}
                         </p>
                         <p className="text-center text-sm text-gray-500 mb-2">この単語の意味は？</p>
-                        <p className="text-center text-2xl font-medium mb-4">{testVocabularies[number].word}</p>
+                        <p className="text-center text-2xl font-medium mb-4 break-all">{testVocabularies[number].word}</p>
 
                         <div className="relative border border-gray-200 rounded-md min-h-[56px] flex items-center justify-center mb-4">
                             <p>{testVocabularies[number].meaning}</p>
                             {!revealed && (
                                 <button
+                                    type="button"
                                     onClick={() => setRevealed(true)}
                                     className="absolute inset-0 bg-red-500/90 text-white rounded-md"
                                 >
@@ -132,14 +146,16 @@ export const VocabularyTestPopUp = ({ vocabularies, onClose, scope, test }: Prop
                         </div>
 
                         {revealed ? (
-                            <div className="flex gap-2">
+                            <div className="flex flex-col gap-2 sm:flex-row">
                                 <button
+                                    type="button"
                                     onClick={() => handleAnswer(false, testVocabularies[number])}
                                     className="flex-1 border border-gray-300 rounded-md py-2.5"
                                 >
                                     わからなかった
                                 </button>
                                 <button
+                                    type="button"
                                     onClick={() => handleAnswer(true, testVocabularies[number])}
                                     className="flex-1 bg-green-500 hover:bg-green-600 text-white rounded-md py-2.5"
                                 >

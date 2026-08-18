@@ -51,21 +51,25 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
     const isPending = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
     return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg mx-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
                 <div className="flex justify-between items-start">
                     {/* タイトルを追加/編集で出し分け */}
                     <h2 className="text-lg font-semibold">
                         {data !== null ? "単語を編集" : "単語を追加"}
                     </h2>
-                    <button className="font-semibold text-gray-500 px-2 py-1 border border-gray-300 rounded hover:bg-gray-200" onClick={onClose}>
+                    <button
+                        type="button"
+                        className="font-semibold text-gray-500 px-2 py-1 border border-gray-300 rounded hover:bg-gray-200"
+                        onClick={onClose}
+                    >
                         ✕
                     </button>
                 </div>
                 <form onSubmit={handleSubmit(onSubmit)}>
-                    <div className="flex justify-between my-4">
-                        <div>
-                            <label className="text-gray-600 mb-1">単語</label>
+                    <div className="grid grid-cols-1 gap-3 my-4 sm:grid-cols-2">
+                        <div className="min-w-0">
+                            <label className="block text-gray-600 mb-1">単語</label>
                             <input
                                 {...register("word", {
                                     required: "単語を入力してください",
@@ -74,16 +78,16 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                                 type="text"
                                 disabled={isPending}
                                 placeholder="例 : people"
-                                className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-56" />
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base sm:text-lg" />
                             {errors.word && (
                                 <p className="mt-1 text-sm text-red-600">{errors.word.message}</p>
                             )}
                         </div>
-                        <div>
-                            <label className="text-gray-600 mb-1">品詞</label>
+                        <div className="min-w-0">
+                            <label className="block text-gray-600 mb-1">品詞</label>
                             <select
                                 {...register("wordClass")}
-                                className="py-2 border border-gray-400 rounded-md bg-white w-56"
+                                className="w-full py-2 px-3 border border-gray-400 rounded-md bg-white text-base sm:text-lg"
                                 disabled={isPending}
                             >
                                 {wordClassOptions.map((opt) => (
@@ -95,7 +99,7 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                         </div>
                     </div>
                     <div className="my-2">
-                        <label className="text-gray-600 mb-1">意味</label>
+                        <label className="block text-gray-600 mb-1">意味</label>
                         <input
                             {...register("meaning", {
                                 required: "意味を入力してください",
@@ -104,32 +108,32 @@ export const VocabularyPopUp = ({ onClose, data }: Props) => {
                             type="text"
                             disabled={isPending}
                             placeholder="例 : 人々"
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full" />
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base sm:text-lg" />
                         {errors.meaning && (
                             <p className="mt-1 text-sm text-red-600">{errors.meaning.message}</p>
                         )}
                     </div>
                     <div className="my-3">
-                        <h2 className="text-gray-600 mb-1">ステータス</h2>
-                        <div className="flex gap-6 justify-center">
+                        <label className="block text-gray-600 mb-1">ステータス</label>
+                        <div className="flex flex-wrap gap-3 justify-center">
                             {allStatus.map((s => changeTagByStatus(s, "radio", s === status, register("status"), isPending)))}
                         </div>
                     </div>
                     <div className="my-3">
-                        <label className="text-gray-600 mb-2">メモ（任意）</label>
+                        <label className="block text-gray-600 mb-1">メモ（任意）</label>
                         <input
                             {...register("memo", {
                                 maxLength: { value: 200, message: "200文字以内で入力してください" }
                             })}
                             type="text"
                             disabled={isPending}
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base sm:text-lg"
                         />
                         {errors.memo && (
                             <p className="mt-1 text-sm text-red-600">{errors.memo.message}</p>
                         )}
                     </div>
-                    <div className="flex justify-between mt-7">
+                    <div className="flex flex-wrap justify-between gap-3 mt-7">
                         {data !== null ? (
                             <button
                                 type="button"

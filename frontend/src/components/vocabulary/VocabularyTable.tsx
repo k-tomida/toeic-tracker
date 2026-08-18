@@ -70,22 +70,30 @@ export const VocabularyTable = ({ vocabularies }: { vocabularies: vocabularyType
     const totalPages = Math.ceil(filteredStudyTables.length / ITEMS_PER_PAGE);
 
     return (
-        <div className="bg-white rounded-xl p-4 m-10 border border-gray-300">
-            <p className="mb-3 text-xl font-medium text-gray-600">単語一覧</p>
-            <div className="flex items-center justify-between m-5">
-                <div className="flex justify-center gap-5 bg-emerald-50 border border-emerald-200 p-3 rounded-lg items-center flex-wrap">
-                    <CiFilter size={28} />
-                    <Select name="wordClass" value={wordClass} onChange={setWordClass} options={wordClassOptions} />
-                    <Select name="status" value={status} onChange={setStatus} options={statusOptions} />
-                    <Select name="order" value={order} onChange={setOrder} options={orderOptions} />
-                </div>
+        <div className="w-full bg-white rounded-xl p-4 border border-gray-300">
+            <div className="flex items-center justify-between gap-3 mb-4">
+                <p className="text-xl font-medium text-gray-600">
+                    単語一覧
+                </p>
+
                 <Button onClick={() => { setPopUpData(null); setIsPopUpOpen(true); }}>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 whitespace-nowrap">
                         <span>+</span>
                         <span>単語を追加</span>
                     </div>
                 </Button>
             </div>
+
+            <div className="flex w-full items-start gap-3 mb-5 bg-emerald-50 border border-emerald-200 p-3 rounded-lg">
+                <CiFilter size={28} className="shrink-0 mt-2" />
+
+                <div className="grid min-w-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-3">
+                    <Select name="wordClass" value={wordClass} onChange={setWordClass} options={wordClassOptions} />
+                    <Select name="status" value={status} onChange={setStatus} options={statusOptions} />
+                    <Select name="order" value={order} onChange={setOrder} options={orderOptions} />
+                </div>
+            </div>
+
             {filteredStudyTables.length === 0 ? (
                 <EmptyTable
                     icon={<FaLanguage className="w-8 h-8" />}
@@ -94,42 +102,67 @@ export const VocabularyTable = ({ vocabularies }: { vocabularies: vocabularyType
                 />
             ) : (
                 <div className="w-full border border-gray-200 rounded-lg overflow-hidden">
-                    <table className="w-full border-collapse">
-                        <thead>
-                            <tr className="text-left text-sm text-emerald-900 bg-emerald-50">
-                                <th className="py-3 px-4 font-medium w-50">単語</th>
-                                <th className="py-3 px-4 font-medium w-30">品詞</th>
-                                <th className="py-3 px-4 font-medium w-70">意味</th>
-                                <th className="py-3 px-4 font-medium w-30">習得状況</th>
-                                <th className="py-3 px-4 font-medium w-80">メモ</th>
-                                <th className="py-3 px-4"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {pageTables.map((data) => (
-                                <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
-                                    <td className="py-3 px-4 text-gray-700 text-lg font-bold">{data.word}</td>
-                                    <td className="py-3 px-4 text-gray-700">{changeTagByWordClass(data.wordClass)}</td>
-                                    <td className="py-3 px-4 text-gray-700">{data.meaning}</td>
-                                    <td className="py-3 px-4 text-gray-700">{changeTagByStatus(data.status, "span")}</td>
-                                    <td className="py-3 px-4 text-gray-700">{data.memo}</td>
-                                    <td className="py-3 px-4">
-                                        <button
-                                            className="cursor-pointer text-gray-400 hover:bg-gray-200 p-2 border border-gray-300 rounded-md"
-                                            onClick={() => { setPopUpData(data); setIsPopUpOpen(true); }}>
-                                            <FaPen />
-                                        </button>
-                                    </td>
+                    <div className="overflow-x-auto">
+                        <table className="w-full min-w-[900px] border-collapse">
+                            <thead>
+                                <tr className="text-left text-sm text-emerald-900 bg-emerald-50">
+                                    <th className="py-3 px-4 font-medium w-48">単語</th>
+                                    <th className="py-3 px-4 font-medium w-32">品詞</th>
+                                    <th className="py-3 px-4 font-medium w-56">意味</th>
+                                    <th className="py-3 px-4 font-medium w-32">習得状況</th>
+                                    <th className="py-3 px-4 font-medium">メモ</th>
+                                    <th className="py-3 px-4 w-16"></th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500">
-                        <span>全{filteredStudyTables.length}件中 {startItem}〜{endItem}件表示</span>
-                        <div className="flex gap-1">
+                            </thead>
+
+                            <tbody>
+                                {pageTables.map((data) => (
+                                    <tr key={data.id} className="hover:bg-emerald-50/50 border-t border-gray-100 transition-colors">
+                                        <td className="py-3 px-4 text-gray-700 text-lg font-bold">
+                                            {data.word}
+                                        </td>
+
+                                        <td className="py-3 px-4 text-gray-700">
+                                            {changeTagByWordClass(data.wordClass)}
+                                        </td>
+
+                                        <td className="py-3 px-4 text-gray-700">
+                                            {data.meaning}
+                                        </td>
+
+                                        <td className="py-3 px-4 text-gray-700">
+                                            {changeTagByStatus(data.status, "span")}
+                                        </td>
+
+                                        <td className="py-3 px-4 text-gray-700">
+                                            {data.memo}
+                                        </td>
+
+                                        <td className="py-3 px-4">
+                                            <button
+                                                type="button"
+                                                className="cursor-pointer text-gray-400 hover:bg-gray-200 p-2 border border-gray-300 rounded-md"
+                                                onClick={() => { setPopUpData(data); setIsPopUpOpen(true); }}
+                                            >
+                                                <FaPen />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-3 px-4 py-3 border-t border-gray-100 bg-gray-50 text-sm text-gray-500 sm:flex-row sm:justify-between">
+                        <span>
+                            全{filteredStudyTables.length}件中 {startItem}〜{endItem}件表示
+                        </span>
+
+                        <div className="flex flex-wrap justify-center gap-1">
                             {getPageNumbers(page, totalPages).map((num, i) => (
                                 <button
                                     key={i}
+                                    type="button"
                                     onClick={() => typeof num === "number" && setPage(num)}
                                     disabled={num === "..."}
                                     className={`px-3 py-1 rounded-md text-sm transition-colors ${num === page
@@ -146,6 +179,7 @@ export const VocabularyTable = ({ vocabularies }: { vocabularies: vocabularyType
                     </div>
                 </div>
             )}
+
             {isPopUpOpen && (
                 <VocabularyPopUp
                     onClose={() => setIsPopUpOpen(false)}

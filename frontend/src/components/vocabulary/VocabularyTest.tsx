@@ -8,16 +8,16 @@ export const VocabularyTest = ({ vocabularies }: { vocabularies: vocabularyType[
     const [test, setTest] = useState<testCountType>("all")
     const [isPopUpOpen, setIsPopUpOpen] = useState(false);
     return (
-        <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-[400px]">
-            <h2 className="mb-3 text-xl font-medium text-gray-600"> 単語テスト</h2>
+        <div className="w-full bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0">
+            <h2 className="mb-3 text-xl font-medium text-gray-600">単語テスト</h2>
             <div>
                 <p className="text-lg text-gray-500 mb-2">出題範囲</p>
                 <div className="flex gap-2 mb-5">
                     <button
                         onClick={() => setScope("all")}
                         className={scope === "all"
-                            ? "flex-1 text-left rounded-lg p-3 border-[1.5px] border-green-500 bg-green-50"
-                            : "flex-1 text-left rounded-lg p-3 border-[1.5px] border-gray-200"}
+                            ? "flex-1 min-w-0 text-left rounded-lg p-3 border-[1.5px] border-green-500 bg-green-50"
+                            : "flex-1 min-w-0 text-left rounded-lg p-3 border-[1.5px] border-gray-200"}
                     >
                         <p
                             className={
@@ -111,15 +111,17 @@ export const VocabularyTest = ({ vocabularies }: { vocabularies: vocabularyType[
             </div>
             <div className="flex justify-center">
                 <button
-                    className={countVocabulary(vocabularies) === 0 ?
-                        "bg-red-500 font-medium rounded-lg p-3 text-white w-[400px]" :
-                        "bg-green-500 font-medium rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700"}
+                    type="button"
+                    className={countVocabulary(vocabularies) === 0
+                        ? "w-full max-w-[400px] bg-red-500 font-medium rounded-lg p-3 text-white"
+                        : "w-full max-w-[400px] bg-green-500 font-medium rounded-lg p-3 text-white hover:bg-green-600 active:bg-green-700"}
                     onClick={() => setIsPopUpOpen(true)}
                     disabled={countVocabulary(vocabularies) === 0}
-                >{countVocabulary(vocabularies) === 0 ? "単語がありません" : "開始する"}
+                >
+                    {countVocabulary(vocabularies) === 0 ? "単語がありません" : "開始する"}
                 </button>
             </div>
             {isPopUpOpen && <VocabularyTestPopUp vocabularies={vocabularies} onClose={() => setIsPopUpOpen(false)} scope={scope} test={test} />}
-        </div>
+        </div >
     )
 }
