@@ -36,6 +36,7 @@ export const LoginPage = () => {
                                 },
                             })}
                             type="email"
+                            disabled={loginMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             placeholder="you@example.com"
                         />
@@ -57,6 +58,7 @@ export const LoginPage = () => {
                                 },
                             })}
                             type="password"
+                            disabled={loginMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             placeholder="••••••••"
                         />

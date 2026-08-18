@@ -8,7 +8,8 @@ export const changeTagByCategory = (
     category: categoryType,
     type: "span" | "radio",
     checked?: boolean,
-    registerProps?: UseFormRegisterReturn<"category">
+    registerProps?: UseFormRegisterReturn<"category">,
+    isPending?: boolean
 ): ReactNode => {
 
     const tagStyles: Record<categoryType, string> = {
@@ -40,10 +41,11 @@ export const changeTagByCategory = (
                 className={`text-lg px-2 py-0.5 rounded-full font-medium cursor-pointer ${checked ? tagStyles[category] : "bg-gray-100 text-gray-700 border border-gray-200"}`}
             >
                 <input
+                    {...registerProps}
                     type="radio"
+                    disabled={isPending}
                     value={category}
                     className="sr-only"
-                    {...registerProps}
                 />
                 {categoryLabelMap[category]}
             </label>
@@ -82,7 +84,8 @@ export const changeTagByStatus = (
     status: statusType,
     type: "span" | "radio",
     checked?: boolean,
-    registerProps?: UseFormRegisterReturn<"status">) => {
+    registerProps?: UseFormRegisterReturn<"status">,
+    isPending?: boolean) => {
 
     const statusTagStyles: Record<statusType, string> = {
         ACQUIRED: "bg-emerald-50 text-emerald-800 border border-emerald-200",
@@ -107,10 +110,12 @@ export const changeTagByStatus = (
                 className={`text-lg px-8 py-2 rounded-full font-medium ${checked ? statusTagStyles[status] : "bg-gray-100 text-gray-700 border border-gray-200"}`}
             >
                 <input
+                    {...registerProps}
                     type="radio"
+                    disabled={isPending}
                     value={status}
                     className="sr-only"
-                    {...registerProps}
+
                 />
                 {statusLabels[status]}
             </label>
