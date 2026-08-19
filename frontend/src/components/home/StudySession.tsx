@@ -1,17 +1,17 @@
 import { changeTagByCategory } from "../../utils/changeTag";
 import { formatDate } from "../../utils/formatDate";
-import { sortTableByOrder } from "../../utils/sortTableByOrder";
+import { sortTableByOrder } from "../../utils/sortData";
 import type { studySessionType } from "../../types/studySessionType";
 
 export const StudySession = ({ studySessions }: { studySessions: studySessionType[] }) => {
     const items = sortTableByOrder("newest", studySessions).slice(0, 5);
     return (
-        <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0 min-w-[400px]">
+        <div className="w-full bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0">
             <p className="mb-5 text-xl font-medium text-gray-600">直近の学習記録</p>
             {items.map((data) => (
-                <div key={data.id} className="flex justify-between gap-3 py-3 m-2 border-b border-gray-200 last:border-b-0">
+                <div key={data.id} className="flex items-center justify-between gap-2 py-3 mx-0 sm:mx-2 border-b border-gray-200 last:border-b-0">
                     {/* 日付 */}
-                    <div className="text-sm font-medium text-gray-700 shrink-0 w-24">
+                    <div className="text-sm font-medium text-gray-700 shrink-0 w-20 sm:w-24">
                         {formatDate(data.date)}
                     </div>
 
@@ -27,5 +27,5 @@ export const StudySession = ({ studySessions }: { studySessions: studySessionTyp
                 </div>
             ))}
         </div>
-    )
+    );
 }

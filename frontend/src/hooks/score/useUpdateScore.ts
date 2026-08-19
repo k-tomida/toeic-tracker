@@ -1,14 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateScore } from "../../api/score";
+import { updateScore, type updateScoreType } from "../../api/score";
 
 export const useUpdateScore = () => {
     const queryClient = useQueryClient();
+
     return useMutation({
-        mutationFn: updateScore,
+        mutationFn: (data: updateScoreType) => updateScore(data),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["score"],
             });
-        }
-    })
-}
+        },
+    });
+};

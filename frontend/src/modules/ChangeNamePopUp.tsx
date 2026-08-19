@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useUpdateName } from "../hooks/user/useUpdateName";
+import type { UpdateNameRequest } from "../api/user";
 
 
 type Props = {
@@ -7,17 +8,13 @@ type Props = {
     name?: string;
 };
 
-type FormValues = {
-    name: string;
-};
-
 export const ChangeNamePopUp = ({ onClose, name }: Props) => {
     const mutation = useUpdateName();
-    const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+    const { register, handleSubmit, formState: { errors } } = useForm<UpdateNameRequest>({
         defaultValues: { name: name }
     })
 
-    const onsubmit = (data: FormValues) => {
+    const onsubmit = (data: UpdateNameRequest) => {
         mutation.mutate(data);
         onClose();
     }

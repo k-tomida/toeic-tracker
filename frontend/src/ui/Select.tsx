@@ -12,7 +12,7 @@ export const Select = <T extends string>({ name, value, onChange, options }: Pro
             id={name}
             value={value}
             onChange={(e) => onChange(e.target.value as T)}
-            className="py-2 border border-gray-400 rounded-md bg-white w-56"
+            className="w-full py-2 px-2 border border-gray-400 rounded-md bg-white"
         >
             {options.map((opt) => (
                 <option key={opt.value} value={opt.value}>

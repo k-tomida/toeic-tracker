@@ -1,6 +1,6 @@
 import type { scoreType } from "../types/scoreType";
 import { formatDateSlashAndRemoveDay } from "./formatDate";
-import { sortScoreByOldest } from "./sortTableByOrder";
+import { sortScoreByOldest } from "./sortData";
 
 type chartType = {
     id: number;
@@ -17,7 +17,7 @@ type trendChartType = {
 }
 
 export const formatChartData = (scores: scoreType[]): chartType[] => {
-    const chartData = sortScoreByOldest(scores).slice(0, 5).map((d) => ({
+    const chartData = sortScoreByOldest(scores).slice(-5).map((d) => ({
         id: d.id,
         examDate: formatDateSlashAndRemoveDay(d.examDate),
         total: d.totalScore

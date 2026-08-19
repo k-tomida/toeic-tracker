@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useLogin } from "../hooks/auth/useLogin";
 import { Link } from "react-router";
 import type { LoginRequest } from "../api/user";
+import { ClipLoader } from "react-spinners";
 
 
 export const LoginPage = () => {
@@ -35,6 +36,7 @@ export const LoginPage = () => {
                                 },
                             })}
                             type="email"
+                            disabled={loginMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             placeholder="you@example.com"
                         />
@@ -56,6 +58,7 @@ export const LoginPage = () => {
                                 },
                             })}
                             type="password"
+                            disabled={loginMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             placeholder="••••••••"
                         />
@@ -66,7 +69,7 @@ export const LoginPage = () => {
 
                     {loginMutation.isError && (
                         <p className="text-sm text-red-600 text-center">
-                            メールアドレスまたはパスワードが正しくありません
+                            {loginMutation.error.message}
                         </p>
                     )}
 
@@ -75,7 +78,7 @@ export const LoginPage = () => {
                         disabled={loginMutation.isPending}
                         className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white font-medium py-2 rounded-md text-sm transition-colors"
                     >
-                        {loginMutation.isPending ? "ログイン中..." : "ログイン"}
+                        {loginMutation.isPending ? <ClipLoader size={20} /> : "ログイン"}
                     </button>
                 </form>
 

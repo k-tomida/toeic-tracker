@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useRegister } from "../hooks/auth/useRegister";
 import { Link } from "react-router";
+import { ClipLoader } from "react-spinners";
 
 type RegisterForm = {
     email: string;
@@ -43,6 +44,7 @@ export const RegisterPage = () => {
                                 },
                             })}
                             type="email"
+                            disabled={registerMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             placeholder="you@example.com"
                         />
@@ -60,6 +62,7 @@ export const RegisterPage = () => {
                                 required: "ユーザーネームを入力してください",
                             })}
                             type="text"
+                            disabled={registerMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             placeholder="山田太郎"
                         />
@@ -81,6 +84,7 @@ export const RegisterPage = () => {
                                 },
                             })}
                             type="password"
+                            disabled={registerMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             placeholder="••••••••"
                         />
@@ -100,6 +104,7 @@ export const RegisterPage = () => {
                                 max: { value: 990, message: "990点以下で入力してください" },
                             })}
                             type="number"
+                            disabled={registerMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             placeholder="800"
                         />
@@ -115,13 +120,14 @@ export const RegisterPage = () => {
                         <input
                             {...register("nextExamDate")}
                             type="date"
+                            disabled={registerMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         />
                     </div>
 
                     {registerMutation.isError && (
                         <p className="text-sm text-red-600 text-center">
-                            登録に失敗しました。時間をおいて再度お試しください
+                            {registerMutation.error.message}
                         </p>
                     )}
 
@@ -130,7 +136,7 @@ export const RegisterPage = () => {
                         disabled={registerMutation.isPending}
                         className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white font-medium py-2 rounded-md text-sm transition-colors"
                     >
-                        {registerMutation.isPending ? "登録中..." : "新規登録"}
+                        {registerMutation.isPending ? <ClipLoader size={20} /> : "新規登録"}
                     </button>
                 </form>
 

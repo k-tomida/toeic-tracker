@@ -5,6 +5,7 @@ import com.toeictracker.backend.user.dto.UpdateNameRequest;
 import com.toeictracker.backend.user.dto.UpdatePasswordRequest;
 import com.toeictracker.backend.user.dto.UpdateTargetScoreAndNextExamRequest;
 import com.toeictracker.backend.user.dto.UserResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<UserResponse> updateTargetScoreAndNextExamDate(
             Authentication authentication,
-            @RequestBody UpdateTargetScoreAndNextExamRequest request) {
+            @Valid @RequestBody UpdateTargetScoreAndNextExamRequest request) {
 
         User updatedUser = userService.updateTargetScoreAndNextExam(authentication.getName(), request);
 
@@ -55,7 +56,7 @@ public class UserController {
     @PutMapping("/password")
     public ResponseEntity<AuthResponse> updatePassword(
             Authentication authentication,
-            @RequestBody UpdatePasswordRequest request){
+            @Valid @RequestBody UpdatePasswordRequest request){
 
         AuthResponse response=userService.updatePassword(authentication.getName(), request);
         return ResponseEntity.ok(response);
@@ -64,7 +65,7 @@ public class UserController {
     @PutMapping("/name")
     public ResponseEntity<UserResponse> updateName(
             Authentication authentication,
-            @RequestBody UpdateNameRequest request){
+            @Valid @RequestBody UpdateNameRequest request){
 
         User updatedUser=userService.updateName(authentication.getName(), request.name());
         UserResponse response = new UserResponse(

@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { ProgressBar } from "../../ui/ProgressBar";
 import { calcBestScore } from "../../utils/calcScore";
-import { useUserMutation } from "../../hooks/user/useUser";
-import type { userType } from "../../types/userType";
+import { useUpdateUser } from "../../hooks/user/useUpdateUser";
+import type { UserType } from "../../types/userType";
 import type { scoreType } from "../../types/scoreType";
 
 type Props = {
-    user: userType;
+    user: UserType;
     scores: scoreType[]
 }
 
 export const GoalSetting = ({ user, scores }: Props) => {
-    const mutation = useUserMutation();
+    const mutation = useUpdateUser();
     const [date, setDate] = useState(user.nextExamDate ?? new Date().toISOString().slice(0, 10));
     const [score, setScore] = useState(user.targetScore ?? 0);
 
@@ -19,13 +19,14 @@ export const GoalSetting = ({ user, scores }: Props) => {
     const isAchieved = bestScore >= score;
 
     return (
-        <div className="bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-[400px]">
+        <div className="w-full bg-white rounded-xl p-4 border border-gray-300 flex-1 min-w-0">
             <h2 className="mb-3 text-xl font-medium text-gray-600">目標設定</h2>
-            <div className="m-2">
+            <div className="mx-0 my-2 sm:m-2">
                 <p className="text-lg text-gray-500">目標スコア</p>
                 <p className="py-3">
                     <input
                         type="number"
+                        disabled={mutation.isPending}
                         value={score}
                         max={990}
                         min={0}
@@ -44,23 +45,35 @@ export const GoalSetting = ({ user, scores }: Props) => {
                     )}
                 </div>
             </div>
-            <div className="m-2">
+            <div className="mx-0 my-2 sm:m-2">
                 <p className="text-lg text-gray-500">次回受験予定日</p>
                 <input
                     type="date"
+                    disabled={mutation.isPending}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base sm:text-lg"
                 />
             </div>
+            {mutation.isError &&
+                <p className="mt-1 text-sm text-red-600 text-center">
+                    {mutation.error.message}
+                </p>
+            }
             <div className="flex justify-center pt-3">
                 <button
-                    className="bg-green-500 rounded-lg p-3 text-white w-[400px] hover:bg-green-600 active:bg-green-700"
+                    type="button"
+                    disabled={mutation.isPending}
+                    className="w-full max-w-[400px] bg-green-500 rounded-lg p-3 text-white hover:bg-green-600 active:bg-green-700 disabled:bg-green-300"
                     onClick={() => mutation.mutate({
                         targetScore: score,
                         nextExamDate: date
-                    })}>更新</button>
+                    })}
+                >
+                    {mutation.isPending ? "更新中..." : "更新"}
+                </button>
             </div>
+
         </div>
     );
 };

@@ -1,4 +1,5 @@
-import type { categoryType, studySessionType } from "../types/studySessionType";
+import type { studySessionFormType } from "../types/studySessionFormType";
+import type { studySessionType } from "../types/studySessionType";
 import { apiClient } from "./client";
 
 export const getStudySession = async (): Promise<studySessionType[]> => {
@@ -6,21 +7,15 @@ export const getStudySession = async (): Promise<studySessionType[]> => {
     return data;
 }
 
-type apiStudySessionType = {
-    date: string;
-    duration: number;
-    category: categoryType;
-    memo: string;
-}
 
-export const postStudySession = async (postStudySession: apiStudySessionType): Promise<studySessionType> => {
+export const postStudySession = async (postStudySession: studySessionFormType): Promise<studySessionType> => {
     const { data } = await apiClient.post("/study-sessions", postStudySession)
     return data;
 }
 
-type updateStudySessionType = {
+export type updateStudySessionType = {
     id: number;
-    updateStudySession: apiStudySessionType
+    updateStudySession: studySessionFormType
 }
 
 export const updateStudySession = async ({ id, updateStudySession }: updateStudySessionType): Promise<studySessionType> => {

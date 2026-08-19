@@ -1,5 +1,6 @@
 package com.toeictracker.backend.study_session;
 
+import com.toeictracker.backend.exception.ResourceNotFoundException;
 import com.toeictracker.backend.study_session.dto.StudySessionRequest;
 import com.toeictracker.backend.user.User;
 import com.toeictracker.backend.user.UserRepository;
@@ -21,14 +22,14 @@ public class StudySessionService {
     @Cacheable(value = "getStudySessions", key = "#email")
     public List<StudySession> getAllStudySession(String email){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("ユーザーが見つかりません"));
         return studySessionRepository.findByUserId(user.getId());
     }
 
     @CacheEvict(value = "getStudySessions", key = "#email")
     public StudySession addStudySession(String email, StudySessionRequest request){
         User user=userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("ユーザーが見つかりません"));
 
         StudySession studySession=new StudySession();
         studySession.setUserId(user.getId());
@@ -44,10 +45,10 @@ public class StudySessionService {
     public StudySession updateStudySession(String email, Long id, StudySessionRequest request) {
 
         User user=userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("ユーザーが見つかりません"));
 
         StudySession existingStudySession = studySessionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("学習記録が見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("学習記録が見つかりません"));
 
         if (!existingStudySession.getUserId().equals(user.getId())) {
             throw new AccessDeniedException("この学習記録を編集する権限がありません");
@@ -65,10 +66,10 @@ public class StudySessionService {
     public void deleteStudySession(String email,Long id){
 
         User user=userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("ユーザーが見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("ユーザーが見つかりません"));
 
         StudySession existingStudySession = studySessionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("学習記録が見つかりません"));
+                .orElseThrow(() -> new ResourceNotFoundException("学習記録が見つかりません"));
 
         // 所有者チェック: このレコードが本当にログイン中のユーザーのものか確認
         if (!existingStudySession.getUserId().equals(user.getId())) {

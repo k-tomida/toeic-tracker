@@ -3,12 +3,13 @@ import { deleteScore } from "../../api/score";
 
 export const useDeleteScore = () => {
     const queryClient = useQueryClient();
+
     return useMutation({
-        mutationFn: deleteScore,
+        mutationFn: (id: number) => deleteScore(id),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["score"],
             });
-        }
-    })
-}
+        },
+    });
+};

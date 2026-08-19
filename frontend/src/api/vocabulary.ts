@@ -1,4 +1,5 @@
-import type { sendTestType, statusType, vocabularyType, wordClassType } from "../types/vocabularyType";
+import type { vocabularyFormType } from "../types/vocabularyFormType";
+import type { sendTestType, vocabularyType, } from "../types/vocabularyType";
 import { apiClient } from "./client";
 
 export const getVocabulary = async (): Promise<vocabularyType[]> => {
@@ -6,22 +7,15 @@ export const getVocabulary = async (): Promise<vocabularyType[]> => {
     return data;
 }
 
-type addiVocabularyType = {
-    word: string;
-    wordClass: wordClassType;
-    meaning: string;
-    status: statusType;
-    memo: string;
-}
 
-export const postVocabulary = async (addVocabulary: addiVocabularyType): Promise<vocabularyType> => {
+export const postVocabulary = async (addVocabulary: vocabularyFormType): Promise<vocabularyType> => {
     const { data } = await apiClient.post("/vocabularies", addVocabulary);
     return data;
 }
 
-type updateVocabularyType = {
+export type updateVocabularyType = {
     id: number;
-    updateVocabulary: addiVocabularyType;
+    updateVocabulary: vocabularyFormType;
 }
 
 export const updateVocabulary = async ({ id, updateVocabulary }: updateVocabularyType): Promise<vocabularyType> => {

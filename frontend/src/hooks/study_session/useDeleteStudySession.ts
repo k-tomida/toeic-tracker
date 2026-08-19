@@ -4,7 +4,7 @@ import { deleteStudySession } from "../../api/studySession";
 export const useDeleteStudySession = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: deleteStudySession,
+        mutationFn: (id: number) => deleteStudySession(id),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["studySession"],

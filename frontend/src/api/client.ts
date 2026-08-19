@@ -15,3 +15,15 @@ apiClient.interceptors.request.use((config) => {
     }
     return config;
 });
+
+//エラー時
+apiClient.interceptors.response.use(
+    (res) => res,
+    (error) => {
+        if (axios.isAxiosError(error)) {
+            const message = error.response?.data?.detail ?? "エラーが発生しました";
+            return Promise.reject(new Error(message, { cause: error }));
+        }
+        return Promise.reject(error);
+    }
+);
