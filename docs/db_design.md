@@ -1,7 +1,7 @@
 # TOEICトラッカー DB設計書
 
-**バージョン**: 1.1.0  
-**作成日**: 2026-07-17  
+**バージョン**: 1.2.0  
+**作成日**: 2026-08-20  
 **作成者**: k-tomida  
 **DB**: PostgreSQL 15（Neon / dev branch分離）  
 **マイグレーション管理**: Flyway
@@ -176,10 +176,10 @@ CREATE INDEX idx_scores_user_date ON scores(user_id, exam_date);
 | updated_at | TIMESTAMPTZ | NOT NULL | NOW() | 更新日時 |
 
 **word_classの値**  
-`noun` / `verb` / `adjective` / `adverb` / `preposition` / `conjunction` / `auxiliaryVerb`
+`NOUN` / `VERB` / `ADJECTIVE` / `ADVERB` / `PREPOSITION` / `CONJUNCTION` / `AUXILIARY_VERB`
 
 **statusの値**  
-`acquired`（習得済） / `unacquired`（未習得）
+`ACQUIRED`（習得済） / `UNACQUIRED`（未習得）
 
 **制約**
 ```sql
@@ -189,15 +189,37 @@ CREATE TABLE vocabularies (
     word        VARCHAR(200) NOT NULL,
     word_class  VARCHAR(20)  NOT NULL,
     meaning     TEXT         NOT NULL,
-    status      VARCHAR(20)  NOT NULL DEFAULT 'unacquired',
+    status      VARCHAR(20)  NOT NULL DEFAULT 'UNACQUIRED',
     memo        TEXT         CHECK (char_length(memo) <= 500),
     created_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
-    updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+    updated_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT chk_word_class
+        CHECK (word_class IN (
+            'NOUN',
+            'VERB',
+            'ADJECTIVE',
+            'ADVERB',
+            'PREPOSITION',
+            'CONJUNCTION',
+            'AUXILIARY_VERB'
+        )),
+
+    CONSTRAINT chk_status
+        CHECK (status IN (
+            'ACQUIRED',
+            'UNACQUIRED'
+        ))
 );
 
-CREATE INDEX idx_vocabularies_user ON vocabularies(user_id);
-CREATE INDEX idx_vocabularies_user_status ON vocabularies(user_id, status);
-CREATE INDEX idx_vocabularies_user_word ON vocabularies(user_id, word);
+CREATE INDEX idx_vocabularies_user
+    ON vocabularies(user_id);
+
+CREATE INDEX idx_vocabularies_user_status
+    ON vocabularies(user_id, status);
+
+CREATE INDEX idx_vocabularies_user_word
+    ON vocabularies(user_id, word);
 ```
 
 ---
