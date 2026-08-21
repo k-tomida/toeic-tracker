@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
@@ -128,7 +129,7 @@ class UserServiceTest {
     @Test
     void updatePassword_正常に更新できる() {
         //given
-        String email ="test@example.com";
+        String email ="kenta@example.com";
 
         User user=new User();
         user.setPassword("encodedOldPassword");
@@ -168,7 +169,7 @@ class UserServiceTest {
     @Test
     void updatePassword_ユーザーが存在しない場合は例外をスローする() {
         // given
-        String email = "test@example.com";
+        String email = "kenta@example.com";
 
         UpdatePasswordRequest request = new UpdatePasswordRequest(
                 "oldPassword",
@@ -190,7 +191,7 @@ class UserServiceTest {
     @Test
     void updatePassword_現在のパスワードが間違っている場合は例外をスローする() {
         // given
-        String email = "test@example.com";
+        String email = "kenta@example.com";
 
         User user = new User();
         user.setPassword("encodedOldPassword");
@@ -217,7 +218,7 @@ class UserServiceTest {
     @Test
     void updatePassword_新しいパスワードと確認用パスワードが一致しない場合は例外をスローする() {
         // given
-        String email = "test@example.com";
+        String email = "kenta@example.com";
 
         User user = new User();
         user.setPassword("encodedOldPassword");
@@ -244,7 +245,7 @@ class UserServiceTest {
     @Test
     void updatePassword_新しいパスワードが現在のパスワードと同じ場合は例外をスローする() {
         // given
-        String email = "test@example.com";
+        String email = "kenta@example.com";
 
         User user = new User();
         user.setPassword("encodedOldPassword");
@@ -271,7 +272,7 @@ class UserServiceTest {
     @Test
     void updateName_正常に更新できる() {
         // given
-        String email = "test@example.com";
+        String email = "kenta@example.com";
 
         User user = new User();
         user.setName("oldUsername");
@@ -294,7 +295,7 @@ class UserServiceTest {
     @Test
     void updateName_ユーザーが存在しない場合は例外をスローする() {
         // given
-        String email = "test@example.com";
+        String email = "kenta@example.com";
 
         when(userRepository.findByEmail(email))
                 .thenReturn(Optional.empty());
@@ -304,5 +305,42 @@ class UserServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
 
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void updateName_デモユーザーの場合は例外をスローする() {
+        // given
+        String email = "test@example.com";
+
+        // when & then
+        assertThatThrownBy(() ->
+                userService.updateName(email, "newUsername")
+        )
+                .isInstanceOf(AccessDeniedException.class);
+
+        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void updatePassword_デモユーザーの場合は例外をスローする() {
+        // given
+        String email = "test@example.com";
+
+        UpdatePasswordRequest request = new UpdatePasswordRequest(
+                "password",
+                "newPassword",
+                "newPassword"
+        );
+
+        // when & then
+        assertThatThrownBy(() ->
+                userService.updatePassword(email, request)
+        )
+                .isInstanceOf(AccessDeniedException.class);
+
+        verify(userRepository, never()).findByEmail(anyString());
+        verify(userRepository, never()).save(any(User.class));
+        verifyNoInteractions(passwordEncoder, jwtProvider);
     }
 }
