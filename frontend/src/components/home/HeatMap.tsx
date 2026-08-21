@@ -1,25 +1,26 @@
 import type { studySessionType } from "../../types/studySessionType";
-
-/** 
- * 引数のstartDateから一年間の日付を取得する
+import { formatLocalDate } from "../../utils/formatDate";
+/**
+ * 指定された年のすべての日付を取得する
  *
- * @param startDate 最初の日付(Data型)
- * @returns 一年間の日付すべて
- * getDatesForOneYear(new Date("2026-01-01"))の返り値は["2026-01-01,2026-01-02, ..... ,2026-12-31"]
+ * @param year 対象年
+ * @returns 対象年の日付一覧
  */
-function getDatesForOneYear(startDate: Date): string[] {
+function getDatesForYear(year: number): string[] {
     const dates: string[] = [];
-    const current = new Date(startDate);
+    const current = new Date(year, 0, 1);
 
-    for (let i = 0; i < 365; i++) {
-        dates.push(current.toISOString().slice(0, 10));
+    while (current.getFullYear() === year) {
+        dates.push(formatLocalDate(current));
         current.setDate(current.getDate() + 1);
     }
+
     return dates;
 }
 
-export const HeatMap = ({ studySessions }: { studySessions: studySessionType[] }) => {
-    const dates = getDatesForOneYear(new Date("2026-01-01"));
+export const HeatMap = ({ studySessions, }: { studySessions: studySessionType[]; }) => {
+    const currentYear = new Date().getFullYear();
+    const dates = getDatesForYear(currentYear);
 
     // 7行（日〜土）× 53列のグリッドに並べる==========
     const weeks: string[][] = [];
@@ -27,13 +28,13 @@ export const HeatMap = ({ studySessions }: { studySessions: studySessionType[] }
 
     dates.forEach((date, i) => {
         if (i === 0) {
-            //はじめの日の曜日に合わせて空文字をpushする
-            const firstDate = new Date(date);
-            for (let j = 0; j < firstDate.getDay(); j++) {
+            const firstDayOfWeek = new Date(currentYear, 0, 1).getDay();
+            for (let j = 0; j < firstDayOfWeek; j++) {
                 week.push("");
             }
         }
         week.push(date);
+
         if (week.length === 7 || i === dates.length - 1) {
             weeks.push(week);
             week = [];
@@ -64,7 +65,7 @@ export const HeatMap = ({ studySessions }: { studySessions: studySessionType[] }
     return (
         <div className="w-full bg-white rounded-xl p-4 overflow-x-auto border border-gray-300">
             <div className="min-w-max pr-4">
-                <p className="mb-3 text-xl font-medium text-gray-600">学習アクティビティ</p>
+                <p className="mb-3 text-xl font-medium text-gray-600">学習アクティビティ（{currentYear}年）</p>
                 <div className="ml-10">
                     {/* 月ラベル */}
                     <div className="whitespace-nowrap">
