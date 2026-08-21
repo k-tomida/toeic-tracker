@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { useRegister } from "../hooks/auth/useRegister";
 import { Link } from "react-router";
 import { ClipLoader } from "react-spinners";
+import { formatLocalDate } from "../utils/formatDate";
 
 type RegisterForm = {
     email: string;
@@ -22,6 +23,12 @@ export const RegisterPage = () => {
     const onSubmit = (data: RegisterForm) => {
         registerMutation.mutate(data);
     };
+
+    const today = formatLocalDate(new Date());
+
+    const tomorrowDate = new Date();
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+    const tomorrow = formatLocalDate(tomorrowDate);
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -99,11 +106,19 @@ export const RegisterPage = () => {
                         </label>
                         <input
                             {...register("targetScore", {
+                                required: "スコアを入力してください",
                                 valueAsNumber: true,
                                 min: { value: 10, message: "10点以上で入力してください" },
                                 max: { value: 990, message: "990点以下で入力してください" },
+                                validate: (value) =>
+                                    value === null ||
+                                    value % 5 === 0 ||
+                                    "目標スコアは5点刻みで入力してください"
                             })}
                             type="number"
+                            min={10}
+                            max={990}
+                            step={5}
                             disabled={registerMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                             placeholder="800"
@@ -118,8 +133,15 @@ export const RegisterPage = () => {
                             次回受験日(任意)
                         </label>
                         <input
-                            {...register("nextExamDate")}
+                            {...register("nextExamDate", {
+                                required: "スコアを入力してください",
+                                validate: (value) =>
+                                    value === null ||
+                                    value > today ||
+                                    "次回受験日は未来の日付を入力してください",
+                            })}
                             type="date"
+                            min={tomorrow}
                             disabled={registerMutation.isPending}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                         />
