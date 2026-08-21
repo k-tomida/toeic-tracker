@@ -64,20 +64,21 @@ export const AccountMenu = () => {
 
             {pulldown && (
                 <div className="absolute top-full left-0 mb-2 w-full bg-white border border-gray-200 border-t-0 shadow-lg overflow-hidden z-50 rounded-b-lg">
-                    <div className="p-1.5">
-                        <button
-                            className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm hover:bg-gray-50"
-                            onClick={() => setNamePopUpOpen(true)}>
-                            <PiPencil className="w-4 h-4 text-gray-500" />
-                            ユーザー名変更
-                        </button>
-                        <button
-                            className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm hover:bg-gray-50"
-                            onClick={() => setPasswordPopUpOpen(true)}>
-                            <FaLock className="w-4 h-4 text-gray-500" />
-                            パスワード変更
-                        </button>
-                    </div>
+                    {data?.email === "test@example.com" ||
+                        <div className="p-1.5">
+                            <button
+                                className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm hover:bg-gray-50"
+                                onClick={() => setNamePopUpOpen(true)}>
+                                <PiPencil className="w-4 h-4 text-gray-500" />
+                                ユーザー名変更
+                            </button>
+                            <button
+                                className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm hover:bg-gray-50"
+                                onClick={() => setPasswordPopUpOpen(true)}>
+                                <FaLock className="w-4 h-4 text-gray-500" />
+                                パスワード変更
+                            </button>
+                        </div>}
                     <div className="border-t border-gray-200 p-1.5">
                         <button
                             className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-sm text-red-600 hover:bg-red-50"

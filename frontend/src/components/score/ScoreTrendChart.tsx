@@ -3,7 +3,7 @@ import { formatTrendChartData } from "../../utils/formatChartData"
 import type { scoreType } from "../../types/scoreType";
 
 type Props = {
-    targetScore: number;
+    targetScore: number | null;
     scores: scoreType[]
 };
 
@@ -63,12 +63,13 @@ export const ScoreTrendChart = ({ targetScore, scores }: Props) => {
                                     offset={10}
                                 />
                             </Line>
-                            <ReferenceLine
-                                y={targetScore}
-                                stroke="#eda100"
-                                strokeDasharray="4 4"
-                                label={{ value: `目標 ${targetScore}`, position: "top", fill: "#c98500", fontSize: 14 }}
-                            />
+                            {targetScore !== null &&
+                                <ReferenceLine
+                                    y={targetScore}
+                                    stroke="#eda100"
+                                    strokeDasharray="4 4"
+                                    label={{ value: `目標 ${targetScore}`, position: "top", fill: "#c98500", fontSize: 14 }}
+                                />}
                             <XAxis dataKey="examDate" />
                             <YAxis domain={[0, 990]} />
                             <Legend

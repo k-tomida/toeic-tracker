@@ -8,6 +8,7 @@ import com.toeictracker.backend.user.dto.UpdateTargetScoreAndNextExamRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+
+    private static final String DEMO_USER_EMAIL = "test@example.com";
 
     @Cacheable("getUser")
     public User getUser(String email) {
@@ -38,6 +41,10 @@ public class UserService {
 
     @CacheEvict(value = "getUser", key="#email")
     public AuthResponse updatePassword(String email, UpdatePasswordRequest request){
+        if (DEMO_USER_EMAIL.equals(email)) {
+            throw new AccessDeniedException("デモアカウントではアカウント情報を変更できません");
+        }
+
         User user =userRepository.findByEmail(email)
                 .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
@@ -62,6 +69,10 @@ public class UserService {
 
     @CacheEvict(value = "getUser", key="#email")
     public User updateName(String email, String name){
+        if (DEMO_USER_EMAIL.equals(email)) {
+            throw new AccessDeniedException("デモアカウントではアカウント情報を変更できません");
+        }
+
         User user =userRepository.findByEmail(email)
                 .orElseThrow(()->new ResourceNotFoundException("ユーザーが見つかりません"));
 
