@@ -106,20 +106,30 @@ export const RegisterPage = () => {
                         </label>
                         <input
                             {...register("targetScore", {
-                                valueAsNumber: true,
-                                min: { value: 10, message: "10点以上で入力してください" },
-                                max: { value: 990, message: "990点以下で入力してください" },
+                                setValueAs: (value) =>
+                                    value === "" ? null : Number(value),
+
+                                min: {
+                                    value: 10,
+                                    message: "10点以上で入力してください",
+                                },
+
+                                max: {
+                                    value: 990,
+                                    message: "990点以下で入力してください",
+                                },
+
                                 validate: (value) =>
                                     value === null ||
                                     value % 5 === 0 ||
-                                    "目標スコアは5点刻みで入力してください"
+                                    "目標スコアは5点刻みで入力してください",
                             })}
                             type="number"
                             min={10}
                             max={990}
                             step={5}
                             disabled={registerMutation.isPending}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                             placeholder="800"
                         />
                         {errors.targetScore && (
@@ -133,6 +143,9 @@ export const RegisterPage = () => {
                         </label>
                         <input
                             {...register("nextExamDate", {
+                                setValueAs: (value) =>
+                                    value === "" ? null : value,
+
                                 validate: (value) =>
                                     value === null ||
                                     value > today ||
@@ -141,8 +154,11 @@ export const RegisterPage = () => {
                             type="date"
                             min={tomorrow}
                             disabled={registerMutation.isPending}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
                         />
+                        {errors.nextExamDate && (
+                            <p className="mt-1 text-sm text-red-600">{errors.nextExamDate.message}</p>
+                        )}
                     </div>
 
                     {registerMutation.isError && (
