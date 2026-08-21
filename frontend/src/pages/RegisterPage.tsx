@@ -106,7 +106,6 @@ export const RegisterPage = () => {
                         </label>
                         <input
                             {...register("targetScore", {
-                                required: "スコアを入力してください",
                                 valueAsNumber: true,
                                 min: { value: 10, message: "10点以上で入力してください" },
                                 max: { value: 990, message: "990点以下で入力してください" },
@@ -134,7 +133,6 @@ export const RegisterPage = () => {
                         </label>
                         <input
                             {...register("nextExamDate", {
-                                required: "スコアを入力してください",
                                 validate: (value) =>
                                     value === null ||
                                     value > today ||
