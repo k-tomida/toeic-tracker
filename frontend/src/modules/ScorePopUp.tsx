@@ -1,4 +1,4 @@
-import { formatDateSlash } from "../utils/formatDate";
+import { formatDateSlash, formatLocalDate } from "../utils/formatDate";
 import { FaRegTrashAlt } from "react-icons/fa";
 import type { scoreType } from "../types/scoreType";
 import { useCreateScore } from "../hooks/score/useCreateScore";
@@ -18,7 +18,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
     const deleteMutation = useDeleteScore();
     const { register, handleSubmit, control, formState: { errors } } = useForm<scoreFormType>({
         defaultValues: {
-            examDate: data?.examDate ?? new Date().toISOString().slice(0, 10),
+            examDate: data?.examDate ?? formatLocalDate(new Date()),
             listeningScore: data?.listeningScore ?? 5,
             readingScore: data?.readingScore ?? 5,
             memo: data?.memo ?? "",
@@ -54,7 +54,7 @@ export const ScorePopUp = ({ onClose, data }: Props) => {
                     <div>
                         <label className="text-gray-600 mb-1">日付</label>
                         <input
-                            {...register("examDate")}
+                            {...register("examDate", { required: "受験日を入力してください" })}
                             type="date"
                             disabled={isPending}
                             className="border border-gray-300 rounded-lg px-3 py-2 text-lg w-full"

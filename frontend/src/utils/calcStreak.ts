@@ -1,8 +1,9 @@
 import type { studySessionType } from "../types/studySessionType";
+import { formatLocalDate } from "./formatDate";
 import { sortTableByOrder } from "./sortData";
 
 export const calcStreak = (studySessions: studySessionType[]): number => {
-    const todayStr = new Date().toISOString().slice(0, 10);
+    const todayStr = formatLocalDate(new Date());
     const data = sortTableByOrder("newest", studySessions);
     if (data.length === 0) return 0;
 
@@ -10,15 +11,13 @@ export const calcStreak = (studySessions: studySessionType[]): number => {
 
     if (uniqueData[0].date !== todayStr) return 0;
 
-    // 4. Count consecutive days from today backwards
     let streak = 0;
-    const currentDate = new Date(todayStr);
+    const currentDate = new Date();
 
     for (const session of uniqueData) {
-        const sessionDateStr = session.date;
-        const expectedDateStr = currentDate.toISOString().slice(0, 10);
+        const expectedDateStr = formatLocalDate(currentDate);
 
-        if (sessionDateStr !== expectedDateStr) {
+        if (session.date !== expectedDateStr) {
             break;
         }
 
