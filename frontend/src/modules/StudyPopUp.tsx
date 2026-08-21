@@ -1,5 +1,5 @@
 import type { studySessionType, categoryType } from "../types/studySessionType";
-import { formatDate } from "../utils/formatDate";
+import { formatDate, formatLocalDate } from "../utils/formatDate";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useCreateStudySession } from "../hooks/study_session/useCreateStudySession";
 import { useUpdateStudySession } from "../hooks/study_session/useUpdateStudySession";
@@ -21,7 +21,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
     const deleteMutation = useDeleteStudySession();
     const { register, handleSubmit, control, formState: { errors } } = useForm<studySessionFormType>({
         defaultValues: {
-            date: data?.date ?? new Date().toISOString().slice(0, 10),
+            date: data?.date ?? formatLocalDate(new Date()),
             duration: data?.duration ?? 1,
             category: data?.category ?? "LISTENING",
             memo: data?.memo ?? ""
@@ -65,7 +65,7 @@ export const StudyPopUp = ({ onClose, data }: Props) => {
                                 日付
                             </label>
                             <input
-                                {...register("date")}
+                                {...register("date", { required: "学習日を入力してください" })}
                                 type="date"
                                 disabled={isPending}
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base sm:text-lg"
