@@ -52,7 +52,6 @@ describe("useUpdateUser", () => {
         id: 1,
         name: "テストユーザー",
         email: "test@example.com",
-        password: "password123",
         targetScore: 850,
         nextExamDate: "2026-12-01",
     };
