@@ -8,6 +8,11 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
+    hikari:
+      minimum-idle: 0
+      idle-timeout: 60000
+      keepalive-time: 0
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -23,4 +28,3 @@ spring:
 jwt:
   key: ${JWT_KEY}
   expiration: 86400000
-  
